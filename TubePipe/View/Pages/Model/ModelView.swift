@@ -76,8 +76,6 @@ struct ModelView: View{
                 }
                 ToolbarItem(placement: .principal) {
                     Button(action:{
-                        //tubeSceneViewModel.updatePosition(-10.0)
-                        //tubeSceneViewModel.updatePosition(10.0)
                     }){
                         Image(systemName: "move.3d")
                     }
