@@ -1,0 +1,71 @@
+//
+//  InfoView.swift
+//  TubePipe
+//
+//  Created by fredrik sundström on 2023-09-16.
+//
+
+import SwiftUI
+
+let pointTab:String = "•\t"
+struct InfoView:View{
+    var guestText:String = """
+                            \(pointTab)Build tube in 2d
+                            \(pointTab)Render tube as 3d scene
+                            \(pointTab)View tube details
+                            """
+    var memberText:String = """
+                            \(pointTab)Save tubes & attached image on device
+                            \(pointTab)Share tubes & attached images with other TubePipe users
+                            \(pointTab)Upcoming features from developers of TubePipe such as augmented reality...
+                            """
+    
+    var infoLabel:some View{
+        Text("USERMODES").font(.title).bold().hLeading()
+        .foregroundColor(Color.GHOSTWHITE)
+        .padding()
+    }
+    
+    var sectionGuest:some View{
+        Section(header:Text("Guest").foregroundColor(.white).bold(),
+                content: {
+            Text(guestText).foregroundColor(.black)
+        })
+    }
+    
+    var sectionMember:some View{
+        Section(header:Text("Member").foregroundColor(.white).bold(),
+                content: {
+            Text(guestText).foregroundColor(.black)
+        })
+    }
+    
+    var sectionRegistred:some View{
+        Section(header:Text("Member").foregroundColor(.white).bold(),
+                content: {
+            Text(memberText).foregroundColor(.black)
+        })
+    }
+    
+    var infoBody:some View{
+        VStack(spacing:0){
+            infoLabel
+            List{
+                sectionGuest
+                sectionRegistred
+            }
+            .listStyle(.insetGrouped)
+        }
+        
+    }
+    
+    var body:some View{
+        NavigationView{
+            AppBackgroundStack(content: {
+                infoBody
+            })
+            .modifier(NavigationViewModifier(title: ""))
+        }
+        .hiddenBackButtonWithCustomTitle("Ok, gotcha!")
+    }
+}
