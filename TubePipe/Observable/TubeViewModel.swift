@@ -875,8 +875,32 @@ extension TubeViewModel{
             center: settingsVar.center)
     }
     
-    // MARK: - USER DEFAULT
-    // TODO: - THIS CRASHES IF USER IS DELETED FROM FIREBASE BUT I DONT THINK THAT IS AN ISSUE, BUT FIX ANYWAYS
+    func collectModelRenderState() -> UInt8{
+        var state:UInt8 = 0
+        for op in stride(from: DrawOption.indexOf(op: .FULL_SIZE_MUFF),
+                         to: DrawOption.indexOf(op: .ALL_OPTIONS),
+                         by: 1){
+            if userDefaultSettingsVar.drawOptions[op]{
+                switch op{
+                case DrawOption.indexOf(op: .DRAW_FILLED_MUFF):         state += RenderOption.indexOf(op: .FILL_MUFF)
+                case DrawOption.indexOf(op: .DRAW_LINED_MUFF):          state += RenderOption.indexOf(op: .LINE_MUFF)
+                case DrawOption.indexOf(op: .DRAW_SEE_THROUGH_MUFF):    state += RenderOption.indexOf(op: .SEE_THROUGH_MUFF)
+                case DrawOption.indexOf(op: .SHOW_WHOLE_MUFF):          state += RenderOption.indexOf(op: .WHOLE_MUFF)
+                case DrawOption.indexOf(op: .SHOW_SPLIT_MUFF):          state += RenderOption.indexOf(op: .SPLIT_MUFF)
+                case DrawOption.indexOf(op: .FULL_SIZE_MUFF):           state += RenderOption.indexOf(op: .FULL_SIZE_MUFF)
+                case DrawOption.indexOf(op: .SCALED_SIZE_MUFF):         state += RenderOption.indexOf(op: .SCALED_SIZE_MUFF)
+                case DrawOption.indexOf(op: .SHOW_WORLD_AXIS):          state += RenderOption.indexOf(op: .WORLD_AXIS)
+                default: break
+                }
+            }
+        }
+        return state
+    }
+}
+
+// MARK: - USER DEFAULT
+// TODO: - THIS CRASHES IF USER IS DELETED FROM FIREBASE BUT I DONT THINK THAT IS AN ISSUE, BUT FIX ANYWAYS
+extension TubeViewModel{
     func loadUserDefaultValues(){
         guard let userId = FirebaseAuth.userId else { return }
         guard let userSettings = SharedPreference.loadUserSettingsFromStorage(userId) else{
@@ -911,6 +935,14 @@ extension TubeViewModel{
         }
     }
     
+    func setUserdefaultDrawOption(with value:Bool,op:DrawOption){
+        userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: op)] = value
+    }
+    
+    func getUserdefaultDrawOptionValue(_ op:DrawOption) -> Bool{
+        return userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: op)]
+    }
+    
     func saveUserDefaultDrawingValues(){
         guard let userId = FirebaseAuth.userId else { return }
         if userDefaultSettingsVar.drawingHasChanged{
@@ -930,27 +962,6 @@ extension TubeViewModel{
             userDefaultSettingsVar.preferredSetting = preferredSetting
             userDefaultSettingsVar.showPreferredSettings()
         }
-    }
-    
-    func collectModelRenderState() -> UInt8{
-        var state:UInt8 = 0
-        for op in stride(from: DrawOption.indexOf(op: .FULL_SIZE_MUFF),
-                         to: DrawOption.indexOf(op: .ALL_OPTIONS),
-                         by: 1){
-            if userDefaultSettingsVar.drawOptions[op]{
-                switch op{
-                case DrawOption.indexOf(op: .DRAW_FILLED_MUFF):         state += RenderOption.indexOf(op: .FILL_MUFF)
-                case DrawOption.indexOf(op: .DRAW_LINED_MUFF):          state += RenderOption.indexOf(op: .LINE_MUFF)
-                case DrawOption.indexOf(op: .DRAW_SEE_THROUGH_MUFF):    state += RenderOption.indexOf(op: .SEE_THROUGH_MUFF)
-                case DrawOption.indexOf(op: .SHOW_WHOLE_MUFF):          state += RenderOption.indexOf(op: .WHOLE_MUFF)
-                case DrawOption.indexOf(op: .SHOW_SPLIT_MUFF):          state += RenderOption.indexOf(op: .SPLIT_MUFF)
-                case DrawOption.indexOf(op: .FULL_SIZE_MUFF):           state += RenderOption.indexOf(op: .FULL_SIZE_MUFF)
-                case DrawOption.indexOf(op: .SCALED_SIZE_MUFF):         state += RenderOption.indexOf(op: .SCALED_SIZE_MUFF)
-                default: break
-                }
-            }
-        }
-        return state
     }
 }
 

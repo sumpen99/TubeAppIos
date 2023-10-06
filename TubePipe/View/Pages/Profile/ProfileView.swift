@@ -323,10 +323,10 @@ extension ProfileView{
     
     func saveChangesPart1(userId:String){
         if pVar.displayName.isEmpty { pVar.profileAlertAction = .ALERT_MISSING_DISPLAYNAME; return }
-        saveChangesPart3(userId: userId)
+        saveChangesPart2(userId: userId)
     }
     
-    func saveChangesPart3(userId:String){
+    func saveChangesPart2(userId:String){
         let allowSharing = tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ALLOW_SHARING)]
         let newUserModeString = UserMode.boolToUserModeString(allowSharing)
         

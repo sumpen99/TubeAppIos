@@ -96,6 +96,7 @@ class UserPreferredSetting: NSObject, NSCoding ,NSSecureCoding{
         arr[DrawOption.indexOf(op: .SHOW_WHOLE_MUFF)] = true
         arr[DrawOption.indexOf(op: .DRAW_FILLED_MUFF)] = true
         arr[DrawOption.indexOf(op: .FULL_SIZE_MUFF)] = true
+        arr[DrawOption.indexOf(op: .SHOW_WORLD_AXIS)] = true
         self.init(segment: nil,radius:nil,dimension:nil,length:nil,drawOptions: arr)
     }
   

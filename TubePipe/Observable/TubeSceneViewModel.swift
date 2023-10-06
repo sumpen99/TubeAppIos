@@ -16,6 +16,7 @@ enum RenderOption{
     case SEE_THROUGH_MUFF
     case FULL_SIZE_MUFF
     case SCALED_SIZE_MUFF
+    case WORLD_AXIS
 }
 
 enum RenderNode: String{
@@ -33,6 +34,7 @@ extension RenderOption{
         case .SEE_THROUGH_MUFF:     return 16
         case .FULL_SIZE_MUFF:       return 32
         case .SCALED_SIZE_MUFF:     return 64
+        case .WORLD_AXIS:           return 128
         }
     }
     static func indexOfBit(op:RenderOption) -> UInt8{
@@ -44,6 +46,7 @@ extension RenderOption{
         case .SEE_THROUGH_MUFF:     return 4
         case .FULL_SIZE_MUFF:       return 5
         case .SCALED_SIZE_MUFF:     return 6
+        case .WORLD_AXIS:           return 7
         }
     }
 }
@@ -164,9 +167,13 @@ class TubeSceneViewModel: ObservableObject {
         for node in parentNode.childNodes{
             node.removeFromParentNode()
         }
+        for node in scnScene.rootNode.childNodes{
+            node.removeFromParentNode()
+        }
+        parentNode = SCNNode()
         meshCube.reset()
     }
-    
+        
     func updatePosition(onAxis axis:AxisDirection,with pos:SCNFloat){
         switch axis{
         case .AXIS_X:   scnScene.rootNode.simdLocalTranslate(by: simd_float3(pos,0,0))
@@ -193,10 +200,14 @@ extension TubeSceneViewModel{
                          RenderOption.indexOf(op: .LINE_MUFF) |
                          RenderOption.indexOf(op: .SEE_THROUGH_MUFF))
     }
+    func clearRenderWorldAxisPart(){
+        renderState &= ~(RenderOption.indexOf(op: .WORLD_AXIS))
+    }
     func isRenderBitSet(_ bit:UInt8) -> Bool{ return (renderState & (1 << bit)) != 0 }
     
     var splitHalf:Bool{ isRenderBitSet(RenderOption.indexOfBit(op: .SPLIT_MUFF))}
     var isMuff:Bool{ renderNode == .NODE_MUFF }
+    var isWorldAxis:Bool{ isRenderBitSet(RenderOption.indexOfBit(op: .WORLD_AXIS))}
     
     var renderSizePart: UInt8{
         let clearBits:UInt8 =
@@ -285,6 +296,8 @@ extension TubeSceneViewModel{
 extension TubeSceneViewModel{
     
     func addWorldAxis(dimension:CGFloat){
+        debugLog(object: "should show world axis \(isWorldAxis)")
+        if(!isWorldAxis){ return }
         let axis:SCNNode = SCNNode()
         let worldAxisDirection: [WorldAxisDirection] = [
             WorldAxisDirection(axisDirection: .AXIS_X,extrusionDepth: 2.0),

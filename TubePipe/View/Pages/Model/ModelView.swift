@@ -47,9 +47,18 @@ struct ModelView: View{
             tubeSceneViewModel.buildSteelFromTubePoints(tubeViewModel.steelPotentiallyScaled(renderSizePart: tubeSceneViewModel.renderSizePart),dimension: tubeViewModel.settingsVar.steel)
             tubeSceneViewModel.addWorldAxis(dimension: tubeViewModel.settingsVar.dimension)
             DispatchQueue.main.async {
-                tubeSceneViewModel.publishScene()
+                withAnimation{
+                    tubeSceneViewModel.publishScene()
+                }
             }
         }
+    }
+    
+    func toggleWorldAxis(){
+        let newVal = tubeViewModel.getUserdefaultDrawOptionValue(.SHOW_WORLD_AXIS)
+        tubeViewModel.setUserdefaultDrawOption(with: !newVal, op: .SHOW_WORLD_AXIS)
+        tubeViewModel.saveUserDefaultDrawingValues()
+        renderNewScene()
     }
     
     var body:some View{
@@ -63,8 +72,8 @@ struct ModelView: View{
                 switch item{
                 case ActiveModelSheet.OPEN_MODEL_SETTINGS:
                     ModelSettingsView(renderNewState: $renderNewState)
-                        .presentationDragIndicator(.visible)
-                        .presentationDetents([.medium])
+                    .presentationDragIndicator(.visible)
+                    .presentationDetents([.medium])
                 }
                 
             }
@@ -75,9 +84,10 @@ struct ModelView: View{
                     }
                 }
                 ToolbarItem(placement: .principal) {
-                    Button(action:{
-                    }){
-                        Image(systemName: "move.3d")
+                    Button(action: toggleWorldAxis){
+                        RotateImageView(isActive:
+                                            self.$tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .SHOW_WORLD_AXIS)],
+                                        name: "move.3d")
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
