@@ -15,7 +15,6 @@ struct SortedContactListVar{
 
 struct ShareDocumentView:View{
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var dialogPresentation: DialogPresentation
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @State var docContent:DocumentContent = DocumentContent()
@@ -95,7 +94,6 @@ struct ShareDocumentView:View{
             }
             
         }
-        .customDialog(presentationManager: dialogPresentation)
         .alert(isPresented: $isSendResult, content: { onResultAlert(action: closeView) })
         .onChange(of: sclVar.showingOptions){ value in
            withAnimation{

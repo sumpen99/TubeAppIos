@@ -76,7 +76,7 @@ struct ProfileView: View{
     @Namespace var animation
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
-    @EnvironmentObject var dialogPresentation: DialogPresentation
+    @EnvironmentObject var globalLoadingPresentation: GlobalLoadingPresentation
     @EnvironmentObject var firebaseAuth: FirebaseAuth
     @FocusState var focusField: Field?
     @State var pVar:ProfileVariables = ProfileVariables()
@@ -243,7 +243,6 @@ struct ProfileView: View{
             }
             .modifier(NavigationViewModifier(title: ""))
         }
-        .customDialog(presentationManager: dialogPresentation)
         .modifier(DeleteAccountModifier(isPresented: $pVar.isDeleteAccount,email: firestoreViewModel.currentUserEmail, onAction: deleteAccountAndAllData))
         .actionSheet(item: $pVar.profileAlertAction){ alert in
             switch alert{
@@ -255,6 +254,12 @@ struct ProfileView: View{
         .onAppear(){
             pVar.updateUserVar(currentUser: firestoreViewModel.currentUser)
             tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ALLOW_SHARING)] = firestoreViewModel.isCurrentUserPublic
+            
+            
+            globalLoadingPresentation.startLoading()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 10.5){
+                globalLoadingPresentation.stopLoading()
+            }
         }
     }
     
@@ -346,7 +351,7 @@ extension ProfileView{
                           userId:String,
                           allowSharing:Bool,
                           newUserModeStr:String){
-        dialogPresentation.show(content: .autofillProgressView())
+        globalLoadingPresentation.startLoading()
         firestoreViewModel.saveUpdatedUserMode(contact:contact,
                                                userId: userId,
                                                displayName: pVar.displayName,
@@ -357,8 +362,7 @@ extension ProfileView{
             if result.isSuccess && userModeHasChanged{
                 tubeViewModel.saveUserDefaultDrawingValues()
             }
-            dialogPresentation.presentedText = result.message
-            dialogPresentation.closeWithAnimationAfter(time: 2.5)
+            globalLoadingPresentation.stopLoading()
         }
     }
     

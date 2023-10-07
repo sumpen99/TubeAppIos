@@ -10,7 +10,7 @@ import SwiftUI
 struct MainView: View{
     @EnvironmentObject var firebaseAuth: FirebaseAuth
     @StateObject var tubeViewModel = TubeViewModel()
-    @StateObject var dialogPresentation = DialogPresentation()
+    @StateObject var globalDialogPresentation = GlobalLoadingPresentation()
     @StateObject var coreDataViewModel = CoreDataViewModel()
     @StateObject var navigationViewModel = NavigationViewModel()
     
@@ -39,7 +39,7 @@ struct MainView: View{
     
     var anonymousMenu:some View{
         VStack{
-            splitLine
+            SplitLineProgressView(isLoading: $globalDialogPresentation.isLoading)
             LazyVGrid(columns: layoutAnonymous, pinnedViews: [.sectionHeaders]){
                 menuItem(tabItem: MainTabItem.HOME, img: "house.fill", label: "Home")
                 menuItem(tabItem: MainTabItem.MODEL, img: "rotate.3d", label: "Model")
@@ -52,7 +52,7 @@ struct MainView: View{
     
     var registredMenu:some View{
         VStack{
-            splitLine
+            SplitLineProgressView(isLoading: $globalDialogPresentation.isLoading)
             LazyVGrid(columns: layoutRegistred,pinnedViews: [.sectionHeaders]){
                 menuItem(tabItem: MainTabItem.HOME, img: "house.fill", label: "Home")
                 menuItem(tabItem: MainTabItem.MODEL, img: "rotate.3d", label: "Model")
@@ -76,6 +76,7 @@ struct MainView: View{
             }
         }
         .safeAreaInset(edge: .bottom){ bottomMenu }
+        .globalLoadingDialog(presentationManager: globalDialogPresentation)
     }
     
     @ViewBuilder
@@ -95,7 +96,7 @@ struct MainView: View{
         .environmentObject(coreDataViewModel)
         .environmentObject(tubeViewModel)
         .environmentObject(navigationViewModel)
-        .environmentObject(dialogPresentation)
+        .environmentObject(globalDialogPresentation)
     }
     
 }

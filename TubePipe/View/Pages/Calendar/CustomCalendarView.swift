@@ -41,7 +41,6 @@ struct CustomCalendarView: View {
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @EnvironmentObject var navigationViewModel: NavigationViewModel
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
-    @EnvironmentObject var dialogPresentation: DialogPresentation
     @EnvironmentObject var firebaseAuth: FirebaseAuth
     @Environment(\.managedObjectContext) var managedObjectContext
     @State var selected:Selected = Selected()

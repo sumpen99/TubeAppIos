@@ -100,10 +100,6 @@ extension View{
         clipShape( RoundedCorners(radius: radius, corners: corners) )
     }
     
-    func customDialog(presentationManager: DialogPresentation) -> some View {
-        self.modifier(CustomDialog(presentationManager: presentationManager))
-    }
-    
     func onConditionalAlert(actionPrimary:@escaping (()-> Void),
                         actionSecondary:@escaping (()-> Void)) -> Alert{
         return Alert(
