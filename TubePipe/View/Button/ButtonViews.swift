@@ -17,12 +17,12 @@ struct TapAndHoldButton: View{
     var body: some View{
         Button(action: {} ){
             Image(systemName: imageName)
-            .font(.largeTitle)
+            .font(.title)
             .bold()
             .foregroundColor(.white)
             .padding()
             .background(color)
-            .frame(width: 42,height:42)
+            .frame(width: 36,height:36)
             .clipShape(Circle())
          }
         .background(Group { if self.pressingState { TimeEventGeneratorView(callback: holdAction) }})

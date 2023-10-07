@@ -68,27 +68,23 @@ struct SliderSection:View{
     }
     
     var primarySliderSection:some View{
-        VStack(spacing:10){
-            sliderButtons
-        }
+        sliderButtons
         .onChange(of: sliderValue){ newValue in
             textfieldValue = "\(Int(newValue))"
             tubeViewModel.rebuild()
             tubeViewModel.settingsVar.redraw.toggle()
         }
-        .padding([.leading,.trailing])
+        .padding([.leading,.trailing,.bottom])
     }
     
     var alignemntSliderSection: some View{
-        VStack(spacing:10){
-            alignmentSliderButtons()
-        }
+        alignmentSliderButtons()
         .onChange(of: sliderValue){ newValue in
             tubeViewModel.settingsVar.alreadyCalculated = true
             tubeViewModel.calculate()
             tubeViewModel.settingsVar.redraw.toggle()
         }
-        .padding([.leading,.trailing])
+        .padding([.leading,.trailing,.bottom])
     }
     
     var body: some View{

@@ -92,7 +92,7 @@ struct ModelView: View{
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink(destination:LazyDestination(destination: {
-                        TubeHelpView()
+                        ModelHelpView()
                     })){
                         Image(systemName: "info.circle")
                     }

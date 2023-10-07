@@ -8,7 +8,7 @@
 import SwiftUI
 
 let ANIMATION_DURATION:CGFloat = 0.7
-let SHOW_CHECKMARK_AFTER_ANIMATION:CGFloat = ANIMATION_DURATION + 0.3
+let SHOW_CHECKMARK_AFTER_ANIMATION:CGFloat = ANIMATION_DURATION + 1.3
 
 enum GlobalDialogContent: View {
     case globalAutoFillProgressView
@@ -32,21 +32,28 @@ final class GlobalLoadingPresentation: ObservableObject {
     @Published var isLoading = false
     @Published var isPresented = false
     @Published var dialogContent: GlobalDialogContent?
+    var loadingIsSuccess:Bool = true
+    var messageAfterLoading:String = "Success"
   
     func startLoading(){
         withAnimation{
+            loadingIsSuccess = true
             isLoading = true
         }
      }
     
-    func stopLoading(){
+    func stopLoading(isSuccess:Bool,message:String){
         withAnimation{
+            loadingIsSuccess = isSuccess
+            messageAfterLoading = message
             isLoading = false
             show(content: .globalAutoFillProgressView)
         }
     }
     
     func close(){
+        loadingIsSuccess = true
+        messageAfterLoading = ""
         isPresented = false
     }
     
@@ -79,28 +86,15 @@ struct GlobalLoadingDialog:ViewModifier{
     }
 }
 
-struct AnimatedPath:Shape{
-    func path(in rect:CGRect) -> Path{
-        debugLog(object: rect.minX)
-        debugLog(object: rect.maxX)
-        debugLog(object: rect.minY)
-        debugLog(object: rect.maxY)
-        var path = Path()
-        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
-        path.move(to: CGPoint(x: rect.maxX/2.0, y: rect.minY))
-        path.move(to: CGPoint(x: rect.maxX, y: rect.maxY))
-        return path
-    }
-}
-
 struct AnimatedRectangle:View{
     
     @State private var percentage: CGFloat = .zero
     var body:some View{
         Rectangle()
         .trim(from: percentage/2.0,to: percentage)
-        .stroke(Gradient(colors: [Color.green, .white]), lineWidth: 2.0)
+        .stroke(Color.green, lineWidth: 2.0)
         .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses:true), value: percentage)
+        .frame(height: 1)
         .onAppear {
             self.percentage = 0.5
         }
@@ -116,7 +110,9 @@ struct SplitLineProgressView:View{
     }
     
     var loadingLine:some View{
-        AnimatedRectangle().frame(height: 1)
+        splitLine.overlay{
+            AnimatedRectangle()
+        }
     }
     
     var baseLine:some View{
@@ -152,6 +148,7 @@ struct SplitLineProgressView:View{
 }
 
 struct GlobalAutoFillProgressView: View {
+    @EnvironmentObject var globalLoadingPresentation: GlobalLoadingPresentation
     var body: some View {
         GeometryReader{ reader in
             let scale = min(reader.size.width,reader.size.height) / 4.0
@@ -159,9 +156,7 @@ struct GlobalAutoFillProgressView: View {
             let rad = scale / 6.0
             ZStack{
                 Color.white
-                HStack{
-                    GlobalRingSpinner(size:scale)
-                }
+                GlobalRingSpinner(size:scale)
             }
             .allowsHitTesting(false)
             .ignoresSafeArea(.all)
@@ -182,27 +177,43 @@ struct GlobalRingSpinner : View {
     var animation: Animation {
         Animation.easeIn(duration: ANIMATION_DURATION)
     }
-
-    var body: some View {
+    
+    var animatedCircle:some View{
         ZStack {
             Circle()
                 .trim(from: 0.0, to: 1.0)
                 .stroke(style: StrokeStyle(lineWidth: LINE_WIDTH_ANIMATED, lineCap: .round, lineJoin: .round))
                 .opacity(0.3)
-                .foregroundColor(Color.green)
+                .foregroundColor(globalLoadingPresentation.loadingIsSuccess ? Color.green : Color.red)
                 .rotationEffect(.degrees(90.0))
             GlobalInnerRing(stopAnimating: $stopAnimating,pct: pct)
-            .stroke(Color.green, lineWidth: LINE_WIDTH_ANIMATED)
+            .stroke(globalLoadingPresentation.loadingIsSuccess ? Color.green : Color.red, lineWidth: LINE_WIDTH_ANIMATED)
             if stopAnimating{
-                Image(systemName: "checkmark")
+                Image(systemName: globalLoadingPresentation.loadingIsSuccess ? "checkmark" : "exclamationmark.triangle")
                 .resizable()
                 .frame(width: size*0.3,height: size*0.3)
-                .foregroundColor(Color.systemGreen)
+                .foregroundColor(globalLoadingPresentation.loadingIsSuccess ? Color.green : Color.red)
                 
             }
         }
         .padding()
         .frame(width: size,height: size)
+        .hLeading()
+    }
+    
+    var message:some View{
+        Text(globalLoadingPresentation.messageAfterLoading)
+        .foregroundColor(globalLoadingPresentation.loadingIsSuccess ? Color.green : Color.red)
+        .lineLimit(1)
+        .padding(.trailing)
+        .hLeading()
+    }
+
+    var body: some View {
+        HStack{
+            animatedCircle
+            message
+        }
         .hLeading()
         .onAppear(){
             startAnimation()

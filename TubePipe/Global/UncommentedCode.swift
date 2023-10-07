@@ -349,6 +349,6 @@ if let w = sceneView.scene.rootNode.childNode(withName: name, recursively: true)
      }
      
  }
-
+ https:www.freepik.com/free-vector/touch-gestures-icons_1537226.htm#query=swipe%20gesture&position=0&from_view=keyword&track=ais
 
 */

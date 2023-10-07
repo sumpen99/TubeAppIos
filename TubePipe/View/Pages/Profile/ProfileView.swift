@@ -254,12 +254,6 @@ struct ProfileView: View{
         .onAppear(){
             pVar.updateUserVar(currentUser: firestoreViewModel.currentUser)
             tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ALLOW_SHARING)] = firestoreViewModel.isCurrentUserPublic
-            
-            
-            globalLoadingPresentation.startLoading()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 10.5){
-                globalLoadingPresentation.stopLoading()
-            }
         }
     }
     
@@ -362,7 +356,7 @@ extension ProfileView{
             if result.isSuccess && userModeHasChanged{
                 tubeViewModel.saveUserDefaultDrawingValues()
             }
-            globalLoadingPresentation.stopLoading()
+            globalLoadingPresentation.stopLoading(isSuccess:result.isSuccess,message: result.message)
         }
     }
     

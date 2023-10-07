@@ -8,11 +8,11 @@
 import Foundation
 
 struct SettingsVar:Codable{
-    var dimension:CGFloat = 720.0
+    var dimension:CGFloat = 160.0
     var segment:CGFloat = 1.0
-    var steel:CGFloat = 300.0
+    var steel:CGFloat = 68.0
     var grader:CGFloat = 90.0
-    var radie:CGFloat = 500.0
+    var radie:CGFloat = 100.0
     var lena:CGFloat = 500.0
     var lenb:CGFloat = 500.0
     var center: CGFloat = 0.0

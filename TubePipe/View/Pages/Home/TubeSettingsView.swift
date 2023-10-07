@@ -254,10 +254,10 @@ struct TubeSettingsView:View{
     
     //MARK: - SWITCHES
     @ViewBuilder
-    func getSwitchSection(header:String,index:Int) -> some View{
+    func getSwitchSection(header:String,imageName:String,index:Int) -> some View{
         VStack{
             HStack{
-                filledCircleWithColor(.black,size: 10.0)
+                listDotWithImage(imageName)
                 Text(header).font(.body).foregroundColor(.black)
                 Spacer()
                 Toggle(isOn: self.$tubeViewModel.userDefaultSettingsVar.drawOptions[index]){}
@@ -368,30 +368,39 @@ struct TubeSettingsView:View{
         switch index{
         case DrawOption.indexOf(op: .LABELSDEGREES):
             getSwitchSection(header: "Labels Degree",
+                             imageName: "goforward.90",
                              index: DrawOption.indexOf(op: .LABELSDEGREES))
         case DrawOption.indexOf(op: .LABELSLENGTH):
             getSwitchSection(header: "Labels Length",
+                             imageName: "textformat.123",
                              index: DrawOption.indexOf(op: .LABELSLENGTH))
         case DrawOption.indexOf(op: .CUTLINES):
             getSwitchSection(header: "Cutlines",
+                             imageName: "line.diagonal",
                              index: DrawOption.indexOf(op: .CUTLINES))
         case DrawOption.indexOf(op: .CENTERLINE):
             getSwitchSection(header: "Center triangle",
+                             imageName: "triangle",
                              index: DrawOption.indexOf(op: .CENTERLINE))
         case DrawOption.indexOf(op: .DIAGONALLINE):
             getSwitchSection(header: "Diagonal line",
+                             imageName: "line.diagonal.arrow",
                              index: DrawOption.indexOf(op: .DIAGONALLINE))
         case DrawOption.indexOf(op: .MIDPOINT):
             getSwitchSection(header: "Midpoint",
+                             imageName: "circle.and.line.horizontal",
                              index: DrawOption.indexOf(op: .MIDPOINT))
         case DrawOption.indexOf(op: .BOUNDINGBOX):
             getSwitchSection(header: "Boundingbox",
+                             imageName: "rectangle",
                              index: DrawOption.indexOf(op: .BOUNDINGBOX))
         case DrawOption.indexOf(op: .TUBE_CENTERLINE):
             getSwitchSection(header: "Muff centerline",
+                             imageName: "point.topleft.down.curvedto.point.bottomright.up.fill",
                              index: DrawOption.indexOf(op: .TUBE_CENTERLINE))
         case DrawOption.indexOf(op: .FULLCIRCLE):
             getSwitchSection(header: "Full circle",
+                             imageName: "square.circle",
                              index: DrawOption.indexOf(op: .FULLCIRCLE))
         default: EmptyView()
         }

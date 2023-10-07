@@ -247,6 +247,12 @@ func filledCircleWithColor(_ color:Color = .white,
     .padding(padding)
 }
 
+func listDotWithImage(_ name:String = "gearshape",
+                           padding:CGFloat = 2.0) -> some View{
+    Image(systemName: name)
+    .padding(padding)
+}
+
 func hSplitLine(color:Color) -> some View{
     HStack{
         Rectangle().fill(color).frame(height: 1)

@@ -67,6 +67,10 @@ extension Text{
         self.foregroundColor(color).bold()
     }
     
+    func listSectionFooter(color:Color = .systemGray) -> some View{
+        self.foregroundColor(color).italic()
+    }
+    
     func leadingSectionHeader(color:Color = .black) -> some View{
         self.foregroundColor(color).bold().hLeading()
     }
