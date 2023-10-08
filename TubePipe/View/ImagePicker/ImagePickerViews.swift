@@ -41,7 +41,10 @@ struct ImagePickerSwiftUi:View {
                                         image = nil
                                     }
                                     
-                                }).hTrailing()
+                                })
+                                .foregroundColor(.red)
+                                .vBottom()
+                                .hTrailing()
                             }
                         }
                         

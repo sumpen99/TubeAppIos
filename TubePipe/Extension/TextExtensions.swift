@@ -136,11 +136,11 @@ extension TextField{
     func preferedDocumentField() -> some View{
         self
             .multilineTextAlignment(.leading)
-            .lineLimit(5)
             .font(Font(UIFont.preferredFont(forTextStyle: .body)))
             .keyboardType(UIKeyboardType.asciiCapable)
             .removePredictiveSuggestions()
             .foregroundColor(Color.black)
+            .hLeading()
     }
     
     func preferedTubeSettingsField() -> some View{

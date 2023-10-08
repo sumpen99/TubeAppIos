@@ -25,6 +25,14 @@ struct ShareDocumentView:View{
         sclVar.currentContact == nil
     }
     
+    //person.crop.circle.fill.badge.xmark
+    @ViewBuilder
+    var toogleContactsButton:some View{
+        Image(systemName: sclVar.isSuggestionShowing ? "chevron.up" : "chevron.down")
+        .foregroundColor(Color.systemGray)
+        .hTrailing()
+    }
+    
     var shareButton: some View{
         HStack{
             Button(action: startSendingMessageProcess,label: {
@@ -48,25 +56,51 @@ struct ShareDocumentView:View{
                maxHeight: 100 * CGFloat(min(3,firestoreViewModel.confirmedContacts.count)))
     }
     
-    var reciever: some View{
-        VStack(spacing: 5.0){
+    @ViewBuilder
+    var contactField:some View{
+        HStack{
+            Label("Send to: ",systemImage: "person.crop.square").foregroundColor(Color.systemGray)
+             toogleContactsButton
+            
+        }
+        .hLeading()
+        .contentShape(Rectangle())
+        .onTapGesture {
+            withAnimation{
+                sclVar.isSuggestionShowing.toggle()
+            }
+        }
+        Divider()
+        if sclVar.isSuggestionShowing{
+            suggestionsList
+        }
+    }
+    
+    @ViewBuilder
+    var clearContactField:some View{
+        if sclVar.currentContact != nil{
             HStack{
-                Label("Send to: ",systemImage: "person.crop.square").foregroundColor(Color.systemGray)
-                if sclVar.currentContact != nil{
-                    Text(sclVar.currentContact?.displayName ?? "")
+                let initial = sclVar.currentContact?.initial ?? ""
+                Label(sclVar.currentContact?.displayName ?? "",
+                      systemImage: "bubbles.and.sparkles")
+                .font(.title)
+                .bold()
+                .foregroundColor(Color[initial])
+                .hLeading()
+                Button(action: { withAnimation{ sclVar.currentContact = nil } }){
+                    Image(systemName: "xmark")
+                    .foregroundColor(.red)
                 }
             }
             .hLeading()
-            .contentShape(Rectangle())
-            .onTapGesture {
-                withAnimation{
-                    sclVar.isSuggestionShowing.toggle()
-                }
-            }
-            Divider()
-            if sclVar.isSuggestionShowing{
-                suggestionsList
-            }
+            .padding(.top)
+        }
+    }
+    
+    var reciever: some View{
+        VStack(spacing: 5.0){
+            contactField
+            clearContactField
             
         }
         .halfSheetWhitePadding()
