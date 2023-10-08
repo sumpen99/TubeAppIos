@@ -291,11 +291,12 @@ struct ProfileView: View{
         .fullListWidthSeperator()
     }
     
+    //lifepreserver
     var navigateToHelpCenter:some View{
         NavigationLink(destination:LazyDestination(destination: {
-            InfoView()
+            FeatureView()
         })){
-            Label("Support",systemImage: "lifepreserver").foregroundColor(.black)
+            Label("Feature",systemImage: "lightbulb").foregroundColor(.black)
             .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemRed))
         }
         .fullListWidthSeperator()
