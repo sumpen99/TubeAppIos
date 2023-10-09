@@ -162,12 +162,14 @@ struct SortedContactsList: View{
     }
     
     func contactSection(_ initial:String) -> some View{
-        Section(header: Text(initial).sectionText(font: .largeTitle,color: Color.systemGray).padding(.leading)){
+        Section {
             LazyVStack{
                 ForEach(firestoreViewModel.confirmedContacts[initial] ?? [],id:\.self){ contact in
                     contactDescription(contact)
                 }
             }
+        } header: {
+            Text(initial).sectionText(font: .largeTitle,color: Color.systemGray).padding(.leading)
         }
     }
     

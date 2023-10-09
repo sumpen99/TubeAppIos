@@ -12,11 +12,13 @@ struct AnonymousProfileView:View{
     var footerText:String = "Navigate to information page and have a look at the benefits of joining the TubePipe community."
     
     var accountSection:some View{
-        Section(header:Text("Account").foregroundColor(.white).bold(),
-                footer: Text(footerText).foregroundColor(.white),
-                content: {
-                    navigateToRegisterPage
-        })
+        Section {
+            navigateToRegisterPage
+        } header: {
+            Text("Account").foregroundColor(.white).bold()
+        } footer: {
+            Text(footerText).listSectionFooter()
+        }
     }
     
     var personalPage:some View{

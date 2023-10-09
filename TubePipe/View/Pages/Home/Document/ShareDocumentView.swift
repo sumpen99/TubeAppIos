@@ -101,9 +101,9 @@ struct ShareDocumentView:View{
         VStack(spacing: 5.0){
             contactField
             clearContactField
-            
         }
         .halfSheetWhitePadding()
+        .padding(.top)
     }
     
     var mainContent:some View{
@@ -121,12 +121,13 @@ struct ShareDocumentView:View{
     }
     
     var body: some View{
-        VStack{
+        VStack(spacing:0){
             TopMenu(title: "Share document", actionCloseButton: closeView)
-            Section(header: Text(Date().formattedString()).sectionTextSecondary(color:.tertiaryLabel).padding(.leading)){
+            Section {
                 mainContent
+            } header:{
+                Text(Date().formattedString()).sectionTextSecondary(color:.tertiaryLabel).padding(.leading)
             }
-            
         }
         .alert(isPresented: $isSendResult, content: { onResultAlert(action: closeView) })
         .onChange(of: sclVar.showingOptions){ value in

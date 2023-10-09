@@ -70,11 +70,13 @@ struct ContactRequestView:View{
         ScrollView{
             LazyVStack(){
                 ForEach(requestsAwaitingheader,id:\.self){ header in
-                    Section(header: Text("\(header.rawValue):")
-                                    .sectionText(color:.systemGray)
-                                    .padding(.leading)){
+                    Section {
                         if header == .REQUEST_SENT { pendingContactRequestSection}
                         else{ recievedContactRequestSection}
+                    } header: {
+                        Text("\(header.rawValue):")
+                        .sectionText(color:.systemGray)
+                        .padding(.leading)
                     }
                     Divider()
                 }

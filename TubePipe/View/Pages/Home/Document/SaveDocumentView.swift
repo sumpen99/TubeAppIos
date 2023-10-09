@@ -36,10 +36,12 @@ struct SaveDocumentView:View{
     }
     
     var body: some View{
-        VStack{
+        VStack(spacing:0){
             TopMenu(title: "Save document", actionCloseButton: closeView)
-            Section(header: Text(Date().formattedString()).sectionTextSecondary(color:.tertiaryLabel).padding(.leading)){
+            Section {
                 mainContent
+            } header: {
+                Text(Date().formattedString()).sectionTextSecondary(color:.tertiaryLabel).padding(.leading)
             }
         }
         .onTapGesture{ endTextEditing() }

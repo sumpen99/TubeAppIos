@@ -190,65 +190,70 @@ struct TubeSettingsView:View{
     
     //MARK: - SLIDERS
     var alignment: some View{
-        Section(header: Text("Align Center").foregroundColor(Color.systemGray)) {
+        Section {
             SliderSection(sliderValue: $tubeViewModel.settingsVar.center,
                           minValue: -CGFloat.infinity,
                           maxValue: CGFloat.infinity,
                           textEnding: "",
                           textfieldValue: "",
                           isNotAlignmentSection: false)
+        } header: {
+            Text("Align Center").foregroundColor(Color.systemGray)
         }
+   
     }
  
     func getCategorieCell(_ item:SettingsOption) -> some View{
-        return Section(header: Text(item.rawValue).foregroundColor(Color.systemGray)) {
-                switch item{
-                case .DEGREES:
-                    VStack{
-                        SliderSection(sliderValue: $tubeViewModel.settingsVar.grader,
-                                      minValue: 0.0,
-                                      maxValue: 360.0,
-                                      textEnding: "°",
-                                      textfieldValue: "\(Int(tubeViewModel.settingsVar.grader))")
-                    }
-                    
-                case .DIMENSION:
-                    SliderSection(sliderValue: $tubeViewModel.settingsVar.dimension,
-                                  minValue: 1.0,
-                                  maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.dimension),
-                                  textEnding: "mm",
-                                  textfieldValue: "\(Int(tubeViewModel.settingsVar.dimension))")
-                case .SEGMENT:
-                    SliderSection(sliderValue: $tubeViewModel.settingsVar.segment,
+        return Section {
+            switch item{
+            case .DEGREES:
+                VStack{
+                    SliderSection(sliderValue: $tubeViewModel.settingsVar.grader,
                                   minValue: 0.0,
-                                  maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.segment),
-                                  textEnding: "st",
-                                  textfieldValue: "\(Int(tubeViewModel.settingsVar.segment))")
-                case .STEEL:
-                    SliderSection(sliderValue: $tubeViewModel.settingsVar.steel,
-                                  minValue: 1.0,
-                                  maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.dimension),
-                                  textEnding: "mm",
-                                  textfieldValue: "\(Int(tubeViewModel.settingsVar.steel))")
-                case .RADIUS:
-                    SliderSection(sliderValue: $tubeViewModel.settingsVar.radie,
-                                  minValue: 1.0,
-                                  maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.radius),
-                                  textEnding: "mm",
-                                  textfieldValue: "\(Int(tubeViewModel.settingsVar.radie))")
-                case .LENA:
-                    SliderSection(sliderValue: $tubeViewModel.settingsVar.lena,
-                                  minValue: 1.0,
-                                  maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.length),
-                                  textEnding: "mm",
-                                  textfieldValue: "\(Int(tubeViewModel.settingsVar.lena))")
-                case .LENB:
-                    SliderSection(sliderValue: $tubeViewModel.settingsVar.lenb,
-                                  minValue: 1.0,
-                                  maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.length),
-                                  textEnding: "mm",
-                                  textfieldValue: "\(Int(tubeViewModel.settingsVar.lenb))")
+                                  maxValue: 360.0,
+                                  textEnding: "°",
+                                  textfieldValue: "\(Int(tubeViewModel.settingsVar.grader))")
                 }
+                
+            case .DIMENSION:
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.dimension,
+                              minValue: 1.0,
+                              maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.dimension),
+                              textEnding: "mm",
+                              textfieldValue: "\(Int(tubeViewModel.settingsVar.dimension))")
+            case .SEGMENT:
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.segment,
+                              minValue: 0.0,
+                              maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.segment),
+                              textEnding: "st",
+                              textfieldValue: "\(Int(tubeViewModel.settingsVar.segment))")
+            case .STEEL:
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.steel,
+                              minValue: 1.0,
+                              maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.dimension),
+                              textEnding: "mm",
+                              textfieldValue: "\(Int(tubeViewModel.settingsVar.steel))")
+            case .RADIUS:
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.radie,
+                              minValue: 1.0,
+                              maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.radius),
+                              textEnding: "mm",
+                              textfieldValue: "\(Int(tubeViewModel.settingsVar.radie))")
+            case .LENA:
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.lena,
+                              minValue: 1.0,
+                              maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.length),
+                              textEnding: "mm",
+                              textfieldValue: "\(Int(tubeViewModel.settingsVar.lena))")
+            case .LENB:
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.lenb,
+                              minValue: 1.0,
+                              maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.length),
+                              textEnding: "mm",
+                              textfieldValue: "\(Int(tubeViewModel.settingsVar.lenb))")
+            }
+        } header: {
+            Text(item.rawValue).foregroundColor(Color.systemGray)
         }
     }
     
@@ -270,7 +275,7 @@ struct TubeSettingsView:View{
     }
     
     func getSwitchCutAngles() -> some View{
-        Section(header: Text("Cut Angles").foregroundColor(Color.systemGray)) {
+        Section {
             VStack{
                 HStack{
                     Toggle(isOn:!self.$tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .KEEP_DEGREES)]){
@@ -290,6 +295,8 @@ struct TubeSettingsView:View{
                 .hLeading()
                 .padding([.leading,.trailing])
             }
+        } header: {
+            Text("Cut Angles").foregroundColor(Color.systemGray)
         }
         .opacity(tubeViewModel.settingsVar.segment < 2 ? 0.2 : 1.0)
     }
@@ -297,7 +304,7 @@ struct TubeSettingsView:View{
     @ViewBuilder
     func getSwitchAutoAlign() -> some View{
         if tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .AUTO_ALIGN)]{
-            Section(header: Text("Automatic Align").foregroundColor(Color.systemGray)) {
+            Section {
                 VStack{
                     HStack{
                         Toggle(isOn:!self.$tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .AUTO_ALIGN)]){
@@ -317,31 +324,36 @@ struct TubeSettingsView:View{
                     .hLeading()
                     .padding([.leading,.trailing])
                 }
-            }
+           } header: {
+               Text("Automatic Align").foregroundColor(Color.systemGray)
+           }
         }
         else{
-            Section(header: HStack{
-                Button(action: {
-                    withAnimation{
-                        self.tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .AUTO_ALIGN)].toggle()
-                        self.tubeViewModel.rebuild()
-                    }
-                }){
-                    Text("Automatic align").foregroundColor(Color.systemBlue)
-                }
-            }.hCenter()){
+            Section {
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.center,
                               minValue: -CGFloat.infinity,
                               maxValue: CGFloat.infinity,
                               textEnding: "",
                               textfieldValue: "",
                               isNotAlignmentSection: false)
+            } header: {
+                HStack{
+                    Button(action: {
+                        withAnimation{
+                            self.tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .AUTO_ALIGN)].toggle()
+                            self.tubeViewModel.rebuild()
+                        }
+                    }){
+                        Text("Automatic align").foregroundColor(Color.systemBlue)
+                    }
+                }
+                .hCenter()
             }
         }
     }
     
     func getSwitchAddHundred() -> some View{
-        Section(header: Text("Overlap").foregroundColor(Color.systemGray)) {
+        Section {
             VStack{
                 HStack{
                     Toggle(isOn:!self.$tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ADD_ONE_HUNDRED)]){
@@ -361,7 +373,10 @@ struct TubeSettingsView:View{
                 .hLeading()
                 .padding([.leading,.trailing])
             }
+        } header: {
+            Text("Overlap").foregroundColor(Color.systemGray)
         }
+        
     }
     @ViewBuilder
     func getSwitchSectionBase(index:Int) -> some View{

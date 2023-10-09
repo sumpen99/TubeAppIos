@@ -14,12 +14,18 @@ struct ImagePickerSwiftUi:View {
     
     func resizeUiImage(_ uiImage:UIImage){
         DispatchQueue.global().async{
-            docContent.resizeImageIfNeeded(uiImage)
+            uiImage.resizeImageIfNeeded(
+                compressionQuality:1.0,
+                maxSize:MAX_STORAGE_JPEG_SIZE,
+                minSize:MIN_STORAGE_JPEG_SIZE,
+                maxAttempts:10,
+                data:&docContent.data)
             DispatchQueue.main.async{
                 image = Image(uiImage: uiImage)
             }
         }
     }
+    
     
     var body:some View{
         ZStack{

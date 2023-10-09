@@ -27,24 +27,27 @@ struct InfoView:View{
     }
     
     var sectionGuest:some View{
-        Section(header:Text("Guest").foregroundColor(.white).bold(),
-                content: {
+        Section {
             Text(guestText).foregroundColor(.black)
-        })
+        } header: {
+            Text("Guest").foregroundColor(.white).bold()
+        }
     }
     
     var sectionMember:some View{
-        Section(header:Text("Member").foregroundColor(.white).bold(),
-                content: {
-            Text(guestText).foregroundColor(.black)
-        })
+        Section {
+            Text(memberText).foregroundColor(.black)
+        } header: {
+            Text("Member").foregroundColor(.white).bold()
+        }
     }
     
     var sectionRegistred:some View{
-        Section(header:Text("Member").foregroundColor(.white).bold(),
-                content: {
+        Section {
             Text(memberText).foregroundColor(.black)
-        })
+        } header: {
+            Text("Member").foregroundColor(.white).bold()
+        }
     }
     
     var infoBody:some View{

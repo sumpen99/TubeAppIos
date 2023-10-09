@@ -16,6 +16,7 @@ enum Field:Int,Hashable{
     case LOGIN_EMAIL
     case LOGIN_SECURE_PASSWORD
     case DOCUMENT_MESSAGE
+    case DOCUMENT_TITLE
     case PROFILE_NAME
     case PROFILE_DISPLAY_NAME
 }

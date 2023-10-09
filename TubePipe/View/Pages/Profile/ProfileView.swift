@@ -187,35 +187,41 @@ struct ProfileView: View{
     }
     
     var accountSection:some View{
-        Section(header:Text("Account").foregroundColor(.white).bold(), content: {
+        Section {
             userEmailtext
             displayName
-        })
+        } header: {
+            Text("Account").foregroundColor(.white).bold()
+        }
     }
     
     var userSocialSection:some View{
-        Section(header:Text("Social").foregroundColor(.white).bold(), content: {
+        Section {
             togglePublicMode
             contactButton
             navigateToMessages
-        })
+        } header: {
+            Text("Social").foregroundColor(.white).bold()
+        }
     }
     
     var supportSection:some View{
-        Section(header:Text("Help & Support").foregroundColor(.white).bold(),
-                content: {
-                    navigateToHelpCenter
-                    navigateToFileBug
-        })
-    }
+        Section {
+            navigateToHelpCenter
+            navigateToFileBug
+        } header: {
+            Text("Help & Support").foregroundColor(.white).bold()
+        }
+   }
     
     var privacySection:some View{
-        Section(header:Text("Privacy").foregroundColor(.white).bold(),
-                content: {
-                    signoutButton
-                    deleteAccountButton
-        })
-    }
+        Section {
+            signoutButton
+            deleteAccountButton
+        } header: {
+            Text("Privacy").foregroundColor(.white).bold()
+        }
+   }
     
     var personalPage:some View{
         List{

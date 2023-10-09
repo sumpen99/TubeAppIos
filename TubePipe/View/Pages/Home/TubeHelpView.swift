@@ -71,7 +71,7 @@ struct TubeHelpView: View{
     var helpBody: some View{
         VStack(spacing:10){
             List{
-                Section(header: Text("Measurement").listSectionHeader(), footer: Text("")) {
+                Section {
                     Image("tubeskiss_3")
                         .resizable()
                         .scaledToFit()
@@ -81,17 +81,23 @@ struct TubeHelpView: View{
                         //.position(location)
                         //.simultaneousGesture(simpleDragGesture.simultaneously(with: fingerDragGesture))
                         .simultaneousGesture(rotationGesture.simultaneously(with: magnificationGesture))
-                    
+                } header: {
+                    Text("Measurement").listSectionHeader()
+                } footer: {
+                    Text("")
                 }
-                
-                Section(header: Text("Information").listSectionHeader(), footer: Text("")) {
-                   HeaderSubHeaderView(header: "Unit", subHeader: "Millimeter.")
-                   HeaderSubHeaderView(header: "Radius", subHeader: "Measure radius from middle of steel.")
-                   HeaderSubHeaderView(header: "Len A & Len B", subHeader: "Select overlap option to add 100mm on each side.")
-                   if firebaseAuth.loggedInAs == .ANONYMOUS_USER{
-                       HeaderSubHeaderView(header: "Share & Save", subHeader: "Register an free account to save and share tubes.")
-                   }
-               }
+                Section {
+                    HeaderSubHeaderView(header: "Unit", subHeader: "Millimeter.")
+                    HeaderSubHeaderView(header: "Radius", subHeader: "Measure radius from middle of steel.")
+                    HeaderSubHeaderView(header: "Len A & Len B", subHeader: "Select overlap option to add 100mm on each side.")
+                    if firebaseAuth.loggedInAs == .ANONYMOUS_USER{
+                        HeaderSubHeaderView(header: "Share & Save", subHeader: "Register an free account to save and share tubes.")
+                    }
+                } header: {
+                    Text("Information").listSectionHeader()
+                } footer: {
+                    Text("")
+                }
            }
            .scrollContentBackground(.hidden)
         }

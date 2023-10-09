@@ -18,10 +18,11 @@ struct BaseTubeTextField:View {
                 .preferedDocumentField()
                 .focused($focusField,equals: .DOCUMENT_MESSAGE)
                 .placeholder("message",
-                             when: (focusField != .DOCUMENT_MESSAGE) && (docContent.message.isEmpty)).vTop()
+                             when: focusField != .DOCUMENT_MESSAGE).vTop()
             Text("\(MAX_TEXTFIELD_LEN-docContent.message.count)").font(.caption).foregroundColor(Color.systemGray).hTrailing().frame(width:33.0).vBottom()
             
-        }.frame(height: 250.0)
+        }
+        .frame(height: 250.0)
         .vTop()
         .fieldFirstResponder{
             focusField = .DOCUMENT_MESSAGE
@@ -47,9 +48,10 @@ struct TextFieldSection:View{
     let isNotAlignmentSection:Bool = true
     
     var body: some View{
-        Section(header:HeaderSubHeaderView(header:header,subHeader: subHeader)){
-            TextField("\(textfieldValue)",
-                      text: $textfieldValue).preferedSettingsField()
+        Section {
+            TextField("\(textfieldValue)", text: $textfieldValue).preferedSettingsField()
+        } header: {
+            HeaderSubHeaderView(header:header,subHeader: subHeader)
         }
         .hLeading()
         Divider()
