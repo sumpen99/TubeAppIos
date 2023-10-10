@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct InputDocumentField<Label: View,Content: View>: View {
-    let label:Label
+struct InputDocumentField<LabelText: View,Content: View>: View {
+    let label:LabelText
     let content: Content
 
     var body : some View {

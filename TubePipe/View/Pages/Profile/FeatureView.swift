@@ -11,6 +11,10 @@ struct FeatureView:View{
     @State var docContent: DocumentContent = DocumentContent()
     @FocusState var focusField: Field?
     
+    var buttonIsDisabled:Bool{
+        false
+    }
+    
     var featureHeader:some View{
         Text("New Feature Request")
         .font(.title)
@@ -63,7 +67,19 @@ struct FeatureView:View{
     }
     
     var inputScreenshot:some View{
-        InputDocumentField(label: Text("Screenshot"), content: ImagePickerSwiftUi(docContent: $docContent))
+        InputDocumentField(label: Text("Screenshot"),
+                           content: ImagePickerSwiftUi(docContent: $docContent,
+                                                       label: Label("(optional)",
+                                                                    systemImage: "photo.on.rectangle.angled")))
+    }
+    
+    var shareButton: some View{
+        Button(action: { },label: {
+            Text("Send").hCenter()
+        })
+        .disabled(buttonIsDisabled)
+        .buttonStyle(ButtonStyleDisabledable(lblColor:Color.black))
+        .padding()
     }
     
     var inputBody:some View {
@@ -87,6 +103,7 @@ struct FeatureView:View{
                 inputBody
             }
             .listStyle(.insetGrouped)
+            shareButton
         }
         
     }

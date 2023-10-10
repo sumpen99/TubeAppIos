@@ -15,12 +15,10 @@ struct SaveDocumentView:View{
     @State var isSaveResult:Bool = false
       
     var saveButton: some View{
-        HStack{
-            Button(action:saveNewTube,label: {
-                Text("Save").hCenter()
-            })
-            .buttonStyle(ButtonStyleDocument())
-        }
+        Button(action:saveNewTube,label: {
+            Text("Save").hCenter()
+        })
+        .buttonStyle(ButtonStyleDocument())
         .padding()
     }
     
@@ -28,7 +26,8 @@ struct SaveDocumentView:View{
         VStack(spacing:10){
             ScrollView{
                 BaseTubeTextField(docContent: $docContent).padding(.top)
-                ImagePickerSwiftUi(docContent: $docContent)
+                ImagePickerSwiftUi(docContent: $docContent,
+                                   label:Label("Attach photo",systemImage: "photo.on.rectangle.angled"))
             }
             saveButton
         }

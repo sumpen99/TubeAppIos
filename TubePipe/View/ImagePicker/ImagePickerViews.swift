@@ -7,8 +7,9 @@
 
 import SwiftUI
 import PhotosUI
-struct ImagePickerSwiftUi:View {
+struct ImagePickerSwiftUi<LabelText:View>: View {
     @Binding var docContent: DocumentContent
+    let label:LabelText
     @State private var selectedItem: PhotosPickerItem? = nil
     @State var image: Image?
     
@@ -26,6 +27,30 @@ struct ImagePickerSwiftUi:View {
         }
     }
     
+    var imageLabel:some View{
+        ZStack{
+            if image != nil{
+                Button("\(Image(systemName: "xmark"))", action: {
+                    withAnimation{
+                        image = nil
+                    }
+                })
+                .foregroundColor(.red)
+            }
+            else{
+                label
+            }
+        }
+        .hLeading()
+    }
+    
+    var fetchedImage:some View{
+        image?
+        .resizable()
+        .scaledToFit()
+        .frame(height: 100)
+        .hLeading()
+    }
     
     var body:some View{
         ZStack{
@@ -34,26 +59,8 @@ struct ImagePickerSwiftUi:View {
                 matching: .images,
                 photoLibrary: .shared()) {
                     VStack(spacing:V_SPACING_REG){
-                        Label("Attach photo",systemImage: "photo.on.rectangle.angled").hLeading()
-                        if image != nil{
-                            HStack{
-                                image?
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 100)
-                                .hLeading()
-                                Button("\(Image(systemName: "xmark"))", action: {
-                                    withAnimation{
-                                        image = nil
-                                    }
-                                    
-                                })
-                                .foregroundColor(.red)
-                                .vBottom()
-                                .hTrailing()
-                            }
-                        }
-                        
+                        imageLabel
+                        fetchedImage
                     }
                     .foregroundColor(Color.systemGray)
                 }

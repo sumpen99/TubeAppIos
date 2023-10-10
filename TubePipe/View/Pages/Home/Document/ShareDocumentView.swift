@@ -34,13 +34,11 @@ struct ShareDocumentView:View{
     }
     
     var shareButton: some View{
-        HStack{
-            Button(action: startSendingMessageProcess,label: {
-                Text("Send").hCenter()
-            })
-            .disabled(buttonIsDisabled)
-            .buttonStyle(ButtonStyleDisabledable(lblColor:Color.black))
-        }
+        Button(action: startSendingMessageProcess,label: {
+            Text("Send").hCenter()
+        })
+        .disabled(buttonIsDisabled)
+        .buttonStyle(ButtonStyleDisabledable(lblColor:Color.black))
         .padding()
     }
     
@@ -112,7 +110,8 @@ struct ShareDocumentView:View{
                 VStack(spacing:20){
                     reciever
                     BaseTubeTextField(docContent: $docContent)
-                    ImagePickerSwiftUi(docContent: $docContent)
+                    ImagePickerSwiftUi(docContent: $docContent,
+                                       label:Label("Attach photo",systemImage: "photo.on.rectangle.angled"))
                 }
             }
             shareButton
