@@ -38,7 +38,7 @@ struct ShareDocumentView:View{
             Text("Send").hCenter()
         })
         .disabled(buttonIsDisabled)
-        .buttonStyle(ButtonStyleDisabledable(lblColor:Color.black))
+        .buttonStyle(ButtonStyleDisabledable(lblColor:Color.black,backgroundColor: Color.tertiarySystemFill))
         .padding()
     }
     

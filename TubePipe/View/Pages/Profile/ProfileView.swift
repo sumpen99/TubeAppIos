@@ -290,9 +290,9 @@ struct ProfileView: View{
     
     var navigateToFileBug:some View{
         NavigationLink(destination:LazyDestination(destination: {
-            InfoView()
+            IssueView()
         })){
-            Label("Report bug",systemImage: "exclamationmark.triangle").foregroundColor(.black)
+            Label("Report an issue",systemImage: "exclamationmark.triangle").foregroundColor(.black)
         }
         .fullListWidthSeperator()
     }

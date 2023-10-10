@@ -129,7 +129,8 @@ struct SignupView : View {
                 .opacity(sVar.hideButton ? 0.5 : 1.0)
                 .hCenter()
             })
-            .buttonStyle(ButtonStyleDisabledable(lblColor: Color.white))
+            .buttonStyle(ButtonStyleDisabledable(lblColor: Color.white,
+                                                 backgroundColor: Color.tertiarySystemFill))
             //.disabled(sVar.hideButton)
         }
         .padding()
