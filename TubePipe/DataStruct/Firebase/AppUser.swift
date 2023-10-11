@@ -155,6 +155,26 @@ struct Message:Codable,Identifiable,Hashable{
     
 }
 
+struct FeatureRequest:Codable,Identifiable{
+    @DocumentID var id: String?
+    var featureId: String?
+    var email: String?
+    var title:String?
+    var description: String?
+    var date:Date?
+    var storageId:String?
+    
+}
+
+struct IssueReport:Codable,Identifiable{
+    @DocumentID var id: String?
+    var issueId: String?
+    var email: String?
+    var description: String?
+    var date:Date?
+    var storageId:String?
+}
+
 struct SharedTube:Codable{
     var dimension:CGFloat?
     var segment:CGFloat?

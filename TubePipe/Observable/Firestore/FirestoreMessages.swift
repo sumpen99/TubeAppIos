@@ -57,7 +57,6 @@ extension FirestoreViewModel{
     func uploadImageToStorage(_ groupId:String,storageId:String,imgData:Data,onResult: ((Error?) -> Void)? = nil){
         let ref = repo.getStorageReference(groupId: groupId, storageId: storageId)
         ref.putData(imgData,metadata: nil){ (metadata,error) in
-            debugLog(object: error?.localizedDescription ?? "")
             if let _ = metadata{ onResult?(nil) }
             else{ onResult?(FirebaseError.FAILED_TO_UPLOAD_IMAGE) }
         }

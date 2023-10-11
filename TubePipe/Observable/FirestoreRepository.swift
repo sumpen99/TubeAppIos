@@ -8,6 +8,10 @@
 import Firebase
 import FirebaseStorage
 
+enum ScreenShotFolder:String{
+    case FEATURE_REQUEST = "FEATURE"
+    case REPORT_ISSUE = "ISSUE"
+}
 
 //REQUESTS/LXOavAcmoSfHJLd4NAZYWRR6P732/REQUESTS_RECIEVED/*
 class FirestoreRepository{
@@ -27,8 +31,15 @@ class FirestoreRepository{
     private let MESSAGE_GROUP = "MESSAGES"
     private let MESSAGE_THREAD = "THREAD"
     
+    // FEATURE REQUEST
+    private let FEATURE_REQUEST = "FEATURE_REQUEST"
+    
+    // ISSUE REPORT
+    private let ISSUE_REPORT = "ISSUE_REPORT"
+    
     //STORAGE
     private let STORAGE_GROUP = "GROUP"
+    private let STORAGE_SCREENSHOT = "SCREENSHOT"
     
     var userCollection: CollectionReference{ firestoreDB.collection(APP_USER_COLLECTION) }
     var messageGroupCollection: CollectionReference{ firestoreDB.collection(MESSAGE_GROUP) }
@@ -52,6 +63,18 @@ class FirestoreRepository{
         return firestoreDB
             .collection(MESSAGE_GROUP)
             .document(groupId)
+    }
+    
+    func featureRequestDocument(_ featureId:String) -> DocumentReference{
+        return firestoreDB
+            .collection(FEATURE_REQUEST)
+            .document(featureId)
+    }
+    
+    func issueReportDocument(_ issueId:String) -> DocumentReference{
+        return firestoreDB
+            .collection(ISSUE_REPORT)
+            .document(issueId)
     }
     
     func messageGroupThreadCollection(_ groupId:String) -> CollectionReference{
@@ -114,6 +137,10 @@ class FirestoreRepository{
     
     func getStorageReference(groupId:String,storageId:String) -> StorageReference{
         return firestoreStorage.reference().child("\(STORAGE_GROUP)/\(groupId)/\(storageId).png")
+    }
+    
+    func getScreenShotReference(storageId:String,folder:ScreenShotFolder) -> StorageReference{
+        return firestoreStorage.reference().child("\(folder.rawValue)/\(storageId).png")
     }
     
   /*

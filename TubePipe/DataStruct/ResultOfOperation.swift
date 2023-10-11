@@ -10,6 +10,8 @@ import SwiftUI
 enum PresentedResult:String{
     case SAVED_SUCCESSFULLY = "Saved successfully"
     case MESSAGE_SENT = "Message sent"
+    case FEATURE_REQUEST = "Feature request submitted"
+    case ISSUE_REPORT = "Issue report submitted"
     case MESSAGE_REMOVED = "Message removed"
     case CONTACT_REMOVED = "Contact removed"
     case CONTACT_REQUEST_REMOVED = "Request removed"

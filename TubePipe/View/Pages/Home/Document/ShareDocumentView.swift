@@ -16,6 +16,7 @@ struct SortedContactListVar{
 struct ShareDocumentView:View{
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
+    @EnvironmentObject var globalLoadingPresentation: GlobalLoadingPresentation
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @State var docContent:DocumentContent = DocumentContent()
     @State var sclVar: SortedContactListVar = SortedContactListVar()
@@ -151,20 +152,21 @@ struct ShareDocumentView:View{
               let groupId = firestoreViewModel.getGroupIdFromOtherUserId(contact.userId)
         else { showSendMessageAlert(FirebaseError.FAILED_TO_SEND_MESSAGE.localizedDescription);return}
         
-        let messageId = UUID().uuidString
-        let storageId:String? = (docContent.data == nil) ? nil : UUID().uuidString
+        let messageId = docContent.documentId
+        let storageId = docContent.storageId
         
-        //dialogPresentation.show(content: .autofillProgressView())
+        globalLoadingPresentation.startLoading()
         sendMessage(groupId:groupId,
                     senderId:senderId,
                     messageId: messageId,
                     storageId: storageId){ result in
-            if result.operationHasMessage{
+            /*if result.operationHasMessage{
                 showSendMessageAlert(result.message)
             }
             else{
                 closeView()
-            }
+            }*/
+            globalLoadingPresentation.stopLoading(isSuccess:result.isSuccess,message: result.message)
             //dialogPresentation.presentedText = err?.localizedDescription ?? "Message sent!"
             //dialogPresentation.closeWithAnimationAfter(time: 2.5)
         }

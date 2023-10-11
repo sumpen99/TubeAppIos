@@ -30,12 +30,26 @@ enum ActiveImagePickerActionSheet: Identifiable {
 struct DocumentContent:Codable{
     var message:String = ""
     var title:String = ""
+    var email:String = ""
     var date:Date?
     var data:Data?
+    
+    var documentId:String { UUID().uuidString }
+    var storageId:String? { data == nil ? nil : UUID().uuidString }
+    var enteredEmail:String? { email.isEmpty ? nil : email }
     
     mutating func trim(){
         message = message.trimmingCharacters(in: .whitespacesAndNewlines)
         title = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        email = email.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+    
+    mutating func clearDocument(){
+        title = ""
+        message = ""
+        email = ""
+        date = nil
+        data = nil
     }
     
 }

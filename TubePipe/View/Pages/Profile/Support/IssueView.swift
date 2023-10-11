@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct IssueView:View{
+    @EnvironmentObject var firestoreViewModel: FirestoreViewModel
+    @EnvironmentObject var globalLoadingPresentation: GlobalLoadingPresentation
     @State var docContent: DocumentContent = DocumentContent()
     @FocusState var focusField: Field?
     @State var collapseFooter:Bool = true
@@ -100,7 +102,8 @@ struct IssueView:View{
                             TextField("",text:$docContent.title.max(MAX_TEXTFIELD_LEN),axis: .vertical)
                                 .preferedDocumentField()
                                 .focused($focusField,equals: .DOCUMENT_TITLE)
-                                .placeholder("(required field)",when: focusField != .DOCUMENT_TITLE)
+                                .placeholder("(required field)",
+                                             when: (focusField != .DOCUMENT_TITLE && docContent.title.isEmpty))
         )
         .fieldFirstResponder{
             focusField = .DOCUMENT_TITLE
@@ -133,7 +136,7 @@ struct IssueView:View{
     
     
     var shareButton: some View{
-        Button(action: { submitHasBeenMade.toggle() },label: {
+        Button(action: submitIssueReport,label: {
             Text("Submit").hCenter()
         })
         .disabled(buttonIsDisabled)
@@ -173,26 +176,35 @@ struct IssueView:View{
             .modifier(NavigationViewModifier(title: ""))
         }
         .hiddenBackButtonWithCustomTitle("Profile")
-        .confirmationDialog("Report submitted",
-                            isPresented: $submitHasBeenMade,
-                            titleVisibility: .visible){
-            Button("Thank you!", role: .cancel){}
-        } message: {
-            Text("\(thankReporter)")
+        .alert("Report submitted",
+               isPresented: $submitHasBeenMade,
+               actions: { Button("Thank you!", role: .cancel){ clearDocument() } },
+               message: { Text("\(thankReporter)") })
+        
+    }
+    
+    func clearDocument(){
+        docContent.clearDocument()
+        focusField = nil
+    }
+    
+    func submitIssueReport(){
+        docContent.trim()
+        let issueId = docContent.documentId
+        let storageId = docContent.storageId
+        let email = docContent.enteredEmail
+        let issue = IssueReport(issueId: issueId,
+                                email: email,
+                                description: docContent.message,
+                                date: Date(),
+                                storageId: storageId)
+        
+        globalLoadingPresentation.startLoading()
+        firestoreViewModel.submitNewIssueReport(issue,
+                                                issueId: issueId,
+                                                imgData: docContent.data){result in
+            globalLoadingPresentation.stopLoading(isSuccess:result.isSuccess,message: result.message)
         }
+        
     }
 }
-
-/*
- If you`re having trouble in some part of the app you`ve come to thew right place. Please use this form to
- tell us about the issue you`re experience.
- 
- Please provide a detailed description of the issue, including:
- 1. What you were doing when the problem occurred
- 2. What you expect to happen
- 3. What actually happen.
- 4. Is this problem consistent or does it come and go.
- 
- 
- */
-
