@@ -33,6 +33,7 @@ struct DocumentContent:Codable{
     var email:String = ""
     var date:Date?
     var data:Data?
+    var clearAttachedImage:Bool = false
     
     var documentId:String { UUID().uuidString }
     var storageId:String? { data == nil ? nil : UUID().uuidString }
@@ -50,6 +51,7 @@ struct DocumentContent:Codable{
         email = ""
         date = nil
         data = nil
+        clearAttachedImage.toggle()
     }
     
 }

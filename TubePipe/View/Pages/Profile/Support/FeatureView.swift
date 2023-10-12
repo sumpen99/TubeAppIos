@@ -55,7 +55,8 @@ struct FeatureView:View{
                                 .preferedDocumentField()
                                 .focused($focusField,equals: .DOCUMENT_TITLE)
                                 .placeholder("(required field)",
-                                             when: (focusField != .DOCUMENT_TITLE && docContent.title.isEmpty))
+                                             when: (focusField != .DOCUMENT_TITLE && docContent.title.isEmpty),
+                                             alignment: .center)
         )
         .fieldFirstResponder{
             focusField = .DOCUMENT_TITLE
@@ -65,13 +66,21 @@ struct FeatureView:View{
     
     var inputDescription:some View{
         InputDocumentField(label: Text("Description").vTop(),content:
-                            HStack{
+                            ZStack{
                             TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN),axis: .vertical)
                                 .preferedDocumentField()
                                 .focused($focusField,equals: .DOCUMENT_MESSAGE)
                                 .placeholder("(required field)",
-                                             when: (focusField != .DOCUMENT_MESSAGE) && (docContent.message.isEmpty)).vTop()
-                            Text("\(MAX_TEXTFIELD_LEN-docContent.message.count)").font(.caption).foregroundColor(Color.systemGray).hTrailing().frame(width:33.0).vBottom()}
+                                             when: (focusField != .DOCUMENT_MESSAGE) && (docContent.message.isEmpty),
+                                             alignment: .center)
+                                .vTop()
+                            Text("\(MAX_TEXTFIELD_LEN-docContent.message.count)")
+                            .font(.caption)
+                            .foregroundColor(Color.systemGray)
+                            .frame(width:33.0)
+                            .vBottom()
+                            .hTrailing()
+                        }
         )
         .frame(height: 250.0)
         .fieldFirstResponder{
@@ -79,11 +88,29 @@ struct FeatureView:View{
         }
     }
     
+    var inputEmail:some View{
+        InputDocumentField(label: Text("Email"),content:
+                            TextField("",text:$docContent.email.max(MAX_TEXTFIELD_LEN),axis: .vertical)
+                                .preferedDocumentField()
+                                .focused($focusField,equals: .DOCUMENT_EMAIL)
+                                .placeholder("(optional)",
+                                             when: (focusField != .DOCUMENT_EMAIL && docContent.email.isEmpty),
+                                             alignment: .center)
+        )
+        .fieldFirstResponder{
+            focusField = .DOCUMENT_EMAIL
+        }
+       
+    }
+    
     var inputScreenshot:some View{
         InputDocumentField(label: Text("Screenshot"),
                            content: ImagePickerSwiftUi(docContent: $docContent,
                                                        label: Label("(optional)",
-                                                                    systemImage: "photo.on.rectangle.angled").vTop()))
+                                                                    systemImage: "photo.on.rectangle.angled")
+                                                        .vTop()
+                                                        .hCenter())
+        )
     }
     
     var shareButton: some View{
@@ -101,14 +128,15 @@ struct FeatureView:View{
             Divider()
             inputDescription
             Divider()
+            inputEmail
+            Divider()
             inputScreenshot
             Divider()
         }
         
         
     }
-    
-   
+       
     var infoBody:some View{
         VStack(spacing:0){
             featureTopHeader
@@ -156,7 +184,10 @@ struct FeatureView:View{
         firestoreViewModel.submitNewFeatureRequest(feature,
                                                    featureId: featureId,
                                                    imgData: docContent.data){result in
-            globalLoadingPresentation.stopLoading(isSuccess:result.isSuccess,message: result.message)
+            globalLoadingPresentation.stopLoading(isSuccess:result.isSuccess,
+                                                  message: result.message,
+                                                  showAnimationCircle: false)
+            if result.isSuccess{ submitHasBeenMade.toggle() }
         }
         
     }

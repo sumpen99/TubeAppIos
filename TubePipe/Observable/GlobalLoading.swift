@@ -8,7 +8,7 @@
 import SwiftUI
 
 let ANIMATION_DURATION:CGFloat = 0.7
-let SHOW_CHECKMARK_AFTER_ANIMATION:CGFloat = ANIMATION_DURATION + 1.3
+let SHOW_CHECKMARK_AFTER_ANIMATION:CGFloat = 1.5
 
 enum GlobalDialogContent: View {
     case globalAutoFillProgressView
@@ -42,12 +42,14 @@ final class GlobalLoadingPresentation: ObservableObject {
         }
      }
     
-    func stopLoading(isSuccess:Bool,message:String){
+    func stopLoading(isSuccess:Bool,message:String,showAnimationCircle:Bool){
         withAnimation{
             loadingIsSuccess = isSuccess
             messageAfterLoading = message
             isLoading = false
-            show(content: .globalAutoFillProgressView)
+            if showAnimationCircle{
+                show(content: .globalAutoFillProgressView)
+            }
         }
     }
     
@@ -156,9 +158,11 @@ struct GlobalAutoFillProgressView: View {
             let rad = scale / 6.0
             ZStack{
                 Color.white
-                GlobalRingSpinner(size:scale)
             }
             .allowsHitTesting(false)
+            .overlay{
+                GlobalRingSpinner(size:scale)
+            }
             .ignoresSafeArea(.all)
             .frame(width: width,height: scale)
             .cornerRadius(rad)
@@ -198,21 +202,31 @@ struct GlobalRingSpinner : View {
         }
         .padding()
         .frame(width: size,height: size)
-        .hLeading()
     }
     
+    @ViewBuilder
     var message:some View{
-        Text(globalLoadingPresentation.messageAfterLoading)
-        .foregroundColor(globalLoadingPresentation.loadingIsSuccess ? Color.green : Color.red)
-        .lineLimit(1)
-        .padding(.trailing)
-        .hLeading()
+        if stopAnimating{
+            ScrollView{
+                Text(globalLoadingPresentation.messageAfterLoading)
+                .italic()
+                .foregroundColor(globalLoadingPresentation.loadingIsSuccess ? Color.green : Color.red)
+                .lineLimit(nil)
+                .padding()
+                .hLeading()
+            }
+        }
+        
     }
-
+    
     var body: some View {
         HStack{
             animatedCircle
             message
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            debugLog(object: "tap on body")
         }
         .hLeading()
         .onAppear(){

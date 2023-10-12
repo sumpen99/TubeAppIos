@@ -91,7 +91,6 @@ extension FirestoreViewModel{
                                    onResult: ((Error?) -> Void)? = nil){
         let ref = repo.getScreenShotReference(storageId: storageId,folder: folder)
         ref.putData(imgData,metadata: nil){ (metadata,error) in
-            debugLog(object: error?.localizedDescription)
             if let _ = metadata{ onResult?(nil) }
             else{ onResult?(FirebaseError.FAILED_TO_UPLOAD_IMAGE) }
         }

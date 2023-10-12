@@ -363,7 +363,9 @@ extension ProfileView{
             if result.isSuccess && userModeHasChanged{
                 tubeViewModel.saveUserDefaultDrawingValues()
             }
-            globalLoadingPresentation.stopLoading(isSuccess:result.isSuccess,message: result.message)
+            globalLoadingPresentation.stopLoading(isSuccess:result.isSuccess,
+                                                  message: result.message,
+                                                  showAnimationCircle: true)
         }
     }
     

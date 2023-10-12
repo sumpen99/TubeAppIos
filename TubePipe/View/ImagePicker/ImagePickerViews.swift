@@ -75,6 +75,9 @@ struct ImagePickerSwiftUi<LabelText:View>: View {
                     }
                 }
         }
+        .onChange(of: docContent.clearAttachedImage) { newValue in
+            image = nil
+        }
         .hLeading()
         .halfSheetWhitePadding()
         

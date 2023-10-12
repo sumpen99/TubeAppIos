@@ -166,7 +166,9 @@ struct ShareDocumentView:View{
             else{
                 closeView()
             }*/
-            globalLoadingPresentation.stopLoading(isSuccess:result.isSuccess,message: result.message)
+            globalLoadingPresentation.stopLoading(isSuccess:result.isSuccess,
+                                                  message: result.message,
+                                                  showAnimationCircle: true)
             //dialogPresentation.presentedText = err?.localizedDescription ?? "Message sent!"
             //dialogPresentation.closeWithAnimationAfter(time: 2.5)
         }

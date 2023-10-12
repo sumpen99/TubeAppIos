@@ -81,7 +81,7 @@ class FirebaseAuth:ObservableObject{
                 completion(.REGISTERED_USER)
                 return
             }
-            if role == "admin"{ completion(.ADMIN_USER) }
+            if role == "admin"{ completion(.REGISTERED_USER) }
             else if(role == "payroll") { completion(.PAYED_USER) }
             else{ completion(.UNKNOWNED_USER_ROLE) }
         }

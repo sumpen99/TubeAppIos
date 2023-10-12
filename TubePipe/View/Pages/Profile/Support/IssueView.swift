@@ -34,7 +34,7 @@ struct IssueView:View{
     """
     
     var buttonIsDisabled:Bool{
-        (docContent.title.isEmpty||docContent.message.isEmpty)
+        docContent.message.isEmpty
     }
     
     var toggleFullFooterButton:some View{
@@ -103,7 +103,8 @@ struct IssueView:View{
                                 .preferedDocumentField()
                                 .focused($focusField,equals: .DOCUMENT_TITLE)
                                 .placeholder("(required field)",
-                                             when: (focusField != .DOCUMENT_TITLE && docContent.title.isEmpty))
+                                             when: (focusField != .DOCUMENT_TITLE && docContent.title.isEmpty),
+                                             alignment: .center)
         )
         .fieldFirstResponder{
             focusField = .DOCUMENT_TITLE
@@ -113,13 +114,21 @@ struct IssueView:View{
     
     var inputDescription:some View{
         InputDocumentField(label: Text("Description").vTop(),content:
-                            HStack{
+                            ZStack{
                             TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN*4),axis: .vertical)
                                 .preferedDocumentField()
                                 .focused($focusField,equals: .DOCUMENT_MESSAGE)
                                 .placeholder("(required field)",
-                                             when: (focusField != .DOCUMENT_MESSAGE) && (docContent.message.isEmpty)).vTop()
-                            Text("\(MAX_TEXTFIELD_LEN*4-docContent.message.count)").font(.caption).foregroundColor(Color.systemGray).hTrailing().frame(width:33.0).vBottom()}
+                                             when: (focusField != .DOCUMENT_MESSAGE) && (docContent.message.isEmpty),
+                                             alignment: .center)
+                                .vTop()
+                            Text("\(MAX_TEXTFIELD_LEN*4-docContent.message.count)")
+                            .font(.caption)
+                            .foregroundColor(Color.systemGray)
+                            .frame(width:33.0)
+                            .hTrailing()
+                            .vBottom()
+            }
         )
         .frame(height: 250.0)
         .fieldFirstResponder{
@@ -127,11 +136,28 @@ struct IssueView:View{
         }
     }
     
+    var inputEmail:some View{
+        InputDocumentField(label: Text("Email"),content:
+                            TextField("",text:$docContent.email.max(MAX_TEXTFIELD_LEN),axis: .vertical)
+                                .preferedDocumentField()
+                                .focused($focusField,equals: .DOCUMENT_EMAIL)
+                                .placeholder("(optional)",
+                                             when: (focusField != .DOCUMENT_EMAIL && docContent.email.isEmpty),
+                                             alignment: .center)
+        )
+        .fieldFirstResponder{
+            focusField = .DOCUMENT_EMAIL
+        }
+    }
+    
     var inputScreenshot:some View{
         InputDocumentField(label: Text("Screenshot"),
                            content: ImagePickerSwiftUi(docContent: $docContent,
                                                        label: Label("(optional)",
-                                                                    systemImage: "photo.on.rectangle.angled").vTop()))
+                                                                    systemImage: "photo.on.rectangle.angled")
+                                                        .vTop()
+                                                        .hCenter())
+        )
     }
     
     
@@ -147,6 +173,8 @@ struct IssueView:View{
     var inputBody:some View {
         VStack{
             inputDescription
+            Divider()
+            inputEmail
             Divider()
             inputScreenshot
             Divider()
@@ -203,7 +231,11 @@ struct IssueView:View{
         firestoreViewModel.submitNewIssueReport(issue,
                                                 issueId: issueId,
                                                 imgData: docContent.data){result in
-            globalLoadingPresentation.stopLoading(isSuccess:result.isSuccess,message: result.message)
+            globalLoadingPresentation.stopLoading(isSuccess:result.isSuccess,
+                                                  message: result.message,
+                                                  showAnimationCircle: false)
+            if result.isSuccess{ submitHasBeenMade.toggle() }
+            
         }
         
     }
