@@ -41,10 +41,10 @@ struct ContactRequestView:View{
                         contactDescription(contact)
                     }
                 }
-                else{
+                /*else{
                     Text("No requests awaiting")
                     .noDataBackground()
-                }
+                }*/
             }
         }
     }
@@ -58,10 +58,10 @@ struct ContactRequestView:View{
                         contactDescription(contact)
                     }
                 }
-                else{
+                /*else{
                     Text("No requests sent")
                     .noDataBackground()
-                }
+                }*/
             }
         }
     }
@@ -98,23 +98,11 @@ struct ContactRequestView:View{
             })
             .modifier(NavigationViewModifier(title: ""))
         }
-        .sheet(isPresented: $cVar.isSearchOption){
-            SearchContactsView()
-            .presentationDragIndicator(.visible)
-        }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 BackButton(title: "Contacts")
             }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    withAnimation{
-                        cVar.isSearchOption.toggle()
-                    }}){
-                        Label("Search", systemImage: "magnifyingglass")
-                    }
-            }
-        }
+         }
         .navigationBarBackButtonHidden()
         .alert(isPresented: $cVar.isSelectedContact, content: {
                     onAlertWithOkAction(actionPrimary: {

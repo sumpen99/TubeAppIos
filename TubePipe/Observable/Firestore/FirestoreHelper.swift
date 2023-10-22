@@ -81,6 +81,10 @@ extension FirestoreViewModel{
         recievedContacts.count + pendingContacts.count
     }
     
+    /*var possibleBadgeCount:Int{
+        recievedContacts.count
+    }*/
+    
     var isCurrentUserPublic: Bool{
         guard let user = currentUser,
               let mode = user.userMode else { return false }

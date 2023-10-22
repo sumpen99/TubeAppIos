@@ -54,7 +54,7 @@ struct FeatureView:View{
                             TextField("",text:$docContent.title.max(MAX_TEXTFIELD_LEN),axis: .vertical)
                                 .preferedDocumentField()
                                 .focused($focusField,equals: .DOCUMENT_TITLE)
-                                .placeholder("(required field)",
+                                .placeholder("...",
                                              when: (focusField != .DOCUMENT_TITLE && docContent.title.isEmpty),
                                              alignment: .center)
         )
@@ -67,14 +67,14 @@ struct FeatureView:View{
     var inputDescription:some View{
         InputDocumentField(label: Text("Description").vTop(),content:
                             ZStack{
-                            TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN),axis: .vertical)
+            TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN*4),axis: .vertical)
                                 .preferedDocumentField()
                                 .focused($focusField,equals: .DOCUMENT_MESSAGE)
-                                .placeholder("(required field)",
+                                .placeholder("...",
                                              when: (focusField != .DOCUMENT_MESSAGE) && (docContent.message.isEmpty),
                                              alignment: .center)
                                 .vTop()
-                            Text("\(MAX_TEXTFIELD_LEN-docContent.message.count)")
+                            Text("\(MAX_TEXTFIELD_LEN*4-docContent.message.count)")
                             .font(.caption)
                             .foregroundColor(Color.systemGray)
                             .frame(width:33.0)

@@ -286,6 +286,7 @@ struct ProfileView: View{
         })){
             Label("Messages", systemImage: "tray").foregroundColor(.black)
         }
+        .disabled(!userHasAllowedSharing)
     }
     
     var navigateToFileBug:some View{

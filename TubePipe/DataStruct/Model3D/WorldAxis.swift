@@ -32,11 +32,10 @@ enum AxisDirection{
 }
 
 struct WorldAxisBox{
-    
     static let mult:CGFloat = 1000.0
     
     static var defaultBox:SCNBox{
-        SCNBox(width:           0.200 * CGFloat(WorldAxisBox.mult),
+        SCNBox(width:           0.100 * CGFloat(WorldAxisBox.mult),
                height:          0.005 * CGFloat(WorldAxisBox.mult),
                length:          0.005 * CGFloat(WorldAxisBox.mult),
                chamferRadius:   0.001 * CGFloat(WorldAxisBox.mult))
@@ -66,9 +65,9 @@ struct WorldAxisDirection{
     var textPos:SCNVector3{
         let mult = SCNFloat(WorldAxisBox.mult)
         switch axisDirection {
-        case .AXIS_X:   return SCNVector3(x: 0.100 * mult - 0.0075 * mult, y: 0.01 * mult, z: 0)
-        case .AXIS_Y:   return SCNVector3(x: 0.100 * mult + 0.005 * mult, y: 0.005 * mult, z: 0)
-        case .AXIS_Z:   return SCNVector3(x: 0.100 * mult - 0.0025 * mult, y: 0.01 * mult, z: 0.0025 * mult)
+        case .AXIS_X:   return SCNVector3(x: 0.050 * mult - 0.0075 * mult, y: 0.01 * mult, z: 0)
+        case .AXIS_Y:   return SCNVector3(x: 0.050 * mult + 0.005 * mult, y: 0.005 * mult, z: 0)
+        case .AXIS_Z:   return SCNVector3(x: 0.050 * mult - 0.0025 * mult, y: 0.01 * mult, z: 0.0025 * mult)
         }
     }
     
@@ -89,7 +88,7 @@ struct WorldAxisDirection{
     }
     
     var addDirectionValue:SCNFloat{
-        SCNFloat(0.1 * WorldAxisBox.mult)
+        SCNFloat(0.05 * WorldAxisBox.mult)
     }
     
     var textNode:SCNNode{

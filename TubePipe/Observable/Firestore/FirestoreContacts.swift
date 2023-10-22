@@ -14,6 +14,7 @@ extension FirestoreViewModel{
         DispatchQueue.global(qos: .default).async {
             let dpGroup = DispatchGroup()
             var resultOfOperation = ResultOfOperation(presentedSucces: .CONTACT_REQUEST_ACCEPTED)
+            dpGroup.enter()
             self.addMyselfAsFriendToOther(otherUser){ err in
                 resultOfOperation.add(err)
                 dpGroup.leave()

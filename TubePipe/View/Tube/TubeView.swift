@@ -196,16 +196,25 @@ struct TubeView: View{
             let oy = tubeViewModel.muff.pMin.y
             let inner = tubeViewModel.muff.midInnerPoint
             let outer = tubeViewModel.muff.midOuterPoint
+            let mid = HalfLine(p: TPoint(x: inner.x - ox,y: inner.y - oy),
+                               r: TPoint(x: outer.x - ox,y: outer.y - oy)).halfCgPoint
+            path.addArc(center: mid,
+                        radius: 5,
+                        startAngle: Angle(degrees:0),
+                        endAngle: Angle(degrees:360),
+                        clockwise: true)
             path.addArc(center: CGPoint(x:inner.x - ox,y:inner.y - oy),
-                        radius: 10,
+                        radius: 5,
                         startAngle: Angle(degrees:0),
                         endAngle: Angle(degrees:360),
                         clockwise: true)
             path.addArc(center: CGPoint(x:outer.x - ox,y:outer.y - oy),
-                        radius: 10,
+                        radius: 5,
                         startAngle: Angle(degrees:0),
                         endAngle: Angle(degrees:360),
                         clockwise: true)
+            path.move(to: CGPoint(x:inner.x - ox,y:inner.y - oy))
+            path.addLine(to: CGPoint(x:outer.x - ox,y:outer.y - oy))
         }
         .muffMidPoint(width: 2.0)
     }

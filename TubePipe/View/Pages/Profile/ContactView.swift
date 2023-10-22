@@ -67,6 +67,14 @@ struct ContactView:View{
         .hiddenBackButtonWithCustomTitle("Profile")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    withAnimation{
+                        cVar.isSearchOption.toggle()
+                    }}){
+                        Label("Search", systemImage: "magnifyingglass")
+                    }
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
                 if possibleBadgeCount > 0 {
                     badgedContactRequestButton
                 }
@@ -74,6 +82,11 @@ struct ContactView:View{
                     unBadgedContactRequestButton
                 }
             }
+        }
+        .sheet(isPresented: $cVar.isSearchOption){
+            SearchContactsView()
+            .presentationDetents([.medium])
+            .presentationDragIndicator(.visible)
         }
         .alert(isPresented: $cVar.isSelectedContact, content: {
             onAlertWithOkAction(actionPrimary: {

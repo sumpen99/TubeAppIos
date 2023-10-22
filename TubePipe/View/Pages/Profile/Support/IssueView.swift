@@ -102,7 +102,7 @@ struct IssueView:View{
                             TextField("",text:$docContent.title.max(MAX_TEXTFIELD_LEN),axis: .vertical)
                                 .preferedDocumentField()
                                 .focused($focusField,equals: .DOCUMENT_TITLE)
-                                .placeholder("(required field)",
+                                .placeholder("...",
                                              when: (focusField != .DOCUMENT_TITLE && docContent.title.isEmpty),
                                              alignment: .center)
         )
@@ -118,7 +118,7 @@ struct IssueView:View{
                             TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN*4),axis: .vertical)
                                 .preferedDocumentField()
                                 .focused($focusField,equals: .DOCUMENT_MESSAGE)
-                                .placeholder("(required field)",
+                                .placeholder("...",
                                              when: (focusField != .DOCUMENT_MESSAGE) && (docContent.message.isEmpty),
                                              alignment: .center)
                                 .vTop()

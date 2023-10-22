@@ -158,15 +158,19 @@ class TubeSceneViewModel: ObservableObject {
         scnScene.rootNode.addChildNode(camera.cameraEye)
     }
     
-    func rotateParentNode(deg:CGFloat) {
-        let rot1 = SCNAction.rotate(by: CGFloat(90).degToRad(), around: SCNVector3(0,1,0), duration: 0)
+    func rotateParentNode() {
+        let rot1 = SCNAction.rotate(by: CGFloat(90).degToRad(), around: SCNVector3(1,0,0), duration: 0)
         parentNode.runAction(rot1)
-        //let rot2 = SCNAction.rotate(by: CGFloat(90).degToRad(), around: SCNVector3(0,0,1), duration: 0)
-        //node.runAction(rot2)
-        let rot3 = SCNAction.rotate(by: CGFloat(90).degToRad(), around: SCNVector3(1,0,0), duration: 0)
+        let rot2 = SCNAction.rotate(by: CGFloat(180).degToRad(), around: SCNVector3(0,1,0), duration: 0)
+        parentNode.runAction(rot2)
+        let rot3 = SCNAction.rotate(by: CGFloat(180).degToRad(), around: SCNVector3(0,0,1), duration: 0)
         parentNode.runAction(rot3)
-        //let zoom = SCNAction.move(by: SCNVector3(x: 0, y: 0, z: -1), duration: 0)
-        //parentNode.runAction(zoom)
+    }
+    
+    func zoomScene(){
+        let newZ = scnScene.rootNode.boundingBox.min.z + scnScene.rootNode.boundingBox.max.z
+        let zoom = SCNAction.move(by: SCNVector3(x: 0, y: 0, z: -newZ), duration: 0)
+        scnScene.rootNode.runAction(zoom)
     }
     
     func reset(){

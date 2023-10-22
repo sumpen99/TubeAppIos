@@ -207,15 +207,23 @@ struct GlobalRingSpinner : View {
     @ViewBuilder
     var message:some View{
         if stopAnimating{
+            let ok = globalLoadingPresentation.loadingIsSuccess
+            let text = ok ? globalLoadingPresentation.messageAfterLoading : "Failed"
             ScrollView{
-                Text(globalLoadingPresentation.messageAfterLoading)
-                .italic()
-                .foregroundColor(globalLoadingPresentation.loadingIsSuccess ? Color.green : Color.red)
-                .lineLimit(nil)
-                .padding()
-                .hLeading()
+                VStack(spacing:5){
+                    Text(text)
+                    if(!ok){
+                        Text(globalLoadingPresentation.messageAfterLoading)
+                        .italic()
+                    }
+                }
             }
-        }
+            .hLeading()
+            .lineLimit(nil)
+            .padding()
+            .font(.footnote)
+            .foregroundColor(ok ? Color.green : Color.red)
+       }
         
     }
     
@@ -224,6 +232,10 @@ struct GlobalRingSpinner : View {
             animatedCircle
             message
         }
+        .onTapGesture {
+            closePresentationDialog()
+        }
+        .vCenter()
         .contentShape(Rectangle())
         .hLeading()
         .onAppear(){
@@ -236,15 +248,21 @@ struct GlobalRingSpinner : View {
             self.pct = 1.0
             DispatchQueue.main.asyncAfter(deadline: .now() + ANIMATION_DURATION){
                 stopAnimating = true
-                closePresentationDialog()
+                if(globalLoadingPresentation.loadingIsSuccess){
+                    closePresentationDialogWithDelay()
+                }
              }
          }
     }
     
-    func closePresentationDialog(){
+    func closePresentationDialogWithDelay(){
         DispatchQueue.main.asyncAfter(deadline: .now() + SHOW_CHECKMARK_AFTER_ANIMATION){
-            globalLoadingPresentation.close()
+            closePresentationDialog()
         }
+     }
+    
+    func closePresentationDialog(){
+        globalLoadingPresentation.close()
      }
      
 }

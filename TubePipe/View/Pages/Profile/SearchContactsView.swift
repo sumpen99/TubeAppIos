@@ -150,15 +150,17 @@ struct SearchContactsView: View{
     
     func fireSentRequestAlert(isSuccess:Bool,message:String,displayInfo:String){
         firestoreViewModel.releaseContactSuggestions()
-        if isSuccess{
+        if !isSuccess{
+            //ALERT_TITLE = "Request sent"
+            //ALERT_MESSAGE = "\(message) to \(displayInfo)"
             ALERT_TITLE = "Attention"
             ALERT_MESSAGE = message
+            sVar.isRequestSent.toggle()
         }
-        else{
-            ALERT_TITLE = "Request sent"
-            ALERT_MESSAGE = "\(message) to \(displayInfo)"
-        }
-        sVar.isRequestSent.toggle()
+        /*else{
+            ALERT_TITLE = "Attention"
+            ALERT_MESSAGE = message
+        }*/
         sVar.clearSearch()
     }
     

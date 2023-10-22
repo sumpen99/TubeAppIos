@@ -28,8 +28,6 @@ enum PasswordPassedChecks{
 }
 
 struct PasswordHelper {
-    let dummy = Dummy("PasswordHelper")
-    
     private(set) var passwordsIsAMatch: PasswordPassedChecks = .NOT_ACCEPTED
     private(set) var passwordsLevel: PasswordLevel = .NONE
     var emailText:String = ""
