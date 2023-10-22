@@ -43,6 +43,7 @@ class Mat4x4{
         left = left.norm()
         
         up = forward.crossProduct(v2:left)
+      
         setColumn(row:0,v:left)
         setColumn(row:1,v:up)
         setColumn(row:2,v:forward)

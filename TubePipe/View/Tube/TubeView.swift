@@ -147,7 +147,7 @@ struct TubeView: View{
             }
             
         }
-        .tubeCenterLine(width: tubeViewModel.settingsVar.steel)
+        .tubeCenterLine(width: 2.0)
     }
     
     // MARK: - MUFF BOUNDINGBOX
@@ -234,20 +234,28 @@ struct TubeView: View{
     // MARK: - CENTERLINES
     var centerLines: some View{
         Path { path in
-            if tubeViewModel.muff.centerLines.count <= 0 { return }
-            
+            if tubeViewModel.muff.centerLines.count <= 1 { return }
+            let maxIndex = tubeViewModel.muff.centerLines.count - 1
             let ox = tubeViewModel.muff.pMin.x
             let oy = tubeViewModel.muff.pMin.y
             
-            for line in tubeViewModel.muff.centerLines{
-                let startL1 = line.p1
-                path.move(to: CGPoint(x:startL1.x - ox,y:startL1.y - oy))
-                
-                let p = line.p2
-                path.addLine(to: CGPoint(x:p.x - ox,y:p.y - oy))
-            }
+            let ll1 = tubeViewModel.muff.centerLines[0]
+            let ll2 = tubeViewModel.muff.centerLines[maxIndex]
+            
+            let p0 = ll1.p1
+            path.move(to: CGPoint(x:p0.x - ox,y:p0.y - oy))
+            let p1 = ll1.p2
+            path.addLine(to: CGPoint(x:p1.x - ox,y:p1.y - oy))
+            let p2 = ll2.p2
+            path.addLine(to: CGPoint(x:p2.x - ox,y:p2.y - oy))
+            let p3 = ll2.p1
+            path.addLine(to: CGPoint(x:p3.x - ox,y:p3.y - oy))
+            path.addLine(to: CGPoint(x:p0.x - ox,y:p0.y - oy))
+            
+            
+          
         }
-        .tubeCenterLine(width: 1.0)
+        .tubeCenterLine(width: 2.0)
     }
     
     // MARK: - LABELS DEGREES

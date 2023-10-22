@@ -94,7 +94,9 @@ class TubeSceneViewModel: ObservableObject {
     func buildVerticesPath(_ points:[TPoint]) -> [SCNVector3]?{
         if points.count < 2 { return nil }
         var vertices:[SCNVector3] = []
+        //debugLog(object: "Vertices")
         for p in points{
+            //debugLog(object: p)
             vertices.append(SCNVector3(x: SCNFloat(p.x), y: 0.0, z: SCNFloat(p.y)))
         }
         return vertices
@@ -141,10 +143,6 @@ class TubeSceneViewModel: ObservableObject {
     func publishScene(){
         //scnScene.rootNode.position = SCNVector3(x: 0, y: 0, z: -100)
         //scnScene.rootNode.rotation = SCNVector4(1, 1, 1, 1)
-        
-        //rotateParentNode()
-        //addCamera()
-        rotateParentNode()
         scnScene.rootNode.addChildNode(parentNode)
        //scnScene.rootNode.orientation = SCNQuaternion(x: Float.pi/2, y: 0, z: 0, w: 0)
         
@@ -154,13 +152,15 @@ class TubeSceneViewModel: ObservableObject {
         scnScene.rootNode.addChildNode(camera.cameraEye)
     }
     
-    func rotateParentNode() {
+    func rotateParentNode(deg:CGFloat) {
         let rot1 = SCNAction.rotate(by: CGFloat(90).degToRad(), around: SCNVector3(0,1,0), duration: 0)
         parentNode.runAction(rot1)
         //let rot2 = SCNAction.rotate(by: CGFloat(90).degToRad(), around: SCNVector3(0,0,1), duration: 0)
         //node.runAction(rot2)
         let rot3 = SCNAction.rotate(by: CGFloat(90).degToRad(), around: SCNVector3(1,0,0), duration: 0)
         parentNode.runAction(rot3)
+        //let zoom = SCNAction.move(by: SCNVector3(x: 0, y: 0, z: -1), duration: 0)
+        //parentNode.runAction(zoom)
     }
     
     func reset(){
@@ -318,8 +318,8 @@ extension TubeSceneViewModel{
             node.addChildNode(dir.textNode)
             axis.addChildNode(node)
         }
-        
-        axis.position = SCNVector3(x: 0, y: SCNFloat(parentNode.boundingBox.max.z + 20), z: 0)
+        let maxZ = parentNode.boundingBox.max.z
+        axis.position = SCNVector3(x: 0, y:0, z: maxZ/2.0)
         scnScene.rootNode.addChildNode(axis)
     }
 }

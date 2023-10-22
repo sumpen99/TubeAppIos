@@ -155,7 +155,7 @@ class TubeViewModel: ObservableObject{
         let lenA = Line.calcLengthOfLine(p1: TPoint(x:0.0,y:0.0), p2: tubeBase.b_c)
         
         let off_r = (lenA * cos(b_r3))
-        
+     
         tubeBase.off_r = (settingsVar.radie <= settingsVar.center) ? off_r : -off_r
         
         let b_x1 = (settingsVar.radie + tubeBase.off_r) * sin(b_r2) + tubeBase.b_c.x
@@ -442,6 +442,7 @@ class TubeViewModel: ObservableObject{
                 var pos:CGPoint
                 
                 let p:CGPoint = muff.l1[i]
+                let pp:CGPoint = muff.l2[i]
                 
                 let l1 = HalfLine(p: TPoint(x:cx,y:cy), r: TPoint(x:p.x,y:p.y))
                 
@@ -460,7 +461,7 @@ class TubeViewModel: ObservableObject{
                 }
                 rotation = 0.0
                 pos = CGPoint(x:muff.l2[i].x,y:muff.l2[i].y)
-                muff.centerLines.append(CenterLine(p1: CGPoint(x:cx,y:cy), p2: CGPoint(x:p.x,y:p.y)))
+                muff.centerLines.append(CenterLine(p1: CGPoint(x:cx,y:cy), p2: CGPoint(x:pp.x,y:pp.y)))
                 muff.addLabel(DimensionLabel(text: lbl+"°", pos: pos, rotation: rotation))
            }
         }
@@ -532,7 +533,6 @@ class TubeViewModel: ObservableObject{
             self.muffDetails.setDegree(first: settingsVar.grader/2.0, cut: settingsVar.grader/2.0)
             return []
         }
-      
         var points:[TPoint] = []
         let segments = settingsVar.segment
         let cuts:CGFloat = CGFloat(segments + 1)
@@ -543,7 +543,6 @@ class TubeViewModel: ObservableObject{
         let first_degree:CGFloat = (settingsVar.grader - ((CGFloat(segments - 2)) * cut_degree)) / 2.0
     
         let fp:CGFloat = first_degree
-        
         let c:CGFloat = settingsVar.radie + tubeBase.off_r
         var A:CGFloat = fp
         var B:CGFloat = 90.0 - cut_degree
@@ -576,6 +575,7 @@ class TubeViewModel: ObservableObject{
                 points.append(TPoint(x:x,y:y))
             }
         }
+        
         
         return points
     }
@@ -816,6 +816,8 @@ extension TubeViewModel{
         return pointsList
     }
     
+    
+   
     func initViewFromModelValues(_ model:TubeModel){
         settingsVar.dimension = CGFloat(model.dimension)
         settingsVar.segment = CGFloat(model.segment)

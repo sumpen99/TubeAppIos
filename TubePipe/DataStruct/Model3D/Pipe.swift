@@ -69,10 +69,10 @@ class Pipe{
         let dir1 = path[toIndex].sub(path[fromIndex])
         
         if(toIndex == pathCount-1){ dir2 = dir1 }
+        
         else{ dir2 = path[toIndex+1].sub(path[toIndex]) }
        
         let normal = dir1.add(dir2)
-      
         let plane = Plane(normal:normal,point:path[toIndex])
         
         let fromCountour = contours[fromIndex]

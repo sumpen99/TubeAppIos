@@ -19,6 +19,7 @@ class Plane{
         normalLength = normal.length
         d = -normal.dotProduct(v2: point)
         distance = -d / normalLength
+        normalize()
     }
     
     // MARK: CLASS FUNCTIONS
