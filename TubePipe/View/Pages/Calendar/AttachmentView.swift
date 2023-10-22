@@ -16,6 +16,13 @@ struct AttachmentView:View{
     let message:Message
     let userName:String
     
+    var allowedToDelete:Bool{
+        guard let from = message.senderId,
+              let currentUserID = firestoreViewModel.currentUserID
+        else{ return false }
+        return from == currentUserID
+    }
+    
     var loadButton:some View{
         Button(action: loadViewModelWithSharedTube ){
             Text("Load Tube")
@@ -24,9 +31,11 @@ struct AttachmentView:View{
     }
     
     var deleteButton:some View{
-        Button(action: { } ){
+        Button(action: {
+        } ){
             Text("Delete")
         }
+        .disabled(!allowedToDelete)
         .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemRed))
     }
     

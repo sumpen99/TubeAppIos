@@ -168,6 +168,7 @@ extension FirestoreViewModel{
                     dpGroup.leave()
                 }
             }
+            dpGroup.enter()
             self.removeThreadIdFromGroup(groupId,threadId:messageId){ err in
                 resultOfOperation.add(err)
                 dpGroup.leave()

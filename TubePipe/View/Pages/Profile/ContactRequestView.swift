@@ -41,10 +41,6 @@ struct ContactRequestView:View{
                         contactDescription(contact)
                     }
                 }
-                /*else{
-                    Text("No requests awaiting")
-                    .noDataBackground()
-                }*/
             }
         }
     }
@@ -58,11 +54,7 @@ struct ContactRequestView:View{
                         contactDescription(contact)
                     }
                 }
-                /*else{
-                    Text("No requests sent")
-                    .noDataBackground()
-                }*/
-            }
+             }
         }
     }
     
@@ -198,11 +190,13 @@ struct ContactRequestView:View{
               let newMessageGroup = firestoreViewModel.createNewMessageGroup(groupId: groupId, otherUserId: otherUserId)
         else { return }
         firestoreViewModel.acceptContactRequestFrom(currentContact){ result in
-            if result.hasCriticalError{ firestoreViewModel.removeContactRequestFrom(currentContact)}
-            else{ firestoreViewModel.createMessageGroupDocument(newMessageGroup,groupId:groupId){ result in
-                // show result
-            }}
-       }
-       cVar.currentContact = nil
+            firestoreViewModel.removeContactRequestFrom(currentContact){ result in
+                if !result.hasCriticalError{
+                    firestoreViewModel.createMessageGroupDocument(newMessageGroup,groupId:groupId){ result in}
+                }
+                // else show some info
+            }
+        }
+        cVar.currentContact = nil
     }
 }

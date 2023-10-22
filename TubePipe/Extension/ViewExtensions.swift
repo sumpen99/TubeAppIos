@@ -211,6 +211,10 @@ extension View{
         }
     }
     
+    func toastView(toast: Binding<Toast?>) -> some View {
+        self.modifier(ToastModifier(toast: toast))
+      }
+    
 }
 
 func backButton(title:String = "Back",action:@escaping ()->Void) -> some View{

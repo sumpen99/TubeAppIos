@@ -91,7 +91,8 @@ extension Color {
     static let tertiarySystemGroupedBackground = Color(UIColor.tertiarySystemGroupedBackground)
     
     // MARK: - Gray Colors
-    static let systemGray = Color(UIColor.systemGray)
+    static let systemGray  = Color(UIColor.systemGray)
+    static let darkGray    = Color(UIColor.darkGray)
     static let systemGray2 = Color(UIColor.systemGray2)
     static let systemGray3 = Color(UIColor.systemGray3)
     static let systemGray4 = Color(UIColor.systemGray4)

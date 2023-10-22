@@ -20,7 +20,7 @@ struct ShareDocumentView:View{
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @State var docContent:DocumentContent = DocumentContent()
     @State var sclVar: SortedContactListVar = SortedContactListVar()
-    @State var isSendResult:Bool = false
+    @State private var toast: Toast? = nil
     
     var buttonIsDisabled:Bool{
         sclVar.currentContact == nil
@@ -120,6 +120,33 @@ struct ShareDocumentView:View{
         .padding([.leading,.trailing])
     }
     
+    /*
+     ack(spacing: 32) {
+           Button {
+             toast = Toast(style: .success, message: "Saved.", width: 160)
+           } label: {
+             Text("Run (Success)")
+           }
+           
+           Button {
+             toast = Toast(style: .info, message: "Btw, you are a good person.")
+           } label: {
+             Text("Run (Info)")
+           }
+           
+           Button {
+             toast = Toast(style: .warning, message: "Beware of a dog!")
+           } label: {
+             Text("Run (Warning)")
+           }
+           
+           Button {
+             toast = Toast(style: .error, message: "Fatal error, blue screen level.")
+           } label: {
+             Text("Run (Error)")
+           }
+     
+     */
     var body: some View{
         VStack(spacing:0){
             TopMenu(title: "Share document", actionCloseButton: closeView)
@@ -129,7 +156,7 @@ struct ShareDocumentView:View{
                 Text(Date().formattedString()).sectionTextSecondary(color:.tertiaryLabel).padding(.leading)
             }
         }
-        .alert(isPresented: $isSendResult, content: { onResultAlert(action: closeView) })
+        .toastView(toast: $toast)
         .onChange(of: sclVar.showingOptions){ value in
            withAnimation{
                sclVar.isSuggestionShowing.toggle()
@@ -142,6 +169,14 @@ struct ShareDocumentView:View{
     }
     
     //MARK: - BUTTON FUNCTIONS
+    func closeAfterToast(isSuccess:Bool){
+        if(isSuccess){ toast = Toast(style: .success, message: "Message sent!") }
+        else{ toast = Toast(style: .error, message: "Error sending message!") }
+        DispatchQueue.main.asyncAfter(deadline: .now() + TOAST_DURATION){
+            closeView()
+        }
+    }
+    
     func closeView(){
         dismiss()
     }
@@ -150,27 +185,16 @@ struct ShareDocumentView:View{
         guard let contact = sclVar.currentContact,
               let senderId = firestoreViewModel.currentUserID,
               let groupId = firestoreViewModel.getGroupIdFromOtherUserId(contact.userId)
-        else { showSendMessageAlert(FirebaseError.FAILED_TO_SEND_MESSAGE.localizedDescription);return}
+        else { return }
         
         let messageId = docContent.documentId
         let storageId = docContent.storageId
         
-        globalLoadingPresentation.startLoading()
         sendMessage(groupId:groupId,
                     senderId:senderId,
                     messageId: messageId,
                     storageId: storageId){ result in
-            /*if result.operationHasMessage{
-                showSendMessageAlert(result.message)
-            }
-            else{
-                closeView()
-            }*/
-            globalLoadingPresentation.stopLoading(isSuccess:result.isSuccess,
-                                                  message: result.message,
-                                                  showAnimationCircle: true)
-            //dialogPresentation.presentedText = err?.localizedDescription ?? "Message sent!"
-            //dialogPresentation.closeWithAnimationAfter(time: 2.5)
+            closeAfterToast(isSuccess: result.isSuccess)
         }
     }
     
@@ -197,12 +221,6 @@ struct ShareDocumentView:View{
             }
             onResult?(result)
         }
-    }
-    
-    func showSendMessageAlert(_ message:String){
-        ALERT_TITLE = "Attention!"
-        ALERT_MESSAGE = "\(message)"
-        isSendResult.toggle()
     }
     
 }

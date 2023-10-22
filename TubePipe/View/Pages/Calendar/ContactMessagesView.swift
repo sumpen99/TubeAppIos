@@ -88,7 +88,7 @@ struct ContactMessagesView:View{
         if let from = message.senderId,
            let currentUserID = firestoreViewModel.currentUserID,
            let date = message.date{
-            messageBubble(message,date:date,direction: from == currentUserID ? .right : .left)
+           messageBubble(message,date:date,direction: from == currentUserID ? .right : .left)
         }
     }
     
@@ -129,8 +129,7 @@ struct ContactMessagesView:View{
         }
         .sheet(item: $cmVar.currentMessage){ message in
             AttachmentView(message: message,userName:contact.displayName ?? "Back")
-               .presentationDragIndicator(.visible)
-               //.presentationDetents([.medium])
+            .presentationDragIndicator(.visible)
         }
         .onAppear{
             firestoreViewModel.loadThreadDocumentsFromContact(contact.groupId)

@@ -37,8 +37,8 @@ extension RenderOption{
         case .FULL_SIZE_MUFF:       return 32
         case .SCALED_SIZE_MUFF:     return 64
         case .WORLD_AXIS:           return 128
-        case .SHOW_STEEL:         return 256
-        case .SHOW_MUFF:          return 512
+        case .SHOW_STEEL:           return 256
+        case .SHOW_MUFF:            return 512
         }
     }
     static func indexOfBit(op:RenderOption) -> UInt16{
@@ -51,15 +51,15 @@ extension RenderOption{
         case .FULL_SIZE_MUFF:       return 5
         case .SCALED_SIZE_MUFF:     return 6
         case .WORLD_AXIS:           return 7
-        case .SHOW_STEEL:         return 8
-        case .SHOW_MUFF:          return 9
+        case .SHOW_STEEL:           return 8
+        case .SHOW_MUFF:            return 9
         }
     }
 }
 
 class TubeSceneViewModel: ObservableObject {
     @Published var scnScene = SCNScene()
-    let camera = Camera()
+    var initialZoomSet:Bool = false
     var renderState:UInt16 = 0
     var renderNode:RenderNode = .NODE_MUFF
     var parentNode:SCNNode = SCNNode()
@@ -147,30 +147,7 @@ class TubeSceneViewModel: ObservableObject {
      }
     
     func publishScene(){
-        //scnScene.rootNode.position = SCNVector3(x: 0, y: 0, z: -100)
-        //scnScene.rootNode.rotation = SCNVector4(1, 1, 1, 1)
         scnScene.rootNode.addChildNode(parentNode)
-       //scnScene.rootNode.orientation = SCNQuaternion(x: Float.pi/2, y: 0, z: 0, w: 0)
-        
-    }
-    
-    func addCamera(){
-        scnScene.rootNode.addChildNode(camera.cameraEye)
-    }
-    
-    func rotateParentNode() {
-        let rot1 = SCNAction.rotate(by: CGFloat(90).degToRad(), around: SCNVector3(1,0,0), duration: 0)
-        parentNode.runAction(rot1)
-        let rot2 = SCNAction.rotate(by: CGFloat(180).degToRad(), around: SCNVector3(0,1,0), duration: 0)
-        parentNode.runAction(rot2)
-        let rot3 = SCNAction.rotate(by: CGFloat(180).degToRad(), around: SCNVector3(0,0,1), duration: 0)
-        parentNode.runAction(rot3)
-    }
-    
-    func zoomScene(){
-        let newZ = scnScene.rootNode.boundingBox.min.z + scnScene.rootNode.boundingBox.max.z
-        let zoom = SCNAction.move(by: SCNVector3(x: 0, y: 0, z: -newZ), duration: 0)
-        scnScene.rootNode.runAction(zoom)
     }
     
     func reset(){
@@ -182,14 +159,6 @@ class TubeSceneViewModel: ObservableObject {
         }
         parentNode = SCNNode()
         meshCube.reset()
-    }
-        
-    func updatePosition(onAxis axis:AxisDirection,with pos:SCNFloat){
-        switch axis{
-        case .AXIS_X:   scnScene.rootNode.simdLocalTranslate(by: simd_float3(pos,0,0))
-        case .AXIS_Y:   scnScene.rootNode.simdLocalTranslate(by: simd_float3(0,pos,0))
-        case .AXIS_Z:   scnScene.rootNode.simdLocalTranslate(by: simd_float3(0,0,pos))
-        }
     }
 }
 
@@ -348,4 +317,39 @@ extension TubeSceneViewModel{
     }
 }
 
+extension TubeSceneViewModel{
+    
+    func rotateParentNode() {
+        let rot1 = SCNAction.rotate(by: CGFloat(90).degToRad(), around: SCNVector3(1,0,0), duration: 0)
+        parentNode.runAction(rot1)
+        let rot2 = SCNAction.rotate(by: CGFloat(180).degToRad(), around: SCNVector3(0,1,0), duration: 0)
+        parentNode.runAction(rot2)
+        let rot3 = SCNAction.rotate(by: CGFloat(180).degToRad(), around: SCNVector3(0,0,1), duration: 0)
+        parentNode.runAction(rot3)
+    }
+    
+    func zoomScene(){
+        if(!initialZoomSet){
+            let newZ = scnScene.rootNode.boundingBox.min.z + scnScene.rootNode.boundingBox.max.z
+            let zoom = SCNAction.move(by: SCNVector3(x: 0, y: 0, z: -newZ), duration: 0)
+            scnScene.rootNode.runAction(zoom)
+            initialZoomSet = true
+        }
+    }
+    
+    func updatePosition(onAxis axis:AxisDirection,with pos:SCNFloat){
+        switch axis{
+        case .AXIS_X:   scnScene.rootNode.simdLocalTranslate(by: simd_float3(pos,0,0))
+        case .AXIS_Y:   scnScene.rootNode.simdLocalTranslate(by: simd_float3(0,pos,0))
+        case .AXIS_Z:   scnScene.rootNode.simdLocalTranslate(by: simd_float3(0,0,pos))
+        }
+    }
+    
+    /*
+    func addCamera(){
+        scnScene.rootNode.addChildNode(camera.cameraEye)
+    }*/
+    //scnScene.rootNode.orientation = SCNQuaternion(x: Float.pi/2, y: 0, z: 0, w: 0)
+    
+}
 

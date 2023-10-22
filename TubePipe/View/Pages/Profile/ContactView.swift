@@ -27,7 +27,7 @@ struct ContactView:View{
                            contactCardOption: .CONTACT_CARD_ELLIPSE,
                            contactSectionOption: .WITH_SECTION,
                            contactAvatarColor:.black,
-                           contactInfoColor: .white)
+                           contactInfoColor: Color.GHOSTWHITE)
     }
     
     var badgedContactRequestButton:some View{

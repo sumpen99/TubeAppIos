@@ -28,8 +28,8 @@ extension FirestoreViewModel{
                 resultOfOperation.add(err)
                 dpGroup.leave()
             }
-            dpGroup.enter()
             if userModeHasChanged{
+                dpGroup.enter()
                 if allowSharing{
                     self.createAppUserRequestDocument(contact){ err in
                         resultOfOperation.add(err)
@@ -44,6 +44,7 @@ extension FirestoreViewModel{
                 }
             }
             else {
+                dpGroup.enter()
                 self.checkIfUserRequestDocumentExists(){ error,documentExists in
                    if documentExists{
                        self.updateUserRequestWithTag(tagContainer,displayName:displayName){ err in
