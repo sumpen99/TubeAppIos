@@ -223,7 +223,7 @@ class TubeViewModel: ObservableObject{
         var b_x2: CGFloat
         var b_y2: CGFloat
         guard let l1 = tubeBase.l1,
-              let l2 = tubeBase.l2 else { debugLog(object: "L1 L2 ????"); return false}
+              let l2 = tubeBase.l2 else { return false}
         
         let p = l1.intersect(other: l2)
      
@@ -240,14 +240,14 @@ class TubeViewModel: ObservableObject{
         let p2 = TPoint(x:b_x2,y:b_y2)
         let p3 = TPoint(x:tubeBase.p3.x,y:tubeBase.p3.y)
         let n = getMuff(c_line: [p1,p2,p3])
-        guard let l1 = n.l1,let l2 = n.l2 else { debugLog(object: "L1 L2 ????");return false}
+        guard let l1 = n.l1,let l2 = n.l2 else { return false}
         muff.setL1L2(l1: l1, l2: l2)
         return true
     }
     
     func drawTubeSegments() -> Bool{
         let n = getMuff(c_line: tubeBase.b_xy_p_list)
-        guard let l1 = n.l1,let l2 = n.l2 else { debugLog(object: "L1 L2 ????"); return false}
+        guard let l1 = n.l1,let l2 = n.l2 else { return false}
         muff.setL1L2(l1: l1, l2: l2)
         return true
     }
@@ -753,7 +753,7 @@ class TubeViewModel: ObservableObject{
 
 extension TubeViewModel{
     
-    func pointsWithAddedCircle(renderSizePart:UInt8) -> [TPoint]{
+    func pointsWithAddedCircle(renderSizePart:UInt16) -> [TPoint]{
         if muff.points.count < 3 { return [] }
         switch renderSizePart{
         case RenderOption.indexOf(op: .SCALED_SIZE_MUFF): return scaledListOfPoints()
@@ -763,7 +763,7 @@ extension TubeViewModel{
         
     }
     
-    func steelPotentiallyScaled(renderSizePart:UInt8) -> [TPoint]{
+    func steelPotentiallyScaled(renderSizePart:UInt16) -> [TPoint]{
         switch renderSizePart{
         case RenderOption.indexOf(op: .SCALED_SIZE_MUFF): return tubeBase.scaledPathToModel()
         case RenderOption.indexOf(op: .FULL_SIZE_MUFF): fallthrough
@@ -877,8 +877,8 @@ extension TubeViewModel{
             center: settingsVar.center)
     }
     
-    func collectModelRenderState() -> UInt8{
-        var state:UInt8 = 0
+    func collectModelRenderState() -> UInt16{
+        var state:UInt16 = 0
         for op in stride(from: DrawOption.indexOf(op: .FULL_SIZE_MUFF),
                          to: DrawOption.indexOf(op: .ALL_OPTIONS),
                          by: 1){
@@ -892,6 +892,8 @@ extension TubeViewModel{
                 case DrawOption.indexOf(op: .FULL_SIZE_MUFF):           state += RenderOption.indexOf(op: .FULL_SIZE_MUFF)
                 case DrawOption.indexOf(op: .SCALED_SIZE_MUFF):         state += RenderOption.indexOf(op: .SCALED_SIZE_MUFF)
                 case DrawOption.indexOf(op: .SHOW_WORLD_AXIS):          state += RenderOption.indexOf(op: .WORLD_AXIS)
+                case DrawOption.indexOf(op: .SHOW_STEEL):             state += RenderOption.indexOf(op: .SHOW_STEEL)
+                case DrawOption.indexOf(op: .SHOW_MUFF):              state += RenderOption.indexOf(op: .SHOW_MUFF)
                 default: break
                 }
             }

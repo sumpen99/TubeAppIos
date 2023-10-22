@@ -17,6 +17,8 @@ enum RenderOption{
     case FULL_SIZE_MUFF
     case SCALED_SIZE_MUFF
     case WORLD_AXIS
+    case SHOW_STEEL
+    case SHOW_MUFF
 }
 
 enum RenderNode: String{
@@ -25,7 +27,7 @@ enum RenderNode: String{
 }
 
 extension RenderOption{
-    static func indexOf(op:RenderOption) -> UInt8{
+    static func indexOf(op:RenderOption) -> UInt16{
         switch op{
         case .WHOLE_MUFF:           return 1
         case .SPLIT_MUFF:           return 2
@@ -35,9 +37,11 @@ extension RenderOption{
         case .FULL_SIZE_MUFF:       return 32
         case .SCALED_SIZE_MUFF:     return 64
         case .WORLD_AXIS:           return 128
+        case .SHOW_STEEL:         return 256
+        case .SHOW_MUFF:          return 512
         }
     }
-    static func indexOfBit(op:RenderOption) -> UInt8{
+    static func indexOfBit(op:RenderOption) -> UInt16{
         switch op{
         case .WHOLE_MUFF:           return 0
         case .SPLIT_MUFF:           return 1
@@ -47,6 +51,8 @@ extension RenderOption{
         case .FULL_SIZE_MUFF:       return 5
         case .SCALED_SIZE_MUFF:     return 6
         case .WORLD_AXIS:           return 7
+        case .SHOW_STEEL:         return 8
+        case .SHOW_MUFF:          return 9
         }
     }
 }
@@ -54,18 +60,19 @@ extension RenderOption{
 class TubeSceneViewModel: ObservableObject {
     @Published var scnScene = SCNScene()
     let camera = Camera()
-    var renderState:UInt8 = 0
+    var renderState:UInt16 = 0
     var renderNode:RenderNode = .NODE_MUFF
     var parentNode:SCNNode = SCNNode()
     var meshCube:MeshCube = MeshCube()
     
     //MARK: Do Step 0
-    func setRenderState(_ state:UInt8){
+    func setRenderState(_ state:UInt16){
         renderState = state
     }
     
     //MARK: Do Step 1.0
     func buildModelFromTubePoints(_ points:[TPoint],dimension:CGFloat) {
+        if(!muffShouldBeVisible){ return }
         guard let path = buildVerticesPath(points) else { return }
         renderNode = .NODE_MUFF
         let circle = buildCircleBySteps(CIRCLE_SECTORS, radius: dimension/2.0)
@@ -79,6 +86,7 @@ class TubeSceneViewModel: ObservableObject {
     
     //MARK: Do Step 1.1
     func buildSteelFromTubePoints(_ points:[TPoint],dimension:CGFloat){
+        if(!steelShouldBeVisible){ return }
         guard let path = buildVerticesPath(points) else { return }
         renderNode = .NODE_STEEL
         let circle = buildCircleBySteps(CIRCLE_SECTORS, radius: dimension/2.0)
@@ -94,9 +102,7 @@ class TubeSceneViewModel: ObservableObject {
     func buildVerticesPath(_ points:[TPoint]) -> [SCNVector3]?{
         if points.count < 2 { return nil }
         var vertices:[SCNVector3] = []
-        //debugLog(object: "Vertices")
         for p in points{
-            //debugLog(object: p)
             vertices.append(SCNVector3(x: SCNFloat(p.x), y: 0.0, z: SCNFloat(p.y)))
         }
         return vertices
@@ -184,9 +190,14 @@ class TubeSceneViewModel: ObservableObject {
 }
 
 extension TubeSceneViewModel{
-    func setRenderBit(_ bit:UInt8){ renderState |= bit }
-    func clearRenderBit(_ bit:UInt8){ renderState &= ~(1<<bit) }
+    func setRenderBit(_ bit:UInt16){ renderState |= bit }
+    func clearRenderBit(_ bit:UInt16){ renderState &= ~(1<<bit) }
     func clearRenderState(){ renderState = 0}
+    
+    func clearRenderRenderPart(){
+        renderState &= ~(RenderOption.indexOf(op: .SHOW_STEEL) |
+                         RenderOption.indexOf(op: .SHOW_MUFF))
+    }
     func clearRenderSizePart(){
         renderState &= ~(RenderOption.indexOf(op: .FULL_SIZE_MUFF) |
                          RenderOption.indexOf(op: .SCALED_SIZE_MUFF))
@@ -203,27 +214,36 @@ extension TubeSceneViewModel{
     func clearRenderWorldAxisPart(){
         renderState &= ~(RenderOption.indexOf(op: .WORLD_AXIS))
     }
-    func isRenderBitSet(_ bit:UInt8) -> Bool{ return (renderState & (1 << bit)) != 0 }
+    func isRenderBitSet(_ bit:UInt16) -> Bool{ return (renderState & (1 << bit)) != 0 }
     
     var splitHalf:Bool{ isRenderBitSet(RenderOption.indexOfBit(op: .SPLIT_MUFF))}
     var isMuff:Bool{ renderNode == .NODE_MUFF }
     var isWorldAxis:Bool{ isRenderBitSet(RenderOption.indexOfBit(op: .WORLD_AXIS))}
+    var steelShouldBeVisible:Bool{ isRenderBitSet(RenderOption.indexOfBit(op: .SHOW_STEEL))}
+    var muffShouldBeVisible:Bool{ isRenderBitSet(RenderOption.indexOfBit(op: .SHOW_MUFF))}
     
-    var renderSizePart: UInt8{
-        let clearBits:UInt8 =
+    var renderRenderPart:UInt16{
+        let clearBits:UInt16 =
+        RenderOption.indexOf(op: .SHOW_STEEL) +
+        RenderOption.indexOf(op: .SHOW_MUFF)
+        return renderState & clearBits
+    }
+    
+    var renderSizePart: UInt16{
+        let clearBits:UInt16 =
         RenderOption.indexOf(op: .FULL_SIZE_MUFF) +
         RenderOption.indexOf(op: .SCALED_SIZE_MUFF)
         return renderState & clearBits
     }
-    var renderDrawPart: UInt8{
-        let clearBits:UInt8 =
+    var renderDrawPart: UInt16{
+        let clearBits:UInt16 =
         RenderOption.indexOf(op: .SPLIT_MUFF) +
         RenderOption.indexOf(op: .WHOLE_MUFF)
         return renderState & clearBits
     }
     
-    var renderFillPart: UInt8{
-        let clearBits:UInt8 =
+    var renderFillPart: UInt16{
+        let clearBits:UInt16 =
         RenderOption.indexOf(op: .SEE_THROUGH_MUFF) +
         RenderOption.indexOf(op: .LINE_MUFF) +
         RenderOption.indexOf(op: .FILL_MUFF)

@@ -377,7 +377,6 @@ extension ProfileView{
     func deleteAccountAndAllData(email:String,password:String){
         firebaseAuth.deleteAccount(email: email, password: password){ result in
             if result.isSuccess{ deleteAccountAndAllDataPart2() }
-            //else{ debugLog(object: result.message)}
         }
     }
     

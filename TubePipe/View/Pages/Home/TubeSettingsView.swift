@@ -45,6 +45,8 @@ enum DrawOption{
     case DRAW_LINED_MUFF
     case DRAW_SEE_THROUGH_MUFF
     case SHOW_WORLD_AXIS
+    case SHOW_STEEL
+    case SHOW_MUFF
     case ALL_OPTIONS
     
 }
@@ -74,7 +76,9 @@ extension DrawOption{
         case .DRAW_LINED_MUFF:          return 19
         case .DRAW_SEE_THROUGH_MUFF:    return 20
         case .SHOW_WORLD_AXIS:          return 21
-        case .ALL_OPTIONS:              return 22
+        case .SHOW_STEEL:               return 22
+        case .SHOW_MUFF:                return 23
+        case .ALL_OPTIONS:              return 24
         }
         
     }

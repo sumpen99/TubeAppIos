@@ -225,9 +225,6 @@ struct GlobalRingSpinner : View {
             message
         }
         .contentShape(Rectangle())
-        .onTapGesture {
-            debugLog(object: "tap on body")
-        }
         .hLeading()
         .onAppear(){
             startAnimation()

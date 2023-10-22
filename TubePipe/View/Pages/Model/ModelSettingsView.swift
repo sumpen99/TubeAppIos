@@ -29,16 +29,20 @@ struct ModelSettingsView:View{
     
     //MARK: - SWITCHES
     @ViewBuilder
-    func modelSwitchSection(header:String,imageName:String,index:Int,clearConnectedIndexes:[Int]) -> some View{
+    func modelSwitchSection(header:String,
+                            imageName:String,
+                            index:Int,
+                            clearConnectedIndexes:[Int],
+                            allowToggle:Bool) -> some View{
         HStack{
             listDotWithImage(imageName)
             Text(header).font(.body).foregroundColor(.black)
             Spacer()
             Toggle(isOn: self.$tubeViewModel.userDefaultSettingsVar.drawOptions[index]){}
                 .toggleStyle(CheckboxStyle(alignLabelLeft: true,labelIsOnColor:.black))
-                .disabled(self.tubeViewModel.userDefaultSettingsVar.drawOptions[index])
+                .disabled(allowToggle ? false : self.tubeViewModel.userDefaultSettingsVar.drawOptions[index])
                 .onChange(of:self.tubeViewModel.userDefaultSettingsVar.drawOptions[index]){ isActive in
-                    if isActive{
+                    if isActive || allowToggle{
                         for idx in clearConnectedIndexes{
                             self.tubeViewModel.userDefaultSettingsVar.drawOptions[idx] = false
                         }
@@ -58,39 +62,58 @@ struct ModelSettingsView:View{
                                imageName: "circle.fill",
                                index: DrawOption.indexOf(op: .DRAW_FILLED_MUFF),
                                clearConnectedIndexes:[DrawOption.indexOf(op: .DRAW_LINED_MUFF),
-                                                      DrawOption.indexOf(op: .DRAW_SEE_THROUGH_MUFF)])
+                                                      DrawOption.indexOf(op: .DRAW_SEE_THROUGH_MUFF)],
+                               allowToggle: false)
         case DrawOption.indexOf(op: .DRAW_LINED_MUFF):
             modelSwitchSection(header: "Outlined Muff",
                                imageName: "circle.dashed",
                                index: DrawOption.indexOf(op: .DRAW_LINED_MUFF),
                                clearConnectedIndexes:[DrawOption.indexOf(op: .DRAW_FILLED_MUFF),
-                                                      DrawOption.indexOf(op: .DRAW_SEE_THROUGH_MUFF)])
+                                                      DrawOption.indexOf(op: .DRAW_SEE_THROUGH_MUFF)],
+                               allowToggle: false)
         case DrawOption.indexOf(op: .DRAW_SEE_THROUGH_MUFF):
             modelSwitchSection(header: "See Through Muff",
                                imageName: "circle",
                                index: DrawOption.indexOf(op: .DRAW_SEE_THROUGH_MUFF),
                                clearConnectedIndexes:[DrawOption.indexOf(op: .DRAW_LINED_MUFF),
-                                                      DrawOption.indexOf(op: .DRAW_FILLED_MUFF)])
+                                                      DrawOption.indexOf(op: .DRAW_FILLED_MUFF)],
+                               allowToggle: false)
         case DrawOption.indexOf(op: .SHOW_WHOLE_MUFF):
             modelSwitchSection(header: "Whole Muff",
                                imageName: "oval.portrait.fill",
                                index: DrawOption.indexOf(op: .SHOW_WHOLE_MUFF),
-                               clearConnectedIndexes:[DrawOption.indexOf(op: .SHOW_SPLIT_MUFF)])
+                               clearConnectedIndexes:[DrawOption.indexOf(op: .SHOW_SPLIT_MUFF)],
+                               allowToggle: false)
         case DrawOption.indexOf(op: .SHOW_SPLIT_MUFF):
             modelSwitchSection(header: "Half Muff",
                                imageName: "oval.portrait.lefthalf.filled",
                                index: DrawOption.indexOf(op: .SHOW_SPLIT_MUFF),
-                               clearConnectedIndexes:[DrawOption.indexOf(op: .SHOW_WHOLE_MUFF)])
+                               clearConnectedIndexes:[DrawOption.indexOf(op: .SHOW_WHOLE_MUFF)],
+                               allowToggle: false)
         case DrawOption.indexOf(op: .FULL_SIZE_MUFF):
             modelSwitchSection(header: "Full length",
                                imageName: "ruler.fill",
                                index: DrawOption.indexOf(op: .FULL_SIZE_MUFF),
-                               clearConnectedIndexes:[DrawOption.indexOf(op: .SCALED_SIZE_MUFF)])
+                               clearConnectedIndexes:[DrawOption.indexOf(op: .SCALED_SIZE_MUFF)],
+                               allowToggle: false)
         case DrawOption.indexOf(op: .SCALED_SIZE_MUFF):
             modelSwitchSection(header: "Scaled length",
                                imageName: "ruler",
                                index: DrawOption.indexOf(op: .SCALED_SIZE_MUFF),
-                               clearConnectedIndexes:[DrawOption.indexOf(op: .FULL_SIZE_MUFF)])
+                               clearConnectedIndexes:[DrawOption.indexOf(op: .FULL_SIZE_MUFF)],
+                               allowToggle: false)
+        case DrawOption.indexOf(op: .SHOW_STEEL):
+            modelSwitchSection(header: "Show steel",
+                               imageName: "lightbulb",
+                               index: DrawOption.indexOf(op: .SHOW_STEEL),
+                               clearConnectedIndexes:[],
+                               allowToggle: true)
+        case DrawOption.indexOf(op: .SHOW_MUFF):
+            modelSwitchSection(header: "Show muff",
+                               imageName: "lightbulb",
+                               index: DrawOption.indexOf(op: .SHOW_MUFF),
+                               clearConnectedIndexes:[],
+                               allowToggle: true)
         default: EmptyView()
         }
     }
@@ -115,18 +138,34 @@ struct ModelSettingsView:View{
     
     var drawMuffSection: some View{
         Section(content:{
-            ForEach(DrawOption.indexOf(op: .DRAW_FILLED_MUFF)..<DrawOption.indexOf(op: .ALL_OPTIONS),id: \.self){ index in
+            ForEach(DrawOption.indexOf(op: .DRAW_FILLED_MUFF)..<DrawOption.indexOf(op: .SHOW_STEEL),id: \.self){ index in
                 modelSwitchSectionBase(index: index)
             }},
             header: {Text("Draw").leadingSectionHeader(color: Color.systemGray)}) {
         }
     }
+    
+    var renderSceneSection: some View{
+        Section(content:{
+            ForEach(DrawOption.indexOf(op: .SHOW_STEEL)..<DrawOption.indexOf(op: .ALL_OPTIONS),id: \.self){ index in
+                modelSwitchSectionBase(index: index)
+            }},
+            header: {Text("Render").leadingSectionHeader(color: Color.systemGray)}) {
+        }
+    }
+    
+    var showMuffOptions:Bool{
+        tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .SHOW_MUFF)]
+    }
        
      var mainPage:some View{
          List{
-             sizeMuffSection
-             showPartOfMuffSection
-             drawMuffSection
+             if(showMuffOptions){
+                 sizeMuffSection
+                 showPartOfMuffSection
+                 drawMuffSection
+             }
+             renderSceneSection
          }
          .padding(.bottom)
          .scrollContentBackground(.hidden)

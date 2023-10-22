@@ -87,7 +87,6 @@ struct Line{
                     guard let isectP = lineLineIntersect(p0:p0,p1:p1,q0:q0,q1:q1) else { continue }
                     
                     let out = "\(i1+1) \(i2+(i1+1)) \(isectP.x) \(isectP.y)"
-                    debugLog(object: out)
                     return true
                 }
             }

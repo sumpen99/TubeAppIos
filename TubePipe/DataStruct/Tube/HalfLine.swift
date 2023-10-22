@@ -278,10 +278,9 @@ struct HalfLine{
                 let j = i + 2
                 while j < polyline.count{
                     if segmentsIntersect(p1: polyline[i-1], p2: polyline[i], p3: polyline[j-1], p4: polyline[j]){
-                        debugLog(object:"line intersect self")
                         let s = HalfLine(p: polyline[i-1], r: polyline[i])
                         let t = HalfLine(p: polyline[j-1], r: polyline[j])
-                        guard let s = s.intersect(other: t) else { debugLog(object:"error should intersect");break; }
+                        guard let s = s.intersect(other: t) else { break; }
                         result.append(s)
                         i = j
                         break

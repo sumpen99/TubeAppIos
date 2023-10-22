@@ -8,11 +8,11 @@
 import Foundation
 
 struct SettingsVar:Codable{
-    var dimension:CGFloat = 730.0
+    var dimension:CGFloat = 160.0
     var segment:CGFloat = 1.0
-    var steel:CGFloat = 500.0
-    var grader:CGFloat = 66.0
-    var radie:CGFloat = 366.0
+    var steel:CGFloat = 65.0
+    var grader:CGFloat = 90.0
+    var radie:CGFloat = 200.0
     var lena:CGFloat = 220.0
     var lenb:CGFloat = 220.0
     var center: CGFloat = 0.0
@@ -97,6 +97,8 @@ class UserPreferredSetting: NSObject, NSCoding ,NSSecureCoding{
         arr[DrawOption.indexOf(op: .DRAW_FILLED_MUFF)] = true
         arr[DrawOption.indexOf(op: .FULL_SIZE_MUFF)] = true
         arr[DrawOption.indexOf(op: .SHOW_WORLD_AXIS)] = true
+        arr[DrawOption.indexOf(op: .SHOW_STEEL)] = true
+        arr[DrawOption.indexOf(op: .SHOW_MUFF)] = true
         self.init(segment: nil,radius:nil,dimension:nil,length:nil,drawOptions: arr)
     }
   
