@@ -12,9 +12,13 @@ struct AttachmentView:View{
     @EnvironmentObject var navigationViewModel: NavigationViewModel
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @Environment(\.dismiss) private var dismiss
+    @State var showConfirmationDialog:Bool = false
+    @State private var toast: Toast? = nil
     @State var image:Image?
     let message:Message
     let userName:String
+    
+    let confStr = "Message will be permantly deleted, proceed?"
     
     var allowedToDelete:Bool{
         guard let from = message.senderId,
@@ -31,12 +35,12 @@ struct AttachmentView:View{
     }
     
     var deleteButton:some View{
-        Button(action: {
-        } ){
+        Button(action: { showConfirmationDialog.toggle() } ){
             Text("Delete")
         }
         .disabled(!allowedToDelete)
-        .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemRed))
+        .buttonStyle(ButtonStyleFillListRow(
+            lblColor: allowedToDelete ? Color.systemRed : Color.systemRed.opacity(0.3)))
     }
     
     var buttons:some View{
@@ -74,15 +78,6 @@ struct AttachmentView:View{
         }
     }
     
-    var mainPage:some View{
-        List{
-            userSentTube
-            userSentImage
-            buttons
-        }
-        .listStyle(.automatic)
-    }
-    
     var topMenu:  some View{
         VStack{
             BackButton(title: userName).hLeading()
@@ -92,16 +87,46 @@ struct AttachmentView:View{
         .padding()
    }
     
+    var messageData:some View{
+        List{
+            userSentTube
+            userSentImage
+            buttons
+        }
+        .listStyle(.automatic)
+    }
+    
+    var mainPage:some View{
+        VStack(spacing:0){
+            topMenu
+            messageData
+            .onAppear{ loadImageFromStorage() }
+        }
+    }
+    
     var body:some View{
         AppBackgroundStack(content: {
-            VStack(spacing:0){
-                topMenu
-                mainPage
-                .onAppear{ loadImageFromStorage() }
-            }
-            
+            mainPage
         })
+        .toastView(toast: $toast)
+        .confirmationDialog("Attention!",
+                            isPresented: $showConfirmationDialog,
+                            titleVisibility: .visible){
+                buttonsConfirmation
+        } message: {
+            Text(confStr)
+        }
         .modifier(NavigationViewModifier(title: ""))
+    }
+    
+    var buttonsConfirmation:some View{
+        VStack{
+            Button("Yes, delete",role: .destructive) {
+                deleteMessageFromFirebase()
+            }
+            Button("Cancel", role: .cancel){}
+        }
+        
     }
     
     func loadImageFromStorage(){
@@ -125,6 +150,20 @@ struct AttachmentView:View{
                 tubeViewModel.rebuild()
                 navigationViewModel.navTo(.HOME)
             }
+        }
+    }
+    
+    func deleteMessageFromFirebase(){
+        if(!allowedToDelete){ return }
+        guard let groupId = message.groupId,
+              let messagId = message.id
+        else { return }
+        
+        firestoreViewModel.removeMessageFromGroup(groupId,
+                                                  messageId: messagId,
+                                                  storageId:message.storageId){ result in
+            debugLog(object: result)
+            if(!result.isSuccess){ toast = Toast(style: .error, message: "Failed to delete message!") }
         }
     }
     

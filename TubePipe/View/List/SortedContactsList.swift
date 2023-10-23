@@ -96,7 +96,7 @@ struct SortedContactsList: View{
             Text("\(Image(systemName: "ellipsis"))").font(.headline)
         })
     }
-    
+    // CONTACTIVIEW
     func contactCardEllipse(_ contact:Contact) -> some View{
         VStack{
             HStack{
@@ -114,7 +114,7 @@ struct SortedContactsList: View{
         }
         
     }
-    
+    // SHAREDOCUMENT
     func contactCardTapOnCard(_ contact:Contact) -> some View{
         VStack{
             HStack{
@@ -134,7 +134,7 @@ struct SortedContactsList: View{
         }
         
     }
-    
+    // INBOXCONTACTMESSAGES
     func contactCardMessagesOnly(_ contact:Contact) -> some View{
         NavigationLink(destination:LazyDestination(destination: {
             ContactMessagesView(contact: contact,backButtonLabel: "Messages") })) {
@@ -160,7 +160,7 @@ struct SortedContactsList: View{
             }
         }
     }
-    
+    // CONTACTIVIEW
     func contactSection(_ initial:String) -> some View{
         Section {
             LazyVStack{
@@ -172,13 +172,13 @@ struct SortedContactsList: View{
             Text(initial).sectionText(font: .largeTitle,color: Color.systemGray).padding(.leading)
         }
     }
-    
+    // SHAREDOCUMENT
     func contactNoSection(_ initial:String) -> some View{
         ForEach(firestoreViewModel.confirmedContacts[initial] ?? [],id:\.self){ contact in
             contactDescription(contact)
         }
     }
-    
+    // INBOXCONTACTMESSAGES
     func contactNoSectionMessagesOnly(_ initial:String) -> some View{
         ForEach(firestoreViewModel.confirmedContacts[initial] ?? [],id:\.self){ contact in
             if firestoreViewModel.contactInMessageGroup(contact.groupId){
@@ -186,7 +186,7 @@ struct SortedContactsList: View{
             }
         }
     }
-    
+    // CONTACTIVIEW
     var withContactSection: some View{
         ScrollView{
             LazyVStack{
@@ -198,7 +198,7 @@ struct SortedContactsList: View{
         }
         
     }
-    
+    // SHAREDOCUMENT
     var withOutContactSection: some View{
         ScrollView{
             LazyVStack{
@@ -208,7 +208,7 @@ struct SortedContactsList: View{
             }
         }
     }
-    
+    // INBOXCONTACTMESSAGES
     var withOutContactSectionMessagesOnly: some View{
         ScrollView{
             LazyVStack{

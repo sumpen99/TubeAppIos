@@ -91,7 +91,7 @@ struct ContactMessagesView:View{
            messageBubble(message,date:date,direction: from == currentUserID ? .right : .left)
         }
     }
-    
+   
     var mainPage:some View{
         ScrollViewReader { proxy in
             ScrollViewWithOffset() {
@@ -130,9 +130,11 @@ struct ContactMessagesView:View{
             .presentationDragIndicator(.visible)
         }
         .onAppear{
+            // start listener instead
             firestoreViewModel.loadThreadDocumentsFromContact(contact.groupId)
         }
         .onDisappear{
+            //and close it hear
             firestoreViewModel.releaseContactMessages()
         }
         .hiddenBackButtonWithCustomTitle(backButtonLabel)
