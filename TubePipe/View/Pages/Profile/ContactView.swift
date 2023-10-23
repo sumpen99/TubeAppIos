@@ -58,12 +58,9 @@ struct ContactView:View{
     }
     
     var body: some View{
-        NavigationView{
-            AppBackgroundStack(content: {
-                mainpage
-            })
-        }
-        .modifier(NavigationViewModifier(title: ""))
+        AppBackgroundStack(content: {
+            mainpage
+        })
         .hiddenBackButtonWithCustomTitle("Profile")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {

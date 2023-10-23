@@ -83,20 +83,25 @@ struct AttachmentView:View{
         .listStyle(.automatic)
     }
     
+    var topMenu:  some View{
+        VStack{
+            BackButton(title: userName).hLeading()
+            Divider().overlay{ Color.white}.hLeading()
+        }
+        .frame(height:MENU_HEIGHT)
+        .padding()
+   }
+    
     var body:some View{
-        NavigationView{
-            AppBackgroundStack(content: {
+        AppBackgroundStack(content: {
+            VStack(spacing:0){
+                topMenu
                 mainPage
                 .onAppear{ loadImageFromStorage() }
-            })
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    backButton(title:"\(userName)",action: closeView)
-                 }
             }
-            .modifier(NavigationViewModifier(title: ""))
-        }
-        
+            
+        })
+        .modifier(NavigationViewModifier(title: ""))
     }
     
     func loadImageFromStorage(){

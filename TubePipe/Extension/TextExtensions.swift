@@ -38,14 +38,9 @@ extension Text{
     }
     
     func noDataBackgroundNoPadding() -> some View{
-        self.hLeading()
+        self.hCenter()
         .padding()
-        .foregroundColor(Color.black)
-        .background(
-            ZStack{
-                RoundedRectangle(cornerRadius: 8).fill(Color.white)
-            }
-        )
+        .foregroundColor(Color.darkGray)
     }
     
     func lightCaption() -> some View{

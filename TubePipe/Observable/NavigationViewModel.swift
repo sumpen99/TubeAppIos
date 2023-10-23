@@ -19,7 +19,8 @@ class NavigationViewModel: ObservableObject{
     @Published var selectedTab:MainTabItem = .HOME
     
     func navTo(_ tab:MainTabItem){
-        selectedTab = tab
+        if(isActive(tab)){NavigationUtil.popToRootView()}
+        else{selectedTab = tab}
     }
     
     func isActive(_ tab:MainTabItem) -> Bool{

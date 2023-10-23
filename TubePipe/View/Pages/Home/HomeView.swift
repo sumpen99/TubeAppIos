@@ -22,7 +22,6 @@ struct HomeView: View{
             AppBackgroundStack(content: {
                 TubeView()
             })
-            .modifier(NavigationViewModifier(title: ""))
             .sheet(item: $activeHomeSheet){ item in
                 switch item{
                 case ActiveHomeSheet.OPEN_TUBE_SETTINGS:

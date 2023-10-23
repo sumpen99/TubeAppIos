@@ -28,7 +28,9 @@ struct MainView: View{
  
     
     func menuItem(tabItem:MainTabItem,img:String,label:String) -> some View{
-        return Button(action: { navigationViewModel.navTo(tabItem) }, label: {
+        return Button(action: {
+            navigationViewModel.navTo(tabItem)
+        }, label: {
             VStack(spacing:10){
                 Image(systemName: img).font(.title2)
                 Text(label).font(.caption)

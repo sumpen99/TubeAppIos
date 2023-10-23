@@ -122,11 +122,9 @@ struct ContactMessagesView:View{
     }
     
     var body: some View{
-        NavigationView{
-            AppBackgroundStack(content: {
-                mainPage
-            })
-        }
+        AppBackgroundStack(content: {
+            mainPage
+        })
         .sheet(item: $cmVar.currentMessage){ message in
             AttachmentView(message: message,userName:contact.displayName ?? "Back")
             .presentationDragIndicator(.visible)
@@ -138,7 +136,6 @@ struct ContactMessagesView:View{
             firestoreViewModel.releaseContactMessages()
         }
         .hiddenBackButtonWithCustomTitle(backButtonLabel)
-        .modifier(NavigationViewModifier(title: contact.displayName ?? ""))
     }
     
 }

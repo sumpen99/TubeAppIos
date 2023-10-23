@@ -63,12 +63,10 @@ struct InfoView:View{
     }
     
     var body:some View{
-        NavigationView{
-            AppBackgroundStack(content: {
-                infoBody
-            })
-            .modifier(NavigationViewModifier(title: ""))
-        }
+        AppBackgroundStack(content: {
+            infoBody
+        })
+        .modifier(NavigationViewModifier(title: ""))
         .hiddenBackButtonWithCustomTitle("Ok, gotcha!")
     }
 }

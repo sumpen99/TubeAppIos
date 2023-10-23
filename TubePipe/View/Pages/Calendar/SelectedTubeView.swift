@@ -70,33 +70,43 @@ struct SelectedTubeView: View{
         }
     }
     
-    var body:some View{
-        NavigationView{
-            AppBackgroundStack(content: {
-                List{
-                    if let data = tubeModel.image?.data,
-                       let uiImage = UIImage(data: data){
-                       attachedPhoto(uiImage)
-                    }
-                    messageSummary
-                    muffSummary
-                    buttons
-                }
-                .listStyle(.automatic)
-            })
-            .modifier(NavigationViewModifier(title: ""))
-            .alert(isPresented: $isDeleteTube, content: {
-                onAlertWithOkAction(actionPrimary: {
-                    deleteTubeModel(tubeModel)
-                    closeView()
-               })
-            })
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    backButton(title:labelBackButton,action: closeView)
-                 }
-            }
+    var topMenu:  some View{
+        VStack{
+            BackButton(title: labelBackButton).hLeading()
+            Divider().overlay{ Color.white}.hLeading()
         }
+        .frame(height:MENU_HEIGHT)
+        .padding()
+   }
+    
+    var data:some View{
+        List{
+            if let data = tubeModel.image?.data,
+               let uiImage = UIImage(data: data){
+               attachedPhoto(uiImage)
+            }
+            messageSummary
+            muffSummary
+            buttons
+        }
+        .listStyle(.automatic)
+    }
+    
+    var body:some View{
+         AppBackgroundStack(content: {
+             VStack(spacing:0){
+                 topMenu
+                 data
+             }
+            
+        })
+        .modifier(NavigationViewModifier(title: ""))
+        .alert(isPresented: $isDeleteTube, content: {
+            onAlertWithOkAction(actionPrimary: {
+                deleteTubeModel(tubeModel)
+                closeView()
+           })
+        })
         
     }
     

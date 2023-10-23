@@ -197,12 +197,10 @@ struct IssueView:View{
     }
     
     var body:some View{
-        NavigationView{
-            AppBackgroundStack(content: {
-                infoBody
-            })
-            .modifier(NavigationViewModifier(title: ""))
-        }
+        AppBackgroundStack(content: {
+            infoBody
+        })
+        .modifier(NavigationViewModifier(title: ""))
         .hiddenBackButtonWithCustomTitle("Profile")
         .alert("Report submitted",
                isPresented: $submitHasBeenMade,

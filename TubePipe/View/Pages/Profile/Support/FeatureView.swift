@@ -150,12 +150,10 @@ struct FeatureView:View{
     }
     
     var body:some View{
-        NavigationView{
-            AppBackgroundStack(content: {
-                infoBody
-            })
-            .modifier(NavigationViewModifier(title: ""))
-        }
+        AppBackgroundStack(content: {
+            infoBody
+        })
+        .modifier(NavigationViewModifier(title: ""))
         .hiddenBackButtonWithCustomTitle("Profile")
         .alert("Feature request sent",
                isPresented: $submitHasBeenMade,

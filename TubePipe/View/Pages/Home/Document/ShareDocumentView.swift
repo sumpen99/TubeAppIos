@@ -26,7 +26,6 @@ struct ShareDocumentView:View{
         sclVar.currentContact == nil
     }
     
-    //person.crop.circle.fill.badge.xmark
     @ViewBuilder
     var toogleContactsButton:some View{
         Image(systemName: sclVar.isSuggestionShowing ? "chevron.up" : "chevron.down")
@@ -82,7 +81,7 @@ struct ShareDocumentView:View{
                 let initial = sclVar.currentContact?.initial ?? ""
                 Label(sclVar.currentContact?.displayName ?? "",
                       systemImage: "bubbles.and.sparkles")
-                .font(.title)
+                .font(.headline)
                 .bold()
                 .foregroundColor(Color[initial])
                 .hLeading()

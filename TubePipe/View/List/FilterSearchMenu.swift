@@ -16,7 +16,6 @@ struct FilterSearchMenu:View{
     
     let layoutCategories = [
         GridItem(.flexible(minimum: 40)),
-        GridItem(.flexible(minimum: 40)),
         GridItem(.flexible(minimum: 40))
     ]
     
@@ -91,8 +90,8 @@ struct FilterSearchMenu:View{
         VStack{
             categoriesLabel
             if !iVar.collapseCategories{
-                categoriesGridView
                 searchTextField
+                categoriesGridView
             }
         }
         .padding(.bottom)
@@ -103,7 +102,7 @@ struct FilterSearchMenu:View{
             categories
         }
         .background{
-            RoundedRectangle(cornerRadius: 10.0).fill(Color.white)
+            RoundedRectangle(cornerRadius: 10.0).fill(!iVar.collapseCategories ? .white : Color.tertiaryLabel)
         }
     }
 }

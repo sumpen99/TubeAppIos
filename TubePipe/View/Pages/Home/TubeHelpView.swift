@@ -59,12 +59,9 @@ struct TubeHelpView: View{
     }
     
     var body:some View{
-        NavigationView{
-            AppBackgroundStack(content: {
-                helpBody
-            })
-            .modifier(NavigationViewModifier(title: ""))
-        }
+        AppBackgroundStack(content: {
+            helpBody
+        })
         .hiddenBackButtonWithCustomTitle("Home")
     }
     

@@ -84,12 +84,9 @@ struct ContactRequestView:View{
     }
     
     var body: some View{
-        NavigationView{
-            AppBackgroundStack(content: {
-                mainpage
-            })
-            .modifier(NavigationViewModifier(title: ""))
-        }
+        AppBackgroundStack(content: {
+            mainpage
+        })
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 BackButton(title: "Contacts")

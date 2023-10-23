@@ -166,19 +166,17 @@ struct InboxSavedTubesView:View{
     }
     
     var body: some View{
-        NavigationView{
-            AppBackgroundStack(content: {
-                mainpage
-            })
-            .alert(isPresented: $iVar.isDeleteTube, content: {
-                onAlertWithOkAction(actionPrimary: {
-                    deleteSelectedItems()
-                    withAnimation{
-                        iVar.userWillEditTubes.toggle()
-                    }
-               })
-            })
-        }
+        AppBackgroundStack(content: {
+            mainpage
+        })
+        .alert(isPresented: $iVar.isDeleteTube, content: {
+            onAlertWithOkAction(actionPrimary: {
+                deleteSelectedItems()
+                withAnimation{
+                    iVar.userWillEditTubes.toggle()
+                }
+           })
+        })
         .sheet(item: $iVar.tubeModel){ tube in
             SelectedTubeView(tubeModel: tube,
                              labelBackButton: "List",
