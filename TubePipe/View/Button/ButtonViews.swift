@@ -11,7 +11,7 @@ struct TapAndHoldButton: View{
     let tapAction: (Any) -> Void
     let holdAction: () -> Void
     let imageName:String
-    var color:Color = Color.backgroundThirdary
+    var color:Color = Color.systemBlue
     @GestureState var pressingState = false
   
     var body: some View{

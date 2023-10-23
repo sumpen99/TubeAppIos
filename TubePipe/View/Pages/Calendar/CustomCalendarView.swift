@@ -156,7 +156,7 @@ extension CustomCalendarView{
         .background(
              ZStack{
                  if month == selected.month{
-                     RoundedRectangle(cornerRadius: 8).fill(Color.calendarBackground)
+                     RoundedRectangle(cornerRadius: 8).fill(Color.systemBlue)
                       .matchedGeometryEffect(id: "CURRENTMONTH", in: animation)
                  }
                  else{
@@ -213,7 +213,7 @@ extension CustomCalendarView{
                 .background(
                      ZStack{
                          if newDay == selected.day{
-                             Circle().fill(Color.calendarBackground)
+                             Circle().fill(Color.systemBlue)
                              .matchedGeometryEffect(id: "CURRENTDAY", in: animation)
                          }
                      }

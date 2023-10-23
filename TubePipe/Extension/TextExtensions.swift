@@ -17,7 +17,7 @@ extension Text{
     }
     
     func avatar(initial:String) -> some View{
-        self.font(.headline)
+         self.font(.headline)
             .padding()
             .background{
                 Circle().fill(Color[initial])

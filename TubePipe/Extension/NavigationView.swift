@@ -9,7 +9,7 @@ import SwiftUI
 
 extension UIApplication{
     static func connectedScenes() -> [UIWindow]{
-        return self.shared.connectedScenes.flatMap { ($0 as? UIWindowScene)?.windows ?? [] }
+        self.shared.connectedScenes.flatMap { ($0 as? UIWindowScene)?.windows ?? [] }
     }
     static func rootViewController() -> UIViewController?{
         let scenes = self.connectedScenes()
@@ -31,17 +31,17 @@ struct NavigationUtil {
             return nil
         }
         if let navigationController = viewController as? UITabBarController {
-            debugLog(object: "found UITabBarController")
+            //debugLog(object: "found UITabBarController")
             return findNavigationController(viewController: navigationController.selectedViewController)
         }
         
         if let navigationController = viewController as? UINavigationController {
-            debugLog(object: "found UINavigationController")
+            //debugLog(object: "found UINavigationController")
             return navigationController
         }
         
         for childViewController in viewController.children {
-            debugLog(object: "found childViewController")
+            //debugLog(object: "found childViewController")
             return findNavigationController(viewController: childViewController)
         }
         

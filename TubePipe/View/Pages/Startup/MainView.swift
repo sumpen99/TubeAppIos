@@ -48,7 +48,7 @@ struct MainView: View{
                 menuItem(tabItem: MainTabItem.PROFILE_ANONYMOUS, img: "person.fill", label: "Profile")
             }
         }
-        .background(Color.APP_TAB_BACKGROUND_COLOR_ORG)
+        .background(Color.backgroundPrimary)
         .hLeading()
     }
     
@@ -62,7 +62,7 @@ struct MainView: View{
                 menuItem(tabItem: MainTabItem.PROFILE, img: "person.fill", label: "Profile")
             }
         }
-        .background(Color.APP_TAB_BACKGROUND_COLOR_ORG)
+        .background(Color.backgroundPrimary)
         .hLeading()
     }
     

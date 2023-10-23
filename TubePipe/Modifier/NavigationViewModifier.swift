@@ -11,13 +11,8 @@ struct NavigationViewModifier: ViewModifier {
     let title:String
     func body(content: Content) -> some View {
         content
-        //.listStyle(GroupedListStyle())
-        //.listRowBackground(Color(.systemGroupedBackground))
         .scrollContentBackground(.hidden)
-        //.background( APP_BACKGROUND_COLOR )
-        //.edgesIgnoringSafeArea(.all)
         .background( appLinearGradient )
         .navigationBarTitle(title,displayMode: .inline)
-        //.navigationBarHidden(true)
     }
 }

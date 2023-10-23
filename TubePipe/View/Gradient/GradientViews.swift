@@ -9,12 +9,7 @@ import SwiftUI
 
 var appButtonGradient: some View{
     Color.tertiarySystemFill
-    /*LinearGradient(
-        gradient: .init(colors: [
-            Color.APP_TAB_BACKGROUND_COLOR,
-            Color.APP_MID_BACKGROUND_COLOR]),
-        startPoint: .leading,
-        endPoint: .trailing)*/
+    
 }
 
 var appLabelGradient: some View{
@@ -25,15 +20,6 @@ var appLabelGradient: some View{
         startPoint: .leading,
         endPoint: .trailing)
 }
-
-/*var appLogoImage: some View{
-    LinearGradient(gradient: Gradient(colors: [Color.APP_BACKGROUND_COLOR, Color.APP_MID_BACKGROUND_COLOR]),
-                   startPoint: .top, endPoint: .bottom)
-        .mask(Image("tp5")
-          .resizable()
-          .padding()
-          .aspectRatio(contentMode: .fit))
-}*/
 
 var appLinearGradient: some View{
     Color.backgroundPrimary.edgesIgnoringSafeArea(.all)
