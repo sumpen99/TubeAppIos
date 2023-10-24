@@ -26,6 +26,7 @@ struct ShareDocumentView:View{
         sclVar.currentContact == nil
     }
     
+    //person.crop.circle.fill.badge.xmark
     @ViewBuilder
     var toogleContactsButton:some View{
         Image(systemName: sclVar.isSuggestionShowing ? "chevron.up" : "chevron.down")
@@ -135,9 +136,7 @@ struct ShareDocumentView:View{
             }
             
         }
-        .onTapGesture{ endTextEditing() }
         .halfSheetBackgroundStyle()
-   
     }
     
     //MARK: - BUTTON FUNCTIONS

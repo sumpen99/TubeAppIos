@@ -60,9 +60,6 @@ struct SignupView : View {
             .background{
                 Rectangle().fill(Color.white)
             }
-            .fieldFirstResponder {
-                focusField = .SIGNUP_EMAIL
-            }
             illegalCredentials
         }
         
@@ -83,10 +80,7 @@ struct SignupView : View {
             .background{
                 Rectangle().fill(Color.white)
             }
-            .fieldFirstResponder {
-                focusField = .SIGNUP_SECURE_PASSWORD
-            }
-        }
+         }
         
     }
     
@@ -104,9 +98,6 @@ struct SignupView : View {
             .padding([.leading,.trailing])
             .background{
                 Rectangle().fill(Color.white)
-            }
-            .fieldFirstResponder {
-                focusField = .SIGNUP_RETYPE_SECURE_PASSWORD
             }
         }
         

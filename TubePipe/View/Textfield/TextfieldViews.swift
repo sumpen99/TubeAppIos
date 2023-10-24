@@ -32,7 +32,6 @@ struct BaseTubeTextField:View {
     
     var body: some View{
         VStack(spacing:20){
-            //title
             message
         }
         .halfSheetWhitePadding()

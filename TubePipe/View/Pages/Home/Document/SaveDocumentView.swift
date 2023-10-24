@@ -43,7 +43,6 @@ struct SaveDocumentView:View{
                 Text(Date().formattedString()).sectionTextSecondary(color:.tertiaryLabel).padding(.leading)
             }
         }
-        .onTapGesture{ endTextEditing() }
         .halfSheetBackgroundStyle()
         .alert(isPresented: $isSaveResult, content: { onResultAlert(action: closeView) })
     }

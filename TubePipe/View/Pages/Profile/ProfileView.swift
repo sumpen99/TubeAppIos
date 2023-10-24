@@ -56,9 +56,9 @@ struct ProfileVariables{
         return ((user.userMode?.userIsPublic() ?? false) == userSharing) ? 0 : 1
     }
     
-    func compareUserName(currentUser:AppUser?) -> Int{
+    func compareUserName(currentUser:AppUser?,allowEmpty:Bool) -> Int{
         guard let user = currentUser else { return 0 }
-        if displayName.isEmpty { return 0}
+        if displayName.isEmpty && !allowEmpty { return 0}
         var changes:Int = 0
         changes += user.displayName.equalsOtherString(displayName) ? 0 : 1
         return changes
@@ -66,7 +66,7 @@ struct ProfileVariables{
     
     func compareUserVar(currentUser:AppUser?,userSharing:Bool) -> Bool{
         var changes:Int = 0
-        changes += compareUserName(currentUser: currentUser)
+        changes += compareUserName(currentUser: currentUser,allowEmpty: false)
         changes += compareUserMode(currentUser: currentUser, userSharing: userSharing)
         return changes != 0
     }
@@ -100,7 +100,7 @@ struct ProfileView: View{
     }
     
     var userNameHasChanged:Bool{
-        pVar.compareUserName(currentUser: firestoreViewModel.currentUser) != 0
+        pVar.compareUserName(currentUser: firestoreViewModel.currentUser,allowEmpty:true) != 0
     }
     var changesHasHappend:Bool{
         pVar.compareUserVar(currentUser: firestoreViewModel.currentUser,
@@ -135,9 +135,6 @@ struct ProfileView: View{
             .placeholder(when: showPlaceholderText){
                 placeHolderText
             }
-        }
-        .fieldFirstResponder{
-            focusField = .PROFILE_DISPLAY_NAME
         }
         .disabled(!userAllowSharing)
         .onChange(of: focusField,perform: replaceDisplaynameIfEmpty)
@@ -239,8 +236,15 @@ struct ProfileView: View{
                 personalPage
             })
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: { replaceDisplayName();endTextEditing(); }) {
+                        Text("Clear")
+                    }
+                    .opacity(userNameHasChanged ? 1.0 : 0.0)
+                    .disabled(!userNameHasChanged)
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: saveChanges ) {
+                    Button(action: { saveChanges();endTextEditing(); }) {
                         Text("Save")
                     }
                     .opacity(changesHasHappend ? 1.0 : 0.0)
@@ -261,6 +265,10 @@ struct ProfileView: View{
             pVar.updateUserVar(currentUser: firestoreViewModel.currentUser)
             tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ALLOW_SHARING)] = firestoreViewModel.isCurrentUserPublic
         }
+    }
+    
+    func replaceDisplayName(){
+        pVar.displayName = firestoreViewModel.currentUserDisplayName
     }
     
     func replaceDisplaynameIfEmpty(_ field:Field?){

@@ -54,9 +54,6 @@ struct LoginView : View {
             .background{
                 Rectangle().fill(Color.white)
             }
-            .fieldFirstResponder {
-                focusField = .LOGIN_EMAIL
-            }
             illegalCredentials
         }
         
@@ -76,9 +73,6 @@ struct LoginView : View {
             .padding([.leading,.trailing])
             .background{
                 Rectangle().fill(Color.white)
-            }
-            .fieldFirstResponder {
-                focusField = .LOGIN_SECURE_PASSWORD
             }
             illegalCredentials
         }

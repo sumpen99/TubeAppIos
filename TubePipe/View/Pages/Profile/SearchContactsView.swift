@@ -72,7 +72,6 @@ struct SearchContactsView: View{
                 .preferedSearchField()
                 .placeholder("find user",
                              when: (focusField != .FIND_USER) && (sVar.searchText.isEmpty))
-                .focused($focusField,equals: .FIND_USER)
                 .hLeading()
                 .onSubmit {
                     firestoreViewModel.releaseContactSuggestions()
@@ -151,16 +150,10 @@ struct SearchContactsView: View{
     func fireSentRequestAlert(isSuccess:Bool,message:String,displayInfo:String){
         firestoreViewModel.releaseContactSuggestions()
         if !isSuccess{
-            //ALERT_TITLE = "Request sent"
-            //ALERT_MESSAGE = "\(message) to \(displayInfo)"
-            ALERT_TITLE = "Attention"
+             ALERT_TITLE = "Attention"
             ALERT_MESSAGE = message
             sVar.isRequestSent.toggle()
         }
-        /*else{
-            ALERT_TITLE = "Attention"
-            ALERT_MESSAGE = message
-        }*/
         sVar.clearSearch()
     }
     
