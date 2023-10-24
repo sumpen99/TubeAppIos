@@ -162,8 +162,8 @@ struct AttachmentView:View{
         firestoreViewModel.removeMessageFromGroup(groupId,
                                                   messageId: messagId,
                                                   storageId:message.storageId){ result in
-            debugLog(object: result)
             if(!result.isSuccess){ toast = Toast(style: .error, message: "Failed to delete message!") }
+            else{ self.closeView()}
         }
     }
     

@@ -130,12 +130,12 @@ struct ContactMessagesView:View{
             .presentationDragIndicator(.visible)
         }
         .onAppear{
-            // start listener instead
-            firestoreViewModel.loadThreadDocumentsFromContact(contact.groupId)
+            firestoreViewModel.releaseContactMessages()
+            firestoreViewModel.listenForThreadDocumentsFromContact(groupId:contact.groupId)
         }
         .onDisappear{
-            //and close it hear
             firestoreViewModel.releaseContactMessages()
+            firestoreViewModel.closeListenerMessages()
         }
         .hiddenBackButtonWithCustomTitle(backButtonLabel)
     }

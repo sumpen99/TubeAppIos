@@ -18,7 +18,6 @@ extension FirestoreViewModel{
                 let user  = try changes.data(as: AppUser.self)
                 strongSelf.currentUser = user
                 strongSelf.initializeListenerContactRequestsIfUserIsPublic()
-                strongSelf.listenForMessageGroups()
             }
             catch {
                 debugLog(object: error.localizedDescription)
@@ -66,7 +65,6 @@ extension FirestoreViewModel{
             for document in documents {
                 guard let contact = try? document.data(as : Contact.self) else { continue }
                 let initial = contact.initial
-                // If we have initial else set
                 guard let _ = newContacts["\(initial)"] else{
                     newContacts["\(initial)"] = [contact]
                     continue
@@ -78,7 +76,7 @@ extension FirestoreViewModel{
     }
     
     func listenForMessageGroups(){
-        if let groupIds = groupIds{
+         if let groupIds = groupIds{
             let col = repo.messageGroupCollection.whereField("groupId", in: groupIds)
             listenerMessageGroups = col.addSnapshotListener(){ [weak self] (snapshot, err) in
                 guard let documents = snapshot?.documents,
@@ -91,6 +89,24 @@ extension FirestoreViewModel{
                 }
             }
         }
+    }
+    
+    func listenForThreadDocumentsFromContact(groupId:String?){
+         if let groupId = groupId{
+            let col = repo.messageGroupThreadCollection(groupId)
+            listenerMessages = col.order(by: "date",descending: false).addSnapshotListener{ [weak self] (snapshot, error) in
+                guard let documents = snapshot?.documents,
+                      let strongSelf = self else{ return }
+                var newMessages:[Message] = []
+                for document in documents{
+                    guard let message = try? document.data(as : Message.self)
+                    else{ continue }
+                    newMessages.append(message)
+                }
+                strongSelf.contactMessages = newMessages
+            }
+        }
+        
     }
     
 }

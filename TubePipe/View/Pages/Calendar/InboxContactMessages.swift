@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct InboxContactMessages:View{
+    @EnvironmentObject var firestoreViewModel: FirestoreViewModel
     @State var cVar = ContactVar()
         
     var contactList:some View{
@@ -27,6 +28,12 @@ struct InboxContactMessages:View{
         AppBackgroundStack(content: {
             mainPage
         })
+        .onAppear{
+            firestoreViewModel.listenForMessageGroups()
+        }
+        .onDisappear{
+            firestoreViewModel.closeListenerMessageGroups()
+        }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 BackButton(title: "Profile")

@@ -71,6 +71,7 @@ class FirestoreViewModel: ObservableObject{
     var listenerRequestPending: ListenerRegistration?
     var listenerRequestConfirmed: ListenerRegistration?
     var listenerMessageGroups: ListenerRegistration?
+    var listenerMessages: ListenerRegistration?
     @Published var currentUser:AppUser?
     
 }

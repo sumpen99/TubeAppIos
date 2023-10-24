@@ -16,11 +16,54 @@ struct ContactRequestView:View{
     @Namespace var animation
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
     @State var cVar = ContactVar()
+    @State var requestHeader:RequestsAwaitingheader = .REQUEST_SENT
   
     private var requestsAwaitingheader:[RequestsAwaitingheader] = [
         .REQUEST_SENT,
         .REQUESTS_RECIEVED
     ]
+    
+    var requestHeaderMenuList:  some View{
+        ScrollView(.horizontal){
+            LazyHStack(alignment: .top, spacing: 20, pinnedViews: [.sectionHeaders]){
+                ForEach(requestsAwaitingheader, id: \.self) { header in
+                    requestHeaderCell(header)
+               }
+            }
+        }
+        .scrollIndicators(.never)
+        .frame(height:MENU_HEIGHT)
+    }
+    
+    var headerOnEnter:RequestsAwaitingheader{
+        if(firestoreViewModel.pendingContacts.keys.count > 0){ return .REQUEST_SENT }
+        else{
+            return firestoreViewModel.recievedContacts.keys.count > 0 ? .REQUESTS_RECIEVED : .REQUEST_SENT
+        }
+    }
+    
+    func requestHeaderCell(_ request:RequestsAwaitingheader) -> some View{
+        return Text(request.rawValue)
+        .font(.headline)
+        .bold()
+        .frame(height: 33)
+        .foregroundColor(request == requestHeader ? .white : Color.darkGray )
+        .background(
+             ZStack{
+                 if request == requestHeader{
+                     Color.systemBlue
+                     .frame(height: 1)
+                     .offset(y: 14)
+                     .matchedGeometryEffect(id: "CURRENTREQUESTHEADER", in: animation)
+                 }
+             }
+        )
+        .onTapGesture {
+            withAnimation{
+                requestHeader = request
+            }
+        }
+    }
     
     @ViewBuilder
     func contactDescription(_ contact:Contact?) -> some View{
@@ -58,28 +101,19 @@ struct ContactRequestView:View{
         }
     }
     
-    var awaitingContactRequestsSection:some View{
-        ScrollView{
-            LazyVStack(){
-                ForEach(requestsAwaitingheader,id:\.self){ header in
-                    Section {
-                        if header == .REQUEST_SENT { pendingContactRequestSection}
-                        else{ recievedContactRequestSection}
-                    } header: {
-                        Text("\(header.rawValue):")
-                        .sectionText(color:.systemGray)
-                        .padding(.leading)
-                    }
-                    Divider()
-                }
-            }
+    @ViewBuilder
+    func getCurrentPage(_ header:RequestsAwaitingheader) -> some View{
+        switch header{
+        case .REQUEST_SENT:          pendingContactRequestSection
+        case .REQUESTS_RECIEVED:     recievedContactRequestSection
         }
     }
     
-   
-    
     var mainpage:some View{
-        awaitingContactRequestsSection
+        VStack(spacing:10){
+            requestHeaderMenuList
+            getCurrentPage(requestHeader)
+        }
         .padding()
     }
     
@@ -87,6 +121,9 @@ struct ContactRequestView:View{
         AppBackgroundStack(content: {
             mainpage
         })
+        .onAppear{
+            requestHeader = headerOnEnter
+        }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 BackButton(title: "Contacts")
@@ -96,7 +133,6 @@ struct ContactRequestView:View{
         .alert(isPresented: $cVar.isSelectedContact, content: {
                     onAlertWithOkAction(actionPrimary: {
                         switch cVar.alertAction{
-                        case .ACCEPT_REQUEST: fireAcceptRequestAction()
                         case .REJECT_REQUEST_SENT_TO_ME: fireRejectRequestSentToMeAction()
                         case .REMOVE_REQUEST_SENT_FROM_ME: fireRemoveRequestSentFromMeAction()
                         default:break
@@ -129,7 +165,7 @@ struct ContactRequestView:View{
     var buttonsRecieved:some View{
         VStack{
             Button("Accept request") {
-                acceptRequesSentToMe()
+                fireAcceptRequestAction()
             }
             Button("Remove request",role: .destructive) {
                 rejectRequestSentToMeAlert()
@@ -159,15 +195,7 @@ struct ContactRequestView:View{
         cVar.alertAction = .REJECT_REQUEST_SENT_TO_ME
         cVar.isSelectedContact.toggle()
     }
-        
-    func acceptRequesSentToMe(){
-        guard let contact = cVar.currentContact else { return }
-        ALERT_TITLE = "Accept request"
-        ALERT_MESSAGE = "Do you want to add \(contact.displayInfo) to contacts?"
-        cVar.alertAction = .ACCEPT_REQUEST
-        cVar.isSelectedContact.toggle()
-    }
-    
+       
     func fireRemoveRequestSentFromMeAction(){
         guard let contact = cVar.currentContact else { return }
         firestoreViewModel.removeContactRequestTo(contact){ result in }

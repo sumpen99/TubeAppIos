@@ -23,6 +23,10 @@ extension FirestoreViewModel{
         contactMessages.removeAll()
     }
     
+    func releaseContactMessageGroups(){
+        messageGroups.removeAll()
+    }
+    
     func releaseContactSuggestions(){
         contactSuggestions.removeAll()
     }
@@ -37,6 +41,7 @@ extension FirestoreViewModel{
         closeListenerContactRequests()
         closeListenerMessageGroups()
         closeListenerAppUser()
+        closeListenerMessages()
     }
     
     func initializeListenerContactRequestsIfUserIsPublic(){
@@ -69,6 +74,12 @@ extension FirestoreViewModel{
     func closeListenerMessageGroups(){
         listenerMessageGroups?.remove()
     }
+    
+    func closeListenerMessages(){
+        listenerMessages?.remove()
+    }
+    
+    
     var groupIds:[String]?{
         if let user = currentUser,
            let groupIds = user.groupIds{
@@ -111,7 +122,10 @@ extension FirestoreViewModel{
     
     func contactInMessageGroup(_ contactId:String?) -> Bool{
         guard let contactId = contactId else { return false}
-        return messageGroups[contactId] != nil
+        if let group = messageGroups[contactId]{
+            return !group.isEmpty
+        }
+        return false
     }
     
     func getContactLastMessage(_ contactId:String?) -> [Message]?{
