@@ -24,7 +24,7 @@ struct FeatureView:View{
     
     
     var buttonIsDisabled:Bool{
-        (docContent.title.isEmpty||docContent.message.isEmpty)
+        docContent.isNotAValidDocument
     }
     
     var featureHeader:some View{
@@ -80,7 +80,7 @@ struct FeatureView:View{
     var inputDescription:some View{
         InputDocumentField(label: Text("Description").vTop(),content:
                             ZStack{
-            TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN*4),onCommit: {})
+            TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN*4),axis:.vertical)
                                 .preferedDocumentField()
                                 .focused($focusField,equals: .DOCUMENT_MESSAGE)
                                 .placeholder("message",

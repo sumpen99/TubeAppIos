@@ -34,7 +34,7 @@ struct IssueView:View{
     """
     
     var buttonIsDisabled:Bool{
-        docContent.message.isEmpty
+        docContent.isNotAValidDocument
     }
     
     var toggleFullFooterButton:some View{
@@ -111,6 +111,20 @@ struct IssueView:View{
         
     }
     
+    var inputTitle:some View{
+        InputDocumentField(label: Text("Title"),content:
+                            TextField("",text:$docContent.title.max(MAX_TEXTFIELD_LEN),onCommit: {})
+                                .preferedDocumentField()
+                                .focused($focusField,equals: .DOCUMENT_TITLE)
+                                .placeholder("issue",
+                                             when: (focusField != .DOCUMENT_TITLE && docContent.title.isEmpty))
+                                .lineLimit(1)
+                                
+        )
+        .hLeading()
+        
+    }
+    
     var inputDescription:some View{
         InputDocumentField(label: Text("Description").vTop(),content:
                             ZStack{
@@ -167,6 +181,7 @@ struct IssueView:View{
         VStack(spacing:0){
             issueTopHeader
             List{
+                inputTitle
                 inputDescription
                 inputEmail
                 inputScreenshot
@@ -202,6 +217,7 @@ struct IssueView:View{
         let email = docContent.enteredEmail
         let issue = IssueReport(issueId: issueId,
                                 email: email,
+                                title: docContent.title,
                                 description: docContent.message,
                                 date: Date(),
                                 storageId: storageId)

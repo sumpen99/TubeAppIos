@@ -312,7 +312,7 @@ struct ProfileView: View{
         NavigationLink(destination:LazyDestination(destination: {
             FeatureView()
         })){
-            Label("Feature",systemImage: "lightbulb").foregroundColor(.black)
+            Label("Request a new feature",systemImage: "lightbulb").foregroundColor(.black)
             .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemRed))
         }
         .fullListWidthSeperator()

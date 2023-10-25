@@ -39,6 +39,12 @@ struct DocumentContent:Codable{
     var storageId:String? { data == nil ? nil : UUID().uuidString }
     var enteredEmail:String? { email.isEmpty ? nil : email }
     
+    var isNotAValidDocument:Bool{
+        let title = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        let message = message.trimmingCharacters(in: .whitespacesAndNewlines)
+        return title.isEmpty || message.isEmpty
+    }
+    
     mutating func trim(){
         message = message.trimmingCharacters(in: .whitespacesAndNewlines)
         title = title.trimmingCharacters(in: .whitespacesAndNewlines)

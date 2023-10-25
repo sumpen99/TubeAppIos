@@ -12,7 +12,7 @@ struct SaveDocumentView:View{
     @Environment(\.managedObjectContext) private var managedObjectContext
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @State var docContent:DocumentContent = DocumentContent()
-    @State var isSaveResult:Bool = false
+    @State private var toast: Toast? = nil
       
     var saveButton: some View{
         Button(action:saveNewTube,label: {
@@ -43,8 +43,8 @@ struct SaveDocumentView:View{
                 Text(Date().formattedString()).sectionTextSecondary(color:.tertiaryLabel).padding(.leading)
             }
         }
+        .toastView(toast: $toast)
         .halfSheetBackgroundStyle()
-        .alert(isPresented: $isSaveResult, content: { onResultAlert(action: closeView) })
     }
     
     //MARK: - BUTTON FUNCTIONS
@@ -67,25 +67,13 @@ struct SaveDocumentView:View{
         }
         do{
             try PersistenceController.shared.saveContext()
-            savedSuccessfullyAlert()
+            closeAfterToast(isSuccess: true,msg:"Document saved!",toast: &toast,action: closeView)
         }
         catch{
-            savedErrorAlert(error.localizedDescription)
+            closeAfterToast(isSuccess: false,msg:"Operation failed!",toast: &toast,action: closeView)
         }
         
     }
     
-    func savedSuccessfullyAlert(){
-        ALERT_TITLE = "Tube Saved"
-        ALERT_MESSAGE = ""
-        isSaveResult.toggle()
-    }
-    
-    func savedErrorAlert(_ err:String){
-        ALERT_TITLE = "Failed to save"
-        ALERT_MESSAGE = "\(err)"
-        isSaveResult.toggle()
-    }
-   
 }
 

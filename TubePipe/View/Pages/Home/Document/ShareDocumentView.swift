@@ -26,7 +26,6 @@ struct ShareDocumentView:View{
         sclVar.currentContact == nil
     }
     
-    //person.crop.circle.fill.badge.xmark
     @ViewBuilder
     var toogleContactsButton:some View{
         Image(systemName: sclVar.isSuggestionShowing ? "chevron.up" : "chevron.down")
@@ -140,15 +139,7 @@ struct ShareDocumentView:View{
     }
     
     //MARK: - BUTTON FUNCTIONS
-    func closeAfterToast(isSuccess:Bool){
-        if(isSuccess){ toast = Toast(style: .success, message: "Message sent!") }
-        else{ toast = Toast(style: .error, message: "Error sending message!") }
-        DispatchQueue.main.asyncAfter(deadline: .now() + TOAST_DURATION){
-            closeView()
-        }
-    }
-    
-    func closeView(){
+     func closeView(){
         dismiss()
     }
     
@@ -165,7 +156,7 @@ struct ShareDocumentView:View{
                     senderId:senderId,
                     messageId: messageId,
                     storageId: storageId){ result in
-            closeAfterToast(isSuccess: result.isSuccess)
+            closeAfterToast(isSuccess: result.isSuccess,msg: "Message sent!",toast: &toast,action: closeView)
         }
     }
     

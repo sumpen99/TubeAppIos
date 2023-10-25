@@ -213,7 +213,15 @@ extension View{
     
     func toastView(toast: Binding<Toast?>) -> some View {
         self.modifier(ToastModifier(toast: toast))
-      }
+    }
+    
+    func closeAfterToast(isSuccess:Bool,msg:String,toast:inout Toast?,action:(() -> Void)? = nil){
+        if(isSuccess){ toast = Toast(style: .success, message: msg) }
+        else{ toast = Toast(style: .error, message: "Operation failed!") }
+        DispatchQueue.main.asyncAfter(deadline: .now() + TOAST_DURATION){
+            action?()
+        }
+    }
     
 }
 

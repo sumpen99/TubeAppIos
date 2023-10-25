@@ -170,6 +170,7 @@ struct IssueReport:Codable,Identifiable{
     @DocumentID var id: String?
     var issueId: String?
     var email: String?
+    var title: String?
     var description: String?
     var date:Date?
     var storageId:String?

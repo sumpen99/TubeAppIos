@@ -14,11 +14,12 @@ struct BaseTubeTextField:View {
     var message:some View{
         HStack{
             Image(systemName: "doc.text.image").foregroundColor(.systemGray).vTop()
-            TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN),onCommit: { })
+            TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN),axis: .vertical)
                 .preferedDocumentField()
                 .focused($focusField,equals: .DOCUMENT_MESSAGE)
                 .placeholder("message",
-                             when: focusField != .DOCUMENT_MESSAGE && docContent.message.isEmpty).vTop()
+                             when: focusField != .DOCUMENT_MESSAGE &&
+                             docContent.message.isEmpty).vTop()
             Text("\(MAX_TEXTFIELD_LEN-docContent.message.count)").font(.caption).foregroundColor(Color.systemGray).hTrailing().frame(width:33.0).vBottom()
             
         }
