@@ -100,8 +100,9 @@ struct ProfileView: View{
     }
     
     var userNameHasChanged:Bool{
-        pVar.compareUserName(currentUser: firestoreViewModel.currentUser,allowEmpty:true) != 0
+        focusField == .PROFILE_DISPLAY_NAME
     }
+    
     var changesHasHappend:Bool{
         pVar.compareUserVar(currentUser: firestoreViewModel.currentUser,
                             userSharing:tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ALLOW_SHARING)])

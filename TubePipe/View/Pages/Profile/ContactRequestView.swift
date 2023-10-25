@@ -25,7 +25,7 @@ struct ContactRequestView:View{
     
     var requestHeaderMenuList:  some View{
         ScrollView(.horizontal){
-            LazyHStack(alignment: .top, spacing: 20, pinnedViews: [.sectionHeaders]){
+            LazyHStack(alignment: .top, spacing: 30, pinnedViews: [.sectionHeaders]){
                 ForEach(requestsAwaitingheader, id: \.self) { header in
                     requestHeaderCell(header)
                }

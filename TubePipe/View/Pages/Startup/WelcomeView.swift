@@ -38,14 +38,16 @@ struct WelcomeView : View {
     }
     
     var body: some View {
-        AppBackgroundStackWithoutBottomPadding(content: {
-            appLogoImage
-            welcomeButton.vBottom()
-            dialog
-        })
-        .alert(isPresented: $wVar.isSignupResult, content: {
-            onResultAlert()
-        })
+        NavigationView{
+            AppBackgroundStackWithoutBottomPadding(content: {
+                appLogoImage
+                welcomeButton.vBottom()
+                dialog
+            })
+            .alert(isPresented: $wVar.isSignupResult, content: {
+                onResultAlert()
+            })
+        }
         .modifier(NavigationViewModifier(title: ""))
     }
     

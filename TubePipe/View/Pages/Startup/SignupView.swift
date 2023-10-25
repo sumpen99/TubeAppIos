@@ -50,7 +50,7 @@ struct SignupView : View {
         VStack(spacing:5.0){
             HStack{
                 Image(systemName: "mail")
-                TextField("",text:$sVar.passwordHelper.emailText)
+                TextField("",text:$sVar.passwordHelper.emailText,onCommit: { })
                     .preferedEmailField(textColor: Color.black)
                     .placeholder("email",when: sVar.passwordHelper.emailText.isEmpty)
                     .focused($focusField,equals: .SIGNUP_EMAIL)
@@ -69,7 +69,7 @@ struct SignupView : View {
         VStack(spacing:5.0){
             HStack{
                 Image(systemName: sVar.passwordHelper.passwordsLevel != .NONE ? "lock" : "lock.open")
-                SecureField("",text:$sVar.passwordHelper.password)
+                SecureField("",text:$sVar.passwordHelper.password,onCommit: { })
                     .preferedSecureField()
                     .placeholder("password",
                                  when: sVar.passwordHelper.password.isEmpty)
@@ -88,7 +88,7 @@ struct SignupView : View {
         VStack(spacing:5.0){
             HStack{
                 Image(systemName: sVar.passwordHelper.passwordsIsAMatch != .NOT_ACCEPTED ? "lock" : "lock.open")
-                SecureField("",text:$sVar.passwordHelper.confirmedPassword)
+                SecureField("",text:$sVar.passwordHelper.confirmedPassword,onCommit: { })
                     .preferedSecureField()
                     .placeholder("verify password",
                                  when: sVar.passwordHelper.confirmedPassword.isEmpty)

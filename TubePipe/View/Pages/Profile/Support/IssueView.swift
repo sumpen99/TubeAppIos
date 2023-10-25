@@ -97,27 +97,28 @@ struct IssueView:View{
         .padding()
     }
     
-    var inputTitle:some View{
-        InputDocumentField(label: Text("Title"),content:
-                            TextField("",text:$docContent.title.max(MAX_TEXTFIELD_LEN),axis: .vertical)
-                                .preferedDocumentField()
-                                .focused($focusField,equals: .DOCUMENT_TITLE)
-                                .placeholder("...",
-                                             when: (focusField != .DOCUMENT_TITLE && docContent.title.isEmpty),
-                                             alignment: .center)
-                                .lineLimit(1)
-        )
+    var optionalText:some View{
+        Text("optional").italic().foregroundColor(.tertiaryLabel)
+    }
+    
+    var optionalImage:some View{
+        HStack{
+            optionalText
+            Image(systemName: "photo.on.rectangle.angled")
+        }
+        .italic()
+        .foregroundColor(.tertiaryLabel)
+        
     }
     
     var inputDescription:some View{
         InputDocumentField(label: Text("Description").vTop(),content:
                             ZStack{
-                            TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN*4),axis: .vertical)
+                            TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN*4),onCommit: {})
                                 .preferedDocumentField()
                                 .focused($focusField,equals: .DOCUMENT_MESSAGE)
-                                .placeholder("...",
-                                             when: (focusField != .DOCUMENT_MESSAGE) && (docContent.message.isEmpty),
-                                             alignment: .leading)
+                                .placeholder("message",
+                                             when: (focusField != .DOCUMENT_MESSAGE) && (docContent.message.isEmpty))
                                 .vTop()
                             Text("\(MAX_TEXTFIELD_LEN*4-docContent.message.count)")
                             .font(.caption)
@@ -132,12 +133,12 @@ struct IssueView:View{
     
     var inputEmail:some View{
         InputDocumentField(label: Text("Email"),content:
-                            TextField("",text:$docContent.email.max(MAX_TEXTFIELD_LEN),axis: .vertical)
+                            TextField("",text:$docContent.email.max(MAX_TEXTFIELD_LEN),onCommit: {})
                                 .preferedDocumentField()
                                 .focused($focusField,equals: .DOCUMENT_EMAIL)
-                                .placeholder("...",
-                                             when: (focusField != .DOCUMENT_EMAIL && docContent.email.isEmpty),
-                                             alignment: .leading)
+                                .placeholder(when: (focusField != .DOCUMENT_EMAIL && docContent.email.isEmpty)){
+                                    optionalText.padding(.leading)
+                                }
                                 .lineLimit(1)
         )
     }
@@ -145,11 +146,12 @@ struct IssueView:View{
     var inputScreenshot:some View{
         InputDocumentField(label: Text("Screenshot"),
                            content: ImagePickerSwiftUi(docContent: $docContent,
-                                                       label: Label("",
-                                                                    systemImage: "photo.on.rectangle.angled").hLeading())
+                                                       label: optionalImage)
+                            .buttonStyle(BorderlessButtonStyle())
         )
+        .fullListWidthSeperator()
         .buttonStyle(BorderlessButtonStyle())
-    }
+     }
     
     
     var shareButton: some View{
@@ -161,25 +163,13 @@ struct IssueView:View{
         .padding()
     }
     
-    var inputBody:some View {
-        VStack{
-            inputDescription
-            Divider()
-            inputEmail
-            Divider()
-            inputScreenshot
-            Divider()
-        }
-        
-        
-    }
-    
-   
     var infoBody:some View{
         VStack(spacing:0){
             issueTopHeader
             List{
-                inputBody
+                inputDescription
+                inputEmail
+                inputScreenshot
                 shareButton
             }
             .listStyle(.insetGrouped)

@@ -35,6 +35,7 @@ struct ImagePickerSwiftUi<LabelText:View>: View {
                         image = nil
                     }
                 })
+                .font(.title)
                 .foregroundColor(.red)
             }
             else{
@@ -99,7 +100,6 @@ struct UserImage: View{
                 .resizable()
                 .scaledToFit()
                 .frame(height: 100)
-                //.clipShape(Circle())
                 .foregroundColor(.backgroundPrimary)
                 .onTapGesture {
                     activeImagePicker = .ORIGINAL_PICKER

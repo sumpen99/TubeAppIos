@@ -44,7 +44,7 @@ struct LoginView : View {
         VStack(spacing:5.0){
             HStack{
                 Image(systemName: "mail")
-                TextField("",text:$lVar.email)
+                TextField("",text:$lVar.email,onCommit: { })
                     .preferedEmailField(textColor: Color.black)
                     .placeholder("email",when: lVar.email.isEmpty)
                     .focused($focusField,equals: .LOGIN_EMAIL)
@@ -63,7 +63,7 @@ struct LoginView : View {
         VStack(spacing:5.0){
             HStack{
                 Image(systemName: "lock")
-                SecureField("",text:$lVar.password)
+                SecureField("",text:$lVar.password,onCommit: { })
                     .preferedSecureField()
                     .placeholder("password",
                                  when: lVar.password.isEmpty)

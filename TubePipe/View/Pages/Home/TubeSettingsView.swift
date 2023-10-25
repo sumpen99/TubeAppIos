@@ -118,7 +118,7 @@ struct TubeSettingsView:View{
         ZStack{
             HStack{
                 ScrollView(.horizontal){
-                    LazyHStack(alignment: .top, spacing: 10, pinnedViews: [.sectionHeaders]){
+                    LazyHStack(alignment: .top, spacing: 30, pinnedViews: [.sectionHeaders]){
                         ForEach(settingsHeader, id: \.self) { header in
                             settingsHeaderCell(header)
                        }
@@ -137,7 +137,7 @@ struct TubeSettingsView:View{
     
     var settingsItemMenuList:some View{
         ScrollView(.horizontal){
-            LazyHStack(alignment: .center, spacing: 10, pinnedViews: [.sectionHeaders]){
+            LazyHStack(alignment: .center, spacing: 20, pinnedViews: [.sectionHeaders]){
                 ForEach(settingsItem, id: \.self) { setting in
                     settingsOptionCell(setting)
                }
@@ -152,18 +152,19 @@ struct TubeSettingsView:View{
     func settingsHeaderCell(_ setting:SettingsHeader) -> some View{
         return Text(setting.rawValue)
         .font(.headline)
+        .bold()
         .frame(height: 33)
+        .foregroundColor(setting == tsVar.settingsHeader ? Color.black : Color.tertiaryLabel )
         .background(
              ZStack{
                  if setting == tsVar.settingsHeader{
-                     Color.black
+                     Color.systemBlue
                      .frame(height: 1)
                      .offset(y: 14)
                      .matchedGeometryEffect(id: "CURRENTHEADER", in: animation)
                  }
              }
         )
-        .foregroundStyle(setting == tsVar.settingsHeader ? .primary : .tertiary)
         .onTapGesture {
             withAnimation{
                 tsVar.settingsHeader = setting
