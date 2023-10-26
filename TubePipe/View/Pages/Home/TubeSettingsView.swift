@@ -212,14 +212,11 @@ struct TubeSettingsView:View{
         return Section {
             switch item{
             case .DEGREES:
-                VStack{
-                    SliderSection(sliderValue: $tubeViewModel.settingsVar.grader,
-                                  minValue: 0.0,
-                                  maxValue: SLIDER_MAX_DEGREES,
-                                  textEnding: "°",
-                                  textfieldValue: "\(Int(tubeViewModel.settingsVar.grader))")
-                }
-                
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.grader,
+                              minValue: 0.0,
+                              maxValue: SLIDER_MAX_DEGREES,
+                              textEnding: "°",
+                              textfieldValue: "\(Int(tubeViewModel.settingsVar.grader))")
             case .DIMENSION:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.dimension,
                               minValue: 1.0,

@@ -818,6 +818,17 @@ extension TubeViewModel{
     
     
    
+    func initViewFromTubeDefaultValues(_ model:TubeDefault){
+        settingsVar.dimension = CGFloat(model.dimension)
+        settingsVar.segment = CGFloat(model.segment)
+        settingsVar.steel = CGFloat(model.steel)
+        settingsVar.grader = CGFloat(model.grader)
+        settingsVar.radie = CGFloat(model.radie)
+        settingsVar.lena = CGFloat(model.lena)
+        settingsVar.lenb = CGFloat(model.lenb)
+        settingsVar.overlap = CGFloat(model.overlap)
+    }
+    
     func initViewFromModelValues(_ model:TubeModel){
         settingsVar.dimension = CGFloat(model.dimension)
         settingsVar.segment = CGFloat(model.segment)
@@ -915,6 +926,7 @@ extension TubeViewModel{
             return
         }
         userDefaultSettingsVar.preferredSetting = userSettings
+        initViewFromTubeDefaultValues(userSettings.tubeDefault)
         userDefaultSettingsVar.showPreferredSettings()
     }
     
@@ -928,13 +940,12 @@ extension TubeViewModel{
     
     func saveUserDefaultDrawingValues(){
         guard let userId = FirebaseAuth.userId else { return }
-        if userDefaultSettingsVar.drawingHasChanged{
+        if userDefaultSettingsVar.hasChanges{
             let drawOptions = userDefaultSettingsVar.drawOptions
-            userDefaultSettingsVar.changeDefaultTube()
-            let defaultTube = userDefaultSettingsVar.defaultTube
+            let tubeDefault = userDefaultSettingsVar.tubeDefault
             let preferredSetting = UserPreferredSetting(
-                 drawOptions: drawOptions,defaultTube: defaultTube)
-            
+                 drawOptions: drawOptions,
+                 tubeDefault: tubeDefault)
             SharedPreference.writeNewUserSettingsToStorage(userId,userSetting: preferredSetting)
             userDefaultSettingsVar.preferredSetting = preferredSetting
             userDefaultSettingsVar.showPreferredSettings()

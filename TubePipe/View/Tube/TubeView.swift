@@ -16,14 +16,12 @@ struct TubeVariables{
 
 struct TubeView: View{
     @EnvironmentObject var tubeViewModel: TubeViewModel
-    //@State var tVar = TubeVariables()
     @GestureState private var pinchMagnification: CGFloat = 1.0
     @GestureState private var twistAngle: Angle = Angle.zero
     @GestureState private var fingerLocation: CGPoint? = nil
     @GestureState private var startLocation: CGPoint? = nil
     
     // MARK: - HELPER
-    
     func calculateScale(size:CGSize) -> CGFloat{
             let a = sqrt(pow(size.width, 2) + pow(size.height, 2))
             let b = sqrt(pow(tubeViewModel.muff.width, 2) + pow(tubeViewModel.muff.height, 2))
@@ -308,9 +306,9 @@ struct TubeView: View{
     // MARK: - HIT TEST
     var hitTest: some View{
         Color.clear
-            .frame(width: tubeViewModel.muff.width,
-                   height: tubeViewModel.muff.height)
-            .contentShape(Rectangle())
+        .frame(width: tubeViewModel.muff.width,
+               height: tubeViewModel.muff.height)
+        .contentShape(Rectangle())
     }
     
     // MARK: - DRAW OPTION
@@ -343,7 +341,6 @@ struct TubeView: View{
                     }
                 }
             }
-            //.offset(calculateOffset(size: reader.size))
             .scaleEffect(tubeViewModel.posVar.currentMagnification * pinchMagnification * calculateScale(size: reader.size))
             .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
             .rotationEffect(tubeViewModel.posVar.currentRotation + twistAngle + Angle(degrees: 180.0))

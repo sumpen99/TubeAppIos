@@ -40,4 +40,5 @@ let SLIDER_MAX_SEGMENT:CGFloat      =  100.0
 let SLIDER_MAX_RADIUS:CGFloat       =  5000.0
 let SLIDER_MAX_DIMENSION:CGFloat    =  5000.0
 let SLIDER_MAX_LENGTH:CGFloat       =  10000.0
+let SLIDER_MAX_OVERLAP:CGFloat      =  100000.0
 

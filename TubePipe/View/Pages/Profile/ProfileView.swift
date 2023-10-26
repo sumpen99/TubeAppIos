@@ -193,6 +193,14 @@ struct ProfileView: View{
         }
     }
     
+    var settingsSection:some View{
+        Section {
+            navigateToUserSettings
+        } header: {
+            Text("Settings").foregroundColor(.white).bold()
+        }
+    }
+    
     var userSocialSection:some View{
         Section {
             togglePublicMode
@@ -225,6 +233,7 @@ struct ProfileView: View{
         List{
             accountSection
             userSocialSection
+            settingsSection
             supportSection
             privacySection
         }
@@ -287,6 +296,14 @@ struct ProfileView: View{
         }
         .fullListWidthSeperator()
         .disabled(!userHasAllowedSharing)
+    }
+    
+    var navigateToUserSettings:some View{
+        NavigationLink(destination:LazyDestination(destination: {
+            UserSettingsView()
+        })){
+            Label("Default Tube", systemImage: "smallcircle.circle").foregroundColor(.black)
+        }
     }
     
     var navigateToMessages:some View{
