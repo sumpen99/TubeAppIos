@@ -329,7 +329,7 @@ struct TubeView: View{
         default: EmptyView()
         }
     }
-    
+   
     // MARK: - BODY
     var body: some View{
         GeometryReader{ reader in
@@ -337,7 +337,7 @@ struct TubeView: View{
                 hitTest
                 tubeBase
                 muff
-                ForEach(0..<DrawOption.indexOf(op: .FULLCIRCLE) + 1,id: \.self){ index in
+                ForEach(DrawOption.indexOf(op: .LABELSDEGREES)..<DrawOption.indexOf(op: .FULLCIRCLE) + 1,id: \.self){ index in
                     if tubeViewModel.userDefaultSettingsVar.drawOptions[index]{
                         getDrawOption(index:index)
                     }

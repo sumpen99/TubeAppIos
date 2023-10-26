@@ -42,7 +42,7 @@ struct DocumentContent:Codable{
     var isNotAValidDocument:Bool{
         let title = title.trimmingCharacters(in: .whitespacesAndNewlines)
         let message = message.trimmingCharacters(in: .whitespacesAndNewlines)
-        return title.isEmpty || message.isEmpty
+        return (title.isEmpty||message.isEmpty)
     }
     
     mutating func trim(){

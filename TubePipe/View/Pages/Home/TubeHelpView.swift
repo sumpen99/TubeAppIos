@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct TubeHelpView: View{
-    @EnvironmentObject var firebaseAuth: FirebaseAuth
     @GestureState private var pinchMagnification: CGFloat = 1.0
     @GestureState private var twistAngle: Angle = Angle.zero
     @GestureState private var fingerLocation: CGPoint? = nil
@@ -72,11 +71,8 @@ struct TubeHelpView: View{
                     Image("tubeskiss_3")
                         .resizable()
                         .scaledToFit()
-                        //.offset(CGSizeMake(reader.size.width/2, reader.size.height/2))
                         .scaleEffect(currentMagnification * pinchMagnification)
                         .rotationEffect(currentRotation + twistAngle)
-                        //.position(location)
-                        //.simultaneousGesture(simpleDragGesture.simultaneously(with: fingerDragGesture))
                         .simultaneousGesture(rotationGesture.simultaneously(with: magnificationGesture))
                 } header: {
                     Text("Measurement").listSectionHeader()
@@ -84,12 +80,8 @@ struct TubeHelpView: View{
                     Text("")
                 }
                 Section {
-                    HeaderSubHeaderView(header: "Unit", subHeader: "Millimeter.")
-                    HeaderSubHeaderView(header: "Radius", subHeader: "Measure radius from middle of steel.")
-                    HeaderSubHeaderView(header: "Len A & Len B", subHeader: "Select overlap option to add 100mm on each side.")
-                    if firebaseAuth.loggedInAs == .ANONYMOUS_USER{
-                        HeaderSubHeaderView(header: "Share & Save", subHeader: "Register an free account to save and share tubes.")
-                    }
+                    HeaderSubHeaderView(header: "Unit", subHeader: "Millimeter")
+                    HeaderSubHeaderView(header: "Radius", subHeader: "Measure radius from middle of steel")
                 } header: {
                     Text("Information").listSectionHeader()
                 } footer: {

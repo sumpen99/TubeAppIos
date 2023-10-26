@@ -28,61 +28,59 @@ struct SettingsVar:Codable{
     
 }
 
-struct UserDefaultSettingsVar{
-    var segment: String = ""
-    var radius: String = ""
-    var dimension: String = ""
-    var length: String = ""
-    var drawOptions: [Bool] = []
+struct DefaultTube: Equatable,Codable{
+    var dimension:Int32 = 160
+    var segment:Int32 = 1
+    var steel:Int32 = 65
+    var grader:Int32 = 90
+    var radie:Int32 = 200
+    var lena:Int32 = 220
+    var lenb:Int32 = 220
     
-    var settingHasChanged:Bool{
-        (segment != String(preferredSetting.segment) && legalInt(str: segment,max:1000)) ||
-        (radius != String(preferredSetting.radius) && legalInt(str: radius,max:10000)) ||
-        (dimension != String(preferredSetting.dimension) && legalInt(str: dimension,max:10000)) ||
-        (length != String(preferredSetting.length) && legalInt(str: length,max:100000))
+    static func == (lhs: DefaultTube, rhs: DefaultTube) -> Bool {
+        return(
+        lhs.dimension == rhs.dimension &&
+        lhs.segment == rhs.segment &&
+        lhs.steel == rhs.steel &&
+        lhs.grader == rhs.grader &&
+        lhs.radie == rhs.radie &&
+        lhs.lena == rhs.lena &&
+        lhs.lenb == rhs.lenb)
     }
+}
+
+struct UserDefaultSettingsVar{
+    var drawOptions: [Bool] = []
+    var defaultTube:DefaultTube = DefaultTube()
+    var preferredSetting:UserPreferredSetting = UserPreferredSetting()
+    
     var drawingHasChanged:Bool{
         ((drawOptions.count != preferredSetting.drawOptions.count) ||
         (drawOptions != preferredSetting.drawOptions))
     }
     
-    var preferredSetting:UserPreferredSetting = UserPreferredSetting()
-    
-    func specificDrawOptionHasChanged(_ index:Int) -> Bool{
-        return drawOptions[index] != preferredSetting.drawOptions[index]
-    }
+    var defaultTubeHasChanged:Bool{ defaultTube != preferredSetting.defaultTube }
     
     mutating func showPreferredSettings(){
-        self.segment = String(preferredSetting.segment)
-        self.radius = String(preferredSetting.radius)
-        self.dimension = String(preferredSetting.dimension)
-        self.length = String(preferredSetting.length)
         self.drawOptions = preferredSetting.drawOptions
-    
+        self.defaultTube = preferredSetting.defaultTube
     }
     
-    func legalInt(str:String,max:Int32) ->Bool{
-        guard let val = Int32(str) else { return false }
-        return val > 0 && val <= max
+    mutating func changeDefaultTube(){
+        self.defaultTube.segment = 65
     }
     
 }
 
-class UserPreferredSetting: NSObject, NSCoding ,NSSecureCoding{
+class UserPreferredSetting: NSObject, NSCoding ,NSSecureCoding,Encodable,Decodable{
     static var supportsSecureCoding: Bool { return true}
-    
-    var segment: Int32
-    var radius: Int32
-    var dimension: Int32
-    var length: Int32
     var drawOptions: [Bool]
+    var defaultTube:DefaultTube
     
-    init(segment: Int32?,radius:Int32?,dimension:Int32?,length:Int32?,drawOptions:[Bool]?) {
-        self.segment = segment ?? 100
-        self.radius = radius ?? 5000
-        self.dimension = dimension ?? 5000
-        self.length = length ?? 10000
-        self.drawOptions = drawOptions ?? Array.init(repeating: true, count: DrawOption.indexOf(op: .ALL_OPTIONS))
+    init(drawOptions:[Bool]?,defaultTube:DefaultTube?) {
+       self.drawOptions = drawOptions ?? Array.init(repeating: true,
+                                                    count: DrawOption.indexOf(op: .ALL_OPTIONS))
+       self.defaultTube = defaultTube ?? DefaultTube()
     }
     
     convenience override init() {
@@ -99,24 +97,18 @@ class UserPreferredSetting: NSObject, NSCoding ,NSSecureCoding{
         arr[DrawOption.indexOf(op: .SHOW_WORLD_AXIS)] = true
         arr[DrawOption.indexOf(op: .SHOW_STEEL)] = true
         arr[DrawOption.indexOf(op: .SHOW_MUFF)] = true
-        self.init(segment: nil,radius:nil,dimension:nil,length:nil,drawOptions: arr)
+        self.init(drawOptions: arr,defaultTube: nil)
     }
-  
+    
     required convenience init(coder aDecoder: NSCoder) {
-        let segment = aDecoder.decodeInt32(forKey: "segment")
-        let radius = aDecoder.decodeInt32(forKey: "radius")
-        let dimension = aDecoder.decodeInt32(forKey: "dimension")
-        let length = aDecoder.decodeInt32(forKey: "length")
         let drawOption = aDecoder.decodeObject(forKey: "drawOption") as? [Bool]
-        self.init(segment:segment,radius:radius,dimension:dimension,length:length,drawOptions: drawOption)
+        let defaultTube = aDecoder.decodeObject(forKey: "defaultTube") as? DefaultTube
+        self.init(drawOptions: drawOption,defaultTube: defaultTube)
     }
 
     func encode(with aCoder: NSCoder) {
-        aCoder.encode(segment, forKey: "segment")
-        aCoder.encode(radius, forKey: "radius")
-        aCoder.encode(dimension, forKey: "dimension")
-        aCoder.encode(length, forKey: "length")
         aCoder.encode(drawOptions, forKey: "drawOption")
+        aCoder.encode(defaultTube, forKey: "defaultTube")
     }
     
 }
@@ -126,10 +118,13 @@ class SharedPreference {
    
     static func writeNewUserSettingsToStorage(_ key: String,userSetting: UserPreferredSetting){
         do{
-            let encodedData: Data = try NSKeyedArchiver.archivedData(
-                withRootObject: userSetting,
-                requiringSecureCoding: false)
-            userDefault.set(encodedData, forKey: key)
+            if let encodedSettings = (try? JSONSerialization.jsonObject(with: JSONEncoder().encode(userSetting))) as? [String: Any]{
+                let encodedData: Data = try NSKeyedArchiver.archivedData(
+                    withRootObject: encodedSettings,
+                    requiringSecureCoding: false)
+                userDefault.set(encodedData, forKey: key)
+            }
+            
         }
         catch{
             debugLog(object: error)
@@ -139,10 +134,11 @@ class SharedPreference {
     static func loadUserSettingsFromStorage(_ key: String) -> UserPreferredSetting? {
         guard let decodedData = userDefault.data(forKey: key) else { return nil }
         do{
-            let decodedUserSetting = try (NSKeyedUnarchiver.unarchivedObject(
-                ofClasses: [NSArray.self, NSString.self, NSNumber.self, UserPreferredSetting.self], from: decodedData) as? UserPreferredSetting)
-            return decodedUserSetting
-            
+            if let decodedDic = try (NSKeyedUnarchiver.unarchivedObject(
+                ofClasses: [NSArray.self, NSString.self, NSNumber.self,NSDictionary.self], from: decodedData) as? NSDictionary){
+                let decodedUserSetting = try JSONDecoder().decode(UserPreferredSetting.self, from: JSONSerialization.data(withJSONObject: decodedDic))
+                return decodedUserSetting
+            }
         }
         catch{
             debugLog(object: error)

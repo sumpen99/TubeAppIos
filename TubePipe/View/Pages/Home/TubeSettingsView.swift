@@ -215,7 +215,7 @@ struct TubeSettingsView:View{
                 VStack{
                     SliderSection(sliderValue: $tubeViewModel.settingsVar.grader,
                                   minValue: 0.0,
-                                  maxValue: 360.0,
+                                  maxValue: SLIDER_MAX_DEGREES,
                                   textEnding: "°",
                                   textfieldValue: "\(Int(tubeViewModel.settingsVar.grader))")
                 }
@@ -223,37 +223,37 @@ struct TubeSettingsView:View{
             case .DIMENSION:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.dimension,
                               minValue: 1.0,
-                              maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.dimension),
+                              maxValue:SLIDER_MAX_DIMENSION,
                               textEnding: "mm",
                               textfieldValue: "\(Int(tubeViewModel.settingsVar.dimension))")
             case .SEGMENT:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.segment,
                               minValue: 0.0,
-                              maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.segment),
+                              maxValue: SLIDER_MAX_SEGMENT,
                               textEnding: "st",
                               textfieldValue: "\(Int(tubeViewModel.settingsVar.segment))")
             case .STEEL:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.steel,
                               minValue: 1.0,
-                              maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.dimension),
+                              maxValue: SLIDER_MAX_DIMENSION,
                               textEnding: "mm",
                               textfieldValue: "\(Int(tubeViewModel.settingsVar.steel))")
             case .RADIUS:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.radie,
                               minValue: 1.0,
-                              maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.radius),
+                              maxValue: SLIDER_MAX_RADIUS,
                               textEnding: "mm",
                               textfieldValue: "\(Int(tubeViewModel.settingsVar.radie))")
             case .LENA:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.lena,
                               minValue: 1.0,
-                              maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.length),
+                              maxValue: SLIDER_MAX_LENGTH,
                               textEnding: "mm",
                               textfieldValue: "\(Int(tubeViewModel.settingsVar.lena))")
             case .LENB:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.lenb,
                               minValue: 1.0,
-                              maxValue: CGFloat(tubeViewModel.userDefaultSettingsVar.preferredSetting.length),
+                              maxValue: SLIDER_MAX_LENGTH,
                               textEnding: "mm",
                               textfieldValue: "\(Int(tubeViewModel.settingsVar.lenb))")
             }

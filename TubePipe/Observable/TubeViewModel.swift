@@ -918,27 +918,6 @@ extension TubeViewModel{
         userDefaultSettingsVar.showPreferredSettings()
     }
     
-    func saveUserDefaultSettingValues(){
-        guard let userId = FirebaseAuth.userId else { return }
-        if userDefaultSettingsVar.settingHasChanged{
-            let segment = Int32(userDefaultSettingsVar.segment) ?? userDefaultSettingsVar.preferredSetting.segment
-            let radius = Int32(userDefaultSettingsVar.radius) ?? userDefaultSettingsVar.preferredSetting.radius
-            let dimension = Int32(userDefaultSettingsVar.dimension) ?? userDefaultSettingsVar.preferredSetting.dimension
-            let length = Int32(userDefaultSettingsVar.length) ?? userDefaultSettingsVar.preferredSetting.length
-            let drawOptions = userDefaultSettingsVar.preferredSetting.drawOptions
-            let preferredSetting = UserPreferredSetting(
-                segment: segment,
-                radius: radius,
-                dimension: dimension,
-                length: length,
-                drawOptions: drawOptions)
-            
-            SharedPreference.writeNewUserSettingsToStorage(userId,userSetting: preferredSetting)
-            userDefaultSettingsVar.preferredSetting = preferredSetting
-            userDefaultSettingsVar.showPreferredSettings()
-        }
-    }
-    
     func setUserdefaultDrawOption(with value:Bool,op:DrawOption){
         userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: op)] = value
     }
@@ -950,17 +929,11 @@ extension TubeViewModel{
     func saveUserDefaultDrawingValues(){
         guard let userId = FirebaseAuth.userId else { return }
         if userDefaultSettingsVar.drawingHasChanged{
-            let segment = userDefaultSettingsVar.preferredSetting.segment
-            let radius = userDefaultSettingsVar.preferredSetting.radius
-            let dimension = userDefaultSettingsVar.preferredSetting.dimension
-            let length =  userDefaultSettingsVar.preferredSetting.length
             let drawOptions = userDefaultSettingsVar.drawOptions
+            userDefaultSettingsVar.changeDefaultTube()
+            let defaultTube = userDefaultSettingsVar.defaultTube
             let preferredSetting = UserPreferredSetting(
-                segment: segment,
-                radius: radius,
-                dimension: dimension,
-                length: length,
-                drawOptions: drawOptions)
+                 drawOptions: drawOptions,defaultTube: defaultTube)
             
             SharedPreference.writeNewUserSettingsToStorage(userId,userSetting: preferredSetting)
             userDefaultSettingsVar.preferredSetting = preferredSetting
@@ -968,20 +941,3 @@ extension TubeViewModel{
         }
     }
 }
-
-
-/*func circleTouchSelf() -> Bool{
-    let l3 = [tubeBase.b,
-              tubeBase.p1,
-              tubeBase.p2,
-              tubeBase.p3]
-    let n = HalfLine.offsetLineSegments(points: l3, offset: settingsVar.steel/2.0)
-    return Line.checkForLineIntersection(inputSegments: [n.l1,n.l2,[tubeBase.b.getCgPoint(),
-                                                                    tubeBase.p1.getCgPoint(),
-                                                                    tubeBase.p2.getCgPoint(),
-                                                                    tubeBase.p3.getCgPoint()]])
-}
-
-func circleToClose() -> Bool{
-    return Line.calcLengthOfLine(p1: tubeBase.b, p2: tubeBase.p3) < settingsVar.dimension
-}*/
