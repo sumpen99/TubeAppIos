@@ -11,6 +11,8 @@ struct UserSettingsView:View{
     @EnvironmentObject var tubeViewModel: TubeViewModel
     let settingsOption:[SettingsOption] = SettingsOption.allCases
     
+    var changesHasHappend:Bool{ tubeViewModel.settingsVar.hasChanges }
+    
     var settingsFooter:some View{
         Text("Specify default values for tube on start up.")
         .listSectionFooter()
@@ -25,7 +27,6 @@ struct UserSettingsView:View{
         .border(Color.darkGray,width: 3.0)
         .padding()
         .hCenter()
-        .vTop()
         .frame(height: 250.0)
     }
     
@@ -119,6 +120,26 @@ struct UserSettingsView:View{
         AppBackgroundStack(content: {
             content
         })
+        .onAppear{
+            tubeViewModel.settingsVar.stash()
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { }) {
+                    Text("Reset")
+                }
+                .padding(.trailing)
+                .opacity(changesHasHappend ? 1.0 : 0.0)
+                .disabled(!changesHasHappend)
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { }) {
+                    Text("Save")
+                }
+                .opacity(changesHasHappend ? 1.0 : 0.0)
+                .disabled(!changesHasHappend)
+            }
+        }
         .onTapGesture{ endTextEditing() }
         .modifier(NavigationViewModifier(title: ""))
         .hiddenBackButtonWithCustomTitle("Profile")

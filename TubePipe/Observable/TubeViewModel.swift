@@ -840,6 +840,20 @@ extension TubeViewModel{
         settingsVar.center = CGFloat(model.center)
     }
     
+    func initViewFromStashedValues(){
+        if let model = settingsVar.stashedValues{
+            settingsVar.dimension = model[0]
+            settingsVar.segment = model[1]
+            settingsVar.steel = model[2]
+            settingsVar.grader = model[3]
+            settingsVar.radie = model[4]
+            settingsVar.lena = model[5]
+            settingsVar.lenb = model[6]
+            settingsVar.center = model[7]
+        }
+        
+    }
+    
     func initViewFromSharedValues(_ model:SharedTube) -> Bool{
         if let dimension = model.dimension,
            let segment = model.segment,
@@ -940,9 +954,9 @@ extension TubeViewModel{
     
     func saveUserDefaultDrawingValues(){
         guard let userId = FirebaseAuth.userId else { return }
-        if userDefaultSettingsVar.hasChanges{
+        if userDefaultSettingsVar.drawingHasChanged{
             let drawOptions = userDefaultSettingsVar.drawOptions
-            let tubeDefault = userDefaultSettingsVar.tubeDefault
+            let tubeDefault = userDefaultSettingsVar.preferredSetting.tubeDefault
             let preferredSetting = UserPreferredSetting(
                  drawOptions: drawOptions,
                  tubeDefault: tubeDefault)
@@ -950,5 +964,16 @@ extension TubeViewModel{
             userDefaultSettingsVar.preferredSetting = preferredSetting
             userDefaultSettingsVar.showPreferredSettings()
         }
+    }
+    
+    func saveUserDefaultTubeValues(_ tubeDefault:TubeDefault){
+        guard let userId = FirebaseAuth.userId else { return }
+        let drawOptions = userDefaultSettingsVar.drawOptions
+        let preferredSetting = UserPreferredSetting(
+             drawOptions: drawOptions,
+             tubeDefault: tubeDefault)
+        SharedPreference.writeNewUserSettingsToStorage(userId,userSetting: preferredSetting)
+        userDefaultSettingsVar.preferredSetting = preferredSetting
+        userDefaultSettingsVar.showPreferredSettings()
     }
 }

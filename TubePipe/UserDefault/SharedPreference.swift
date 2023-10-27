@@ -7,6 +7,13 @@
 
 import Foundation
 
+class Box<T> {
+   let boxed: T
+   init(_ thingToBox: T) {
+       boxed = thingToBox
+   }
+}
+
 struct SettingsVar:Codable{
     var dimension:CGFloat = 160.0
     var segment:CGFloat = 1.0
@@ -20,11 +27,53 @@ struct SettingsVar:Codable{
     var overlap:CGFloat = 100.0
     var alreadyCalculated:Bool = false
     var redraw:Bool = false
+    var stashedValues: [CGFloat]?
+    
+    var hasChanges:Bool{
+        if let stashedValues = stashedValues{
+            return (dimension != stashedValues[0]   ||
+                    segment != stashedValues[1]     ||
+                    steel != stashedValues[2]       ||
+                    grader != stashedValues[3]      ||
+                    radie != stashedValues[4]       ||
+                    lena != stashedValues[5]        ||
+                    lenb != stashedValues[6]        ||
+                    center != stashedValues[7])
+        }
+        return false
+    }
     
     mutating func resetValues(){
         self.alreadyCalculated = false
         self.first = 0.0
         self.center = 0.0
+    }
+    
+    mutating func stash(){
+        var stashed:[CGFloat] = []
+        stashed.append(dimension)
+        stashed.append(segment)
+        stashed.append(steel)
+        stashed.append(grader)
+        stashed.append(radie)
+        stashed.append(lena)
+        stashed.append(lenb)
+        stashed.append(center)
+        stashedValues = stashed
+    }
+    
+    
+    mutating func unStash(){
+        if let stashedValues = stashedValues{
+            dimension = stashedValues[0]
+            segment = stashedValues[1]
+            steel = stashedValues[2]
+            grader = stashedValues[3]
+            radie = stashedValues[4]
+            lena = stashedValues[5]
+            lenb = stashedValues[6]
+            center = stashedValues[7]
+        }
     }
     
 }
@@ -54,28 +103,20 @@ struct TubeDefault: Equatable,Codable{
 
 struct UserDefaultSettingsVar{
     var drawOptions: [Bool] = []
-    var tubeDefault:TubeDefault = TubeDefault()
     var preferredSetting:UserPreferredSetting = UserPreferredSetting()
-    
-    var hasChanges:Bool{
-        return drawingHasChanged||tubeDefaultHasChanged
-    }
-    
+      
     var drawingHasChanged:Bool{
         ((drawOptions.count != preferredSetting.drawOptions.count) ||
         (drawOptions != preferredSetting.drawOptions))
     }
     
-    var tubeDefaultHasChanged:Bool{ tubeDefault != preferredSetting.tubeDefault }
-    
     mutating func showPreferredSettings(){
         self.drawOptions = preferredSetting.drawOptions
-        self.tubeDefault = preferredSetting.tubeDefault
     }
 }
 
 class UserPreferredSetting: NSObject, NSCoding ,NSSecureCoding,Encodable,Decodable{
-    static var supportsSecureCoding: Bool { return true}
+    static var supportsSecureCoding: Bool { return true }
     var drawOptions: [Bool]
     var tubeDefault:TubeDefault
     
