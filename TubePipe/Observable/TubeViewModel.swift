@@ -944,6 +944,13 @@ extension TubeViewModel{
         userDefaultSettingsVar.showPreferredSettings()
     }
     
+    func loadTubeDefaultValues(){
+        guard let userId = FirebaseAuth.userId,
+              let userSettings = SharedPreference.loadUserSettingsFromStorage(userId)
+        else{ return }
+        initViewFromTubeDefaultValues(userSettings.tubeDefault)
+    }
+    
     func setUserdefaultDrawOption(with value:Bool,op:DrawOption){
         userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: op)] = value
     }

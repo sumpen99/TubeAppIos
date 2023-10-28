@@ -63,7 +63,7 @@ struct SettingsVar:Codable{
     }
     
     
-    mutating func unStash(){
+    mutating func drop(){
         if let stashedValues = stashedValues{
             dimension = stashedValues[0]
             segment = stashedValues[1]
@@ -73,6 +73,7 @@ struct SettingsVar:Codable{
             lena = stashedValues[5]
             lenb = stashedValues[6]
             center = stashedValues[7]
+            self.stashedValues = nil
         }
     }
     

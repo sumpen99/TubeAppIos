@@ -20,7 +20,11 @@ class NavigationViewModel: ObservableObject{
     
     func navTo(_ tab:MainTabItem){
         if(isActive(tab)){NavigationUtil.popToRootView()}
-        else{selectedTab = tab}
+        else{
+            DispatchQueue.main.async {
+                self.selectedTab = tab
+            }
+        }
     }
     
     func isActive(_ tab:MainTabItem) -> Bool{

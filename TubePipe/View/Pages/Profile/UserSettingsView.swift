@@ -35,10 +35,9 @@ struct UserSettingsView:View{
             SliderSection(sliderValue: $tubeViewModel.settingsVar.overlap,
                           minValue: 1.0,
                           maxValue: SLIDER_MAX_OVERLAP,
-                          textEnding: "mm",
-                          textfieldValue: "\(Int(tubeViewModel.settingsVar.overlap))")
+                          textEnding: "mm")
         } header: {
-            Text("Overlap").foregroundColor(Color.systemGray)
+            Text("Overlap length").foregroundColor(Color.systemGray)
         }
         
     }
@@ -50,44 +49,37 @@ struct UserSettingsView:View{
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.grader,
                               minValue: 0.0,
                               maxValue: SLIDER_MAX_DEGREES,
-                              textEnding: "°",
-                              textfieldValue: "\(Int(tubeViewModel.settingsVar.grader))")
+                              textEnding: "°")
             case .DIMENSION:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.dimension,
                               minValue: 1.0,
                               maxValue:SLIDER_MAX_DIMENSION,
-                              textEnding: "mm",
-                              textfieldValue: "\(Int(tubeViewModel.settingsVar.dimension))")
+                              textEnding: "mm")
             case .SEGMENT:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.segment,
                               minValue: 0.0,
                               maxValue: SLIDER_MAX_SEGMENT,
-                              textEnding: "st",
-                              textfieldValue: "\(Int(tubeViewModel.settingsVar.segment))")
+                              textEnding: "st")
             case .STEEL:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.steel,
                               minValue: 1.0,
                               maxValue: SLIDER_MAX_DIMENSION,
-                              textEnding: "mm",
-                              textfieldValue: "\(Int(tubeViewModel.settingsVar.steel))")
+                              textEnding: "mm")
             case .RADIUS:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.radie,
                               minValue: 1.0,
                               maxValue: SLIDER_MAX_RADIUS,
-                              textEnding: "mm",
-                              textfieldValue: "\(Int(tubeViewModel.settingsVar.radie))")
+                              textEnding: "mm")
             case .LENA:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.lena,
                               minValue: 1.0,
                               maxValue: SLIDER_MAX_LENGTH,
-                              textEnding: "mm",
-                              textfieldValue: "\(Int(tubeViewModel.settingsVar.lena))")
+                              textEnding: "mm")
             case .LENB:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.lenb,
                               minValue: 1.0,
                               maxValue: SLIDER_MAX_LENGTH,
-                              textEnding: "mm",
-                              textfieldValue: "\(Int(tubeViewModel.settingsVar.lenb))")
+                              textEnding: "mm")
             }
         } header: {
             Text(item.rawValue).foregroundColor(Color.systemGray)
@@ -121,7 +113,10 @@ struct UserSettingsView:View{
             content
         })
         .onAppear{
-            tubeViewModel.settingsVar.stash()
+            setUserDefaultValues()
+        }
+        .onDisappear{
+            resetBackToPreviousValues()
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -143,5 +138,15 @@ struct UserSettingsView:View{
         .onTapGesture{ endTextEditing() }
         .modifier(NavigationViewModifier(title: ""))
         .hiddenBackButtonWithCustomTitle("Profile")
+    }
+    
+    //MARK: LOAD TUBEVIEWMODEL
+    func setUserDefaultValues(){
+        tubeViewModel.settingsVar.stash()
+        tubeViewModel.loadTubeDefaultValues()
+    }
+    func resetBackToPreviousValues(){
+        tubeViewModel.settingsVar.drop()
+        tubeViewModel.rebuild()
     }
 }

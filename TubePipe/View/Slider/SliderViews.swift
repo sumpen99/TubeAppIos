@@ -13,7 +13,7 @@ struct SliderSection:View{
     let minValue:CGFloat
     let maxValue:CGFloat
     let textEnding:String
-    @State var textfieldValue:String
+    @State var textfieldValue:String = ""
     var isNotAlignmentSection:Bool = true
     
     @ViewBuilder
@@ -54,7 +54,7 @@ struct SliderSection:View{
                  })
         HStack{
             leftButton
-            TextField("\(textfieldValue)\(textEnding)",text: binding).preferedTubeSettingsField()
+            TextField("",text: binding).preferedTubeSettingsField()
             rightButton
         }
     }
@@ -69,6 +69,7 @@ struct SliderSection:View{
     
     var primarySliderSection:some View{
         sliderButtons
+        .onAppear{ textfieldValue = "\(Int(sliderValue))" }
         .onChange(of: sliderValue){ newValue in
             textfieldValue = "\(Int(newValue))"
             tubeViewModel.rebuild()
