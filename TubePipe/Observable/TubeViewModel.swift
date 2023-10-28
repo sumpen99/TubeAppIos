@@ -21,8 +21,9 @@ class TubeViewModel: ObservableObject{
     var muffDetails = MuffDetails()
     var muff = Muff()
    
-    var muffDiff: CGFloat {
-        return settingsVar.center
+    var muffDiff: CGFloat { settingsVar.center }
+    var useAutoAlign:Bool{
+        userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .AUTO_ALIGN)]||settingsVar.forceAutoAlign
     }
     
     init(){
@@ -31,8 +32,8 @@ class TubeViewModel: ObservableObject{
     }
     
     func rebuild(){
-        if userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .AUTO_ALIGN)]{
-            settingsVar.resetValues()
+        if useAutoAlign{
+            settingsVar.resetCalculationMode()
         }
         else{
             settingsVar.alreadyCalculated = true
@@ -47,9 +48,12 @@ class TubeViewModel: ObservableObject{
         getDefaultBbox()
         let offsetFromCenter = calcDiagonal()
         
-        if shouldAbort(offsetFromCenter: offsetFromCenter){ return }
+        if shouldAbort(offsetFromCenter: offsetFromCenter){
+            return
+            
+        }
    
-        if userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .AUTO_ALIGN)]{ calculateAutoAlign(offsetFromCenter:offsetFromCenter) }
+        if useAutoAlign{ calculateAutoAlign(offsetFromCenter:offsetFromCenter) }
         
         else{ calculateUserAlign() }
         
@@ -842,14 +846,14 @@ extension TubeViewModel{
     
     func initViewFromStashedValues(){
         if let model = settingsVar.stashedValues{
-            settingsVar.dimension = model[0]
-            settingsVar.segment = model[1]
-            settingsVar.steel = model[2]
-            settingsVar.grader = model[3]
-            settingsVar.radie = model[4]
-            settingsVar.lena = model[5]
-            settingsVar.lenb = model[6]
-            settingsVar.center = model[7]
+            settingsVar.dimension = model.dimension
+            settingsVar.segment = model.segment
+            settingsVar.steel = model.steel
+            settingsVar.grader = model.grader
+            settingsVar.radie = model.radie
+            settingsVar.lena = model.lena
+            settingsVar.lenb = model.lenb
+            settingsVar.center = model.center
         }
         
     }
@@ -936,6 +940,7 @@ extension TubeViewModel{
             let preferredSetting = UserPreferredSetting()
             SharedPreference.writeNewUserSettingsToStorage(userId,userSetting: preferredSetting)
             userDefaultSettingsVar.preferredSetting = preferredSetting
+            initViewFromTubeDefaultValues(preferredSetting.tubeDefault)
             userDefaultSettingsVar.showPreferredSettings()
             return
         }

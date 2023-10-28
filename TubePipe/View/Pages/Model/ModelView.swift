@@ -46,7 +46,7 @@ struct ModelView: View{
                                                         dimension: tubeViewModel.settingsVar.dimension)
             tubeSceneViewModel.buildSteelFromTubePoints(tubeViewModel.steelPotentiallyScaled(renderSizePart: tubeSceneViewModel.renderSizePart),dimension: tubeViewModel.settingsVar.steel)
              
-            tubeSceneViewModel.addWorldAxis(dimension: tubeViewModel.settingsVar.dimension)
+            tubeSceneViewModel.addWorldAxis()
             tubeSceneViewModel.rotateParentNode()
             tubeSceneViewModel.zoomScene()
             DispatchQueue.main.async {

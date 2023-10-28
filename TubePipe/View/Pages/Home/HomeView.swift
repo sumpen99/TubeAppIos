@@ -20,7 +20,7 @@ struct HomeView: View{
     var body: some View{
         NavigationView{
             AppBackgroundStack(content: {
-                TubeView()
+                TubeView(tubeInteraction: .IS_MOVEABLE)
             })
             .sheet(item: $activeHomeSheet){ item in
                 switch item{

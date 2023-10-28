@@ -194,55 +194,42 @@ struct TubeSettingsView:View{
     }
     
     //MARK: - SLIDERS
-    var alignment: some View{
-        Section {
-            SliderSection(sliderValue: $tubeViewModel.settingsVar.center,
-                          minValue: -CGFloat.infinity,
-                          maxValue: CGFloat.infinity,
-                          textEnding: "",
-                          isNotAlignmentSection: false)
-        } header: {
-            Text("Align Center").foregroundColor(Color.systemGray)
-        }
-   
-    }
- 
     func getCategorieCell(_ item:SettingsOption) -> some View{
         return Section {
             switch item{
             case .DEGREES:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.grader,
-                              minValue: 0.0,
+                              minValue: 0,
                               maxValue: SLIDER_MAX_DEGREES,
                               textEnding: "°")
             case .DIMENSION:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.dimension,
-                              minValue: 1.0,
+                              minValue: 1,
                               maxValue:SLIDER_MAX_DIMENSION,
                               textEnding: "mm")
             case .SEGMENT:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.segment,
-                              minValue: 0.0,
+                              minValue: 0,
                               maxValue: SLIDER_MAX_SEGMENT,
                               textEnding: "st")
             case .STEEL:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.steel,
-                              minValue: 1.0,
+                              minValue: 1,
                               maxValue: SLIDER_MAX_DIMENSION,
                               textEnding: "mm")
             case .RADIUS:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.radie,
-                              minValue: 1.0,
+                              minValue: 1,
                               maxValue: SLIDER_MAX_RADIUS,
                               textEnding: "mm")
             case .LENA:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.lena,
-                              minValue: 1.0,
+                              minValue: 1,
                               maxValue: SLIDER_MAX_LENGTH,
                               textEnding: "mm")
             case .LENB:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.lenb,
-                              minValue: 1.0,
+                              minValue: 1,
                               maxValue: SLIDER_MAX_LENGTH,
                               textEnding: "mm")
             }

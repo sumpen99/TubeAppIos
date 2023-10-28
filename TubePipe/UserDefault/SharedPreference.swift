@@ -15,79 +15,83 @@ class Box<T> {
 }
 
 struct SettingsVar:Codable{
-    var dimension:CGFloat = 160.0
-    var segment:CGFloat = 1.0
-    var steel:CGFloat = 65.0
-    var grader:CGFloat = 90.0
-    var radie:CGFloat = 200.0
-    var lena:CGFloat = 220.0
-    var lenb:CGFloat = 220.0
+    var dimension:CGFloat = 0
+    var segment:CGFloat = 0
+    var steel:CGFloat = 0
+    var grader:CGFloat = 0
+    var radie:CGFloat = 0
+    var lena:CGFloat = 0
+    var lenb:CGFloat = 0
+    var overlap:CGFloat = 0
     var center: CGFloat = 0.0
     var first: CGFloat = 0.0
-    var overlap:CGFloat = 100.0
     var alreadyCalculated:Bool = false
     var redraw:Bool = false
-    var stashedValues: [CGFloat]?
+    var stashedValues: TubeDefault?
+    var forceAutoAlign: Bool = false
     
     var hasChanges:Bool{
         if let stashedValues = stashedValues{
-            return (dimension != stashedValues[0]   ||
-                    segment != stashedValues[1]     ||
-                    steel != stashedValues[2]       ||
-                    grader != stashedValues[3]      ||
-                    radie != stashedValues[4]       ||
-                    lena != stashedValues[5]        ||
-                    lenb != stashedValues[6]        ||
-                    center != stashedValues[7])
+            return (dimension != stashedValues.dimension    ||
+                    segment != stashedValues.segment        ||
+                    steel != stashedValues.steel            ||
+                    grader != stashedValues.grader          ||
+                    radie != stashedValues.radie            ||
+                    lena != stashedValues.lena              ||
+                    lenb != stashedValues.lenb              ||
+                    center != stashedValues.center)
         }
         return false
     }
     
-    mutating func resetValues(){
+    mutating func resetCalculationMode(){
         self.alreadyCalculated = false
         self.first = 0.0
         self.center = 0.0
     }
     
     mutating func stash(){
-        var stashed:[CGFloat] = []
-        stashed.append(dimension)
-        stashed.append(segment)
-        stashed.append(steel)
-        stashed.append(grader)
-        stashed.append(radie)
-        stashed.append(lena)
-        stashed.append(lenb)
-        stashed.append(center)
-        stashedValues = stashed
+        stashedValues = TubeDefault(
+            dimension: dimension,
+            segment: segment,
+            steel: steel,
+            grader: grader,
+            radie: radie,
+            lena: lena,
+            lenb: lenb,
+            overlap: overlap,
+            center: center)
+        forceAutoAlign = true
     }
     
     
     mutating func drop(){
         if let stashedValues = stashedValues{
-            dimension = stashedValues[0]
-            segment = stashedValues[1]
-            steel = stashedValues[2]
-            grader = stashedValues[3]
-            radie = stashedValues[4]
-            lena = stashedValues[5]
-            lenb = stashedValues[6]
-            center = stashedValues[7]
+            dimension = stashedValues.dimension
+            segment = stashedValues.segment
+            steel = stashedValues.steel
+            grader = stashedValues.grader
+            radie = stashedValues.radie
+            lena = stashedValues.lena
+            lenb = stashedValues.lenb
+            center = stashedValues.center
             self.stashedValues = nil
+            self.forceAutoAlign = false
         }
     }
     
 }
 
 struct TubeDefault: Equatable,Codable{
-    var dimension:Int32 = 160
-    var segment:Int32 = 1
-    var steel:Int32 = 65
-    var grader:Int32 = 90
-    var radie:Int32 = 200
-    var lena:Int32 = 220
-    var lenb:Int32 = 220
-    var overlap:Int32 = 100
+    var dimension:CGFloat = 160
+    var segment:CGFloat = 1
+    var steel:CGFloat = 65
+    var grader:CGFloat = 90
+    var radie:CGFloat = 200
+    var lena:CGFloat = 220
+    var lenb:CGFloat = 220
+    var overlap:CGFloat = 100
+    var center:CGFloat = 0.0
     
     static func == (lhs: TubeDefault, rhs: TubeDefault) -> Bool {
         return(

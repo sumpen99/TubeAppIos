@@ -161,7 +161,7 @@ struct InboxSavedTubesView:View{
             coreDataViewModel.requestInitialSetOfItems()
         }
         .onDisappear{
-            coreDataViewModel.resetValues()
+            coreDataViewModel.resetPageCounter()
         }
     }
     

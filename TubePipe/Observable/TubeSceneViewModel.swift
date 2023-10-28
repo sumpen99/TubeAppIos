@@ -288,7 +288,7 @@ extension TubeSceneViewModel{
 
 extension TubeSceneViewModel{
     
-    func addWorldAxis(dimension:CGFloat){
+    func addWorldAxis(){
         if(!isWorldAxis){ return }
         let axis:SCNNode = SCNNode()
         let worldAxisDirection: [WorldAxisDirection] = [

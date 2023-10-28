@@ -14,12 +14,20 @@ struct TubeVariables{
     
 }
 
+enum TubeInteraction{
+    case IS_MOVEABLE
+    case IS_STATIC
+}
+
+
 struct TubeView: View{
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @GestureState private var pinchMagnification: CGFloat = 1.0
     @GestureState private var twistAngle: Angle = Angle.zero
     @GestureState private var fingerLocation: CGPoint? = nil
     @GestureState private var startLocation: CGPoint? = nil
+    let tubeInteraction:TubeInteraction
+    
     
     // MARK: - HELPER
     func calculateScale(size:CGSize) -> CGFloat{
@@ -327,9 +335,10 @@ struct TubeView: View{
         default: EmptyView()
         }
     }
-   
-    // MARK: - BODY
-    var body: some View{
+    
+    
+    
+    var tubeMoveable:some View{
         GeometryReader{ reader in
             ZStack {
                 hitTest
@@ -348,6 +357,29 @@ struct TubeView: View{
             .offset(CGSizeMake(reader.size.width/2, reader.size.height/2))
             .simultaneousGesture(simpleDragGesture.simultaneously(with: fingerDragGesture))
             .simultaneousGesture(rotationGesture.simultaneously(with: magnificationGesture))
+        }
+    }
+    
+    var tubeStatic:some View{
+        GeometryReader{ reader in
+            ZStack {
+                hitTest
+                tubeBase
+                muff
+            }
+            .scaleEffect(calculateScale(size: reader.size))
+            .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
+            .rotationEffect(Angle(degrees: 180.0))
+            .position(CGPoint())
+            .offset(CGSizeMake(reader.size.width/2, reader.size.height/2))
+        }
+    }
+    
+    // MARK: - BODY
+    var body: some View{
+        switch tubeInteraction {
+        case .IS_MOVEABLE:  tubeMoveable
+        case .IS_STATIC:    tubeStatic
         }
     }
     

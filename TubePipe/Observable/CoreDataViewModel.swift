@@ -19,7 +19,7 @@ class CoreDataService{
     var nextOffset:Int{ currentPage * CORE_DATA_FETCH_LIMIT }
     var hasDataToFetch:Bool{ currentPage < totalPages && totalItems > 0 }
     
-    func resetValues(){
+    func resetPageCounter(){
         totalItems = 0
         totalPages = 0
         currentPage = 0
@@ -137,7 +137,7 @@ class CoreDataViewModel:ObservableObject{
         if itemsLoadedCount <= 0 {
             rebuild()
         }*/
-        resetValues()
+        resetPageCounter()
         requestItems(page: page)
     }
     
@@ -172,7 +172,7 @@ class CoreDataViewModel:ObservableObject{
         Task {
             self.coreDataFetcher.requestItemsBySearchCategorie(categorie,searchText: searchText){ response in
                 DispatchQueue.main.async{
-                    self.resetValues()
+                    self.resetPageCounter()
                     self.totalItemsAvailable = response.totalItems
                     self.items?.append(contentsOf: response.items)
                     self.itemsLoadedCount = self.items?.count
@@ -238,10 +238,10 @@ extension CoreDataViewModel{
         self.childViewHeight = childViewHeight
     }
     
-    func resetValues(){
+    func resetPageCounter(){
         page = 0
         items?.removeAll()
-        coreDataFetcher.resetValues()
+        coreDataFetcher.resetPageCounter()
     }
     
     
