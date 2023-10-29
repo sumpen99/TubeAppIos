@@ -29,11 +29,11 @@ struct Muff{
     }
     
     var width:CGFloat{
-        pMax.x - pMin.x
+        abs(pMax.x - pMin.x)
     }
     
     var height:CGFloat{
-        pMax.y - pMin.y
+        abs(pMax.y - pMin.y)
     }
     
     var centerX:CGFloat{
@@ -70,7 +70,7 @@ struct Muff{
         self.l2 = l2
     }
     
-    mutating func getL1L2() -> (l1:[CGPoint],l2:[CGPoint]){
+    func getL1L2() -> (l1:[CGPoint],l2:[CGPoint]){
         return (l1:self.l1,l2:self.l2)
     }
     

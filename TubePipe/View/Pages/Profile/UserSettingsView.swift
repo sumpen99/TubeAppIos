@@ -20,8 +20,26 @@ struct UserSettingsView:View{
         .padding(.top)
     }
     
-    var tube:some View{
-        TubeView(tubeInteraction: .IS_STATIC)
+    var tube:some View{ TubeView(tubeInteraction: .IS_STATIC) }
+    
+    var overlayError:some View{
+        ZStack{
+            Color.lightText.opacity(0.2)
+            Text("Invalid tubevalues!")
+            .font(.title)
+            .bold()
+            .foregroundColor(.red)
+        }
+        .vTop()
+        .hLeading()
+   }
+    
+    @ViewBuilder
+    var tubeWindow:some View{
+        ZStack{
+            if tubeViewModel.muff.emptyL1OrL2{ tube;overlayError }
+            else{ tube }
+        }
         .padding()
         .border(Color.darkGray,width: 3.0)
         .padding()
@@ -102,7 +120,7 @@ struct UserSettingsView:View{
     var content:some View{
         VStack{
             settingsFooter
-            tube
+            tubeWindow
             sections
         }
     }

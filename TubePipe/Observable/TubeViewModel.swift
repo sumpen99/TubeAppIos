@@ -706,37 +706,14 @@ class TubeViewModel: ObservableObject{
     }
     
     func getDefaultBbox(){
-        let halfSteel = settingsVar.steel / 2.0
-        let n1 = [
-            CGPoint(x:tubeBase.b.x - halfSteel,y:tubeBase.b.y - halfSteel),
-            CGPoint(x:tubeBase.p1.x - halfSteel,y:tubeBase.p1.y - halfSteel),
-            CGPoint(x:tubeBase.p2.x - halfSteel,y:tubeBase.p2.y - halfSteel),
-            CGPoint(x:tubeBase.p3.x - halfSteel,y:tubeBase.p3.y - halfSteel)]
-        let n2 = [
-            CGPoint(x:tubeBase.b.x + halfSteel,y:tubeBase.b.y + halfSteel),
-            CGPoint(x:tubeBase.p1.x + halfSteel,y:tubeBase.p1.y + halfSteel),
-            CGPoint(x:tubeBase.p2.x + halfSteel,y:tubeBase.p2.y + halfSteel),
-            CGPoint(x:tubeBase.p3.x + halfSteel,y:tubeBase.p3.y + halfSteel)]
-        var x_min = 0.0
-        var y_min = 0.0
-        var x_max = 0.0
-        var y_max = 0.0
-        for (l0,l1) in zip(n1, n2){
-            let x0 = l0.x
-            let y0 = l0.y
-            let x1 = l1.x
-            let y1 = l1.y
-            
-            
-            x_min = getMin(a:x0,b:x1,c:x_min)
-            x_max = getMax(a:x0,b:x1,c:x_max)
-            
-            y_min = getMin(a:y0,b:y1,c:y_min)
-            y_max = getMax(a:y0,b:y1,c:y_max)
-        }
-        muff.setMinMax(m_in:TPoint(x:x_min,y:y_min),m_ax:TPoint(x:x_max,y:y_max))
+        let b_r_x = tubeBase.b.x + settingsVar.dimension/2.0
+        let t_l_y = tubeBase.b.y - settingsVar.dimension/2.0
+        let t_l_x = b_r_x * -1
+        let b_r_y = t_l_y * -1
+        muff.setMinMax(m_in:TPoint(x:t_l_x,y:t_l_y),m_ax:TPoint(x:b_r_x,y:b_r_y))
      }
     
+   
     func getMin(a:CGFloat,b:CGFloat,c:CGFloat) -> CGFloat{
         let aa = a.isNaN ? 0.0 : a
         let bb = b.isNaN ? 0.0 : b

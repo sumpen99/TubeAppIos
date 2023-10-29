@@ -31,15 +31,13 @@ struct TubeView: View{
     
     // MARK: - HELPER
     func calculateScale(size:CGSize) -> CGFloat{
-            let a = sqrt(pow(size.width, 2) + pow(size.height, 2))
-            let b = sqrt(pow(tubeViewModel.muff.width, 2) + pow(tubeViewModel.muff.height, 2))
-            return (a/b)/2.0
+        let a = sqrt(pow(size.width, 2) + pow(size.height, 2))
+        let b = sqrt(pow(tubeViewModel.muff.width, 2) + pow(tubeViewModel.muff.height, 2))
+        return (a/b)/2.0
     }
     
     func calculateOffset(size:CGSize) -> CGSize{
         return CGSize(width: size.width/2, height: size.height/2)
-        //let scale = calculateScale(size: size)
-        //return CGSize(width: size.width/2 / scale, height: -(size.height/4 / scale))
     }
     
     // MARK: - GESTRURES
@@ -317,6 +315,7 @@ struct TubeView: View{
         .frame(width: tubeViewModel.muff.width,
                height: tubeViewModel.muff.height)
         .contentShape(Rectangle())
+        //tubeViewModel.muff.emptyL1OrL2
     }
     
     // MARK: - DRAW OPTION
