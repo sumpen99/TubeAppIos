@@ -53,7 +53,7 @@ struct UserSettingsView:View{
     
     var overlapSection:some View{
         Section{
-            SliderSection(sliderValue: $tubeViewModel.settingsVar.overlap,
+            SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.overlap,
                           minValue: 1,
                           maxValue: SLIDER_MAX_OVERLAP,
                           textEnding: "mm")
@@ -67,37 +67,37 @@ struct UserSettingsView:View{
         return Section {
             switch item{
             case .DEGREES:
-                SliderSection(sliderValue: $tubeViewModel.settingsVar.grader,
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.grader,
                               minValue: 0,
                               maxValue: SLIDER_MAX_DEGREES,
                               textEnding: "°")
             case .DIMENSION:
-                SliderSection(sliderValue: $tubeViewModel.settingsVar.dimension,
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.dimension,
                               minValue: 1,
                               maxValue:SLIDER_MAX_DIMENSION,
                               textEnding: "mm")
             case .SEGMENT:
-                SliderSection(sliderValue: $tubeViewModel.settingsVar.segment,
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.segment,
                               minValue: 0,
                               maxValue: SLIDER_MAX_SEGMENT,
                               textEnding: "st")
             case .STEEL:
-                SliderSection(sliderValue: $tubeViewModel.settingsVar.steel,
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.steel,
                               minValue: 1,
                               maxValue: SLIDER_MAX_DIMENSION,
                               textEnding: "mm")
             case .RADIUS:
-                SliderSection(sliderValue: $tubeViewModel.settingsVar.radie,
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.radie,
                               minValue: 1,
                               maxValue: SLIDER_MAX_RADIUS,
                               textEnding: "mm")
             case .LENA:
-                SliderSection(sliderValue: $tubeViewModel.settingsVar.lena,
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.lena,
                               minValue: 1,
                               maxValue: SLIDER_MAX_LENGTH,
                               textEnding: "mm")
             case .LENB:
-                SliderSection(sliderValue: $tubeViewModel.settingsVar.lenb,
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.lenb,
                               minValue: 1,
                               maxValue: SLIDER_MAX_LENGTH,
                               textEnding: "mm")

@@ -218,12 +218,12 @@ extension TubeDocumentView{
             VStack(spacing:10){
                 SubHeaderSubHeaderView(subMain: Text("Total length:"),
                                        subSecond: Text("\(tubeViewModel.muffDetails.sum_len,specifier: "%.0f") mm"))
-                SubHeaderSubHeaderView(subMain: Text("Degrees:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.grader))°"))
-                SubHeaderSubHeaderView(subMain: Text("Dimension:"), subSecond: Text("ø\(Int(tubeViewModel.settingsVar.dimension))"))
-                SubHeaderSubHeaderView(subMain: Text("Steel:"), subSecond: Text("ø\(Int(tubeViewModel.settingsVar.steel))"))
-                SubHeaderSubHeaderView(subMain: Text("Radius:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.radie)) mm"))
-                SubHeaderSubHeaderView(subMain: Text("LenA:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.lena)) mm"))
-                SubHeaderSubHeaderView(subMain: Text("LenB:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.lenb)) mm"))
+                SubHeaderSubHeaderView(subMain: Text("Degrees:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.tube.grader))°"))
+                SubHeaderSubHeaderView(subMain: Text("Dimension:"), subSecond: Text("ø\(Int(tubeViewModel.settingsVar.tube.dimension))"))
+                SubHeaderSubHeaderView(subMain: Text("Steel:"), subSecond: Text("ø\(Int(tubeViewModel.settingsVar.tube.steel))"))
+                SubHeaderSubHeaderView(subMain: Text("Radius:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.tube.radie)) mm"))
+                SubHeaderSubHeaderView(subMain: Text("LenA:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.tube.lena)) mm"))
+                SubHeaderSubHeaderView(subMain: Text("LenB:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.tube.lenb)) mm"))
              }
             
         } header:{

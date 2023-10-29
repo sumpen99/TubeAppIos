@@ -43,8 +43,8 @@ struct ModelView: View{
             tubeSceneViewModel.setRenderState(tubeViewModel.collectModelRenderState())
             tubeSceneViewModel.buildModelFromTubePoints(tubeViewModel.pointsWithAddedCircle(
                 renderSizePart: tubeSceneViewModel.renderSizePart),
-                                                        dimension: tubeViewModel.settingsVar.dimension)
-            tubeSceneViewModel.buildSteelFromTubePoints(tubeViewModel.steelPotentiallyScaled(renderSizePart: tubeSceneViewModel.renderSizePart),dimension: tubeViewModel.settingsVar.steel)
+                                                        dimension: tubeViewModel.settingsVar.tube.dimension)
+            tubeSceneViewModel.buildSteelFromTubePoints(tubeViewModel.steelPotentiallyScaled(renderSizePart: tubeSceneViewModel.renderSizePart),dimension: tubeViewModel.settingsVar.tube.steel)
              
             tubeSceneViewModel.addWorldAxis()
             tubeSceneViewModel.rotateParentNode()

@@ -15,15 +15,7 @@ class Box<T> {
 }
 
 struct SettingsVar:Codable{
-    var dimension:CGFloat = 0
-    var segment:CGFloat = 0
-    var steel:CGFloat = 0
-    var grader:CGFloat = 0
-    var radie:CGFloat = 0
-    var lena:CGFloat = 0
-    var lenb:CGFloat = 0
-    var overlap:CGFloat = 0
-    var center: CGFloat = 0.0
+    var tube:TubeDefault = TubeDefault()
     var first: CGFloat = 0.0
     var alreadyCalculated:Bool = false
     var redraw:Bool = false
@@ -31,27 +23,20 @@ struct SettingsVar:Codable{
     var forceAutoAlign: Bool = false
     var generateTubeDefault:TubeDefault{
         TubeDefault(
-            dimension: dimension,
-            segment: segment,
-            steel: steel,
-            grader: grader,
-            radie: radie,
-            lena: lena,
-            lenb: lenb,
-            overlap: overlap,
-            center: center)
+            dimension: tube.dimension,
+            segment: tube.segment,
+            steel: tube.steel,
+            grader: tube.grader,
+            radie: tube.radie,
+            lena: tube.lena,
+            lenb: tube.lenb,
+            overlap: tube.overlap,
+            center: tube.center)
     }
     
     var hasChanges:Bool{
         if let stashedValues = stashedValues{
-            return (dimension != stashedValues.dimension    ||
-                    segment != stashedValues.segment        ||
-                    steel != stashedValues.steel            ||
-                    grader != stashedValues.grader          ||
-                    radie != stashedValues.radie            ||
-                    lena != stashedValues.lena              ||
-                    lenb != stashedValues.lenb              ||
-                    center != stashedValues.center)
+            return tube != stashedValues
         }
         return false
     }
@@ -59,7 +44,7 @@ struct SettingsVar:Codable{
     mutating func resetCalculationMode(){
         self.alreadyCalculated = false
         self.first = 0.0
-        self.center = 0.0
+        self.tube.center = 0.0
     }
     
     mutating func stash(){
@@ -70,14 +55,7 @@ struct SettingsVar:Codable{
     
     mutating func drop(){
         if let stashedValues = stashedValues{
-            dimension = stashedValues.dimension
-            segment = stashedValues.segment
-            steel = stashedValues.steel
-            grader = stashedValues.grader
-            radie = stashedValues.radie
-            lena = stashedValues.lena
-            lenb = stashedValues.lenb
-            center = stashedValues.center
+            tube = stashedValues
             self.stashedValues = nil
             self.forceAutoAlign = false
         }

@@ -198,37 +198,37 @@ struct TubeSettingsView:View{
         return Section {
             switch item{
             case .DEGREES:
-                SliderSection(sliderValue: $tubeViewModel.settingsVar.grader,
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.grader,
                               minValue: 0,
                               maxValue: SLIDER_MAX_DEGREES,
                               textEnding: "°")
             case .DIMENSION:
-                SliderSection(sliderValue: $tubeViewModel.settingsVar.dimension,
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.dimension,
                               minValue: 1,
                               maxValue:SLIDER_MAX_DIMENSION,
                               textEnding: "mm")
             case .SEGMENT:
-                SliderSection(sliderValue: $tubeViewModel.settingsVar.segment,
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.segment,
                               minValue: 0,
                               maxValue: SLIDER_MAX_SEGMENT,
                               textEnding: "st")
             case .STEEL:
-                SliderSection(sliderValue: $tubeViewModel.settingsVar.steel,
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.steel,
                               minValue: 1,
                               maxValue: SLIDER_MAX_DIMENSION,
                               textEnding: "mm")
             case .RADIUS:
-                SliderSection(sliderValue: $tubeViewModel.settingsVar.radie,
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.radie,
                               minValue: 1,
                               maxValue: SLIDER_MAX_RADIUS,
                               textEnding: "mm")
             case .LENA:
-                SliderSection(sliderValue: $tubeViewModel.settingsVar.lena,
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.lena,
                               minValue: 1,
                               maxValue: SLIDER_MAX_LENGTH,
                               textEnding: "mm")
             case .LENB:
-                SliderSection(sliderValue: $tubeViewModel.settingsVar.lenb,
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.lenb,
                               minValue: 1,
                               maxValue: SLIDER_MAX_LENGTH,
                               textEnding: "mm")
@@ -261,12 +261,12 @@ struct TubeSettingsView:View{
                 HStack{
                     Toggle(isOn:!self.$tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .KEEP_DEGREES)]){
                         Text("Adjust")
-                    }.disabled(tubeViewModel.settingsVar.segment < 2)
+                    }.disabled(tubeViewModel.settingsVar.tube.segment < 2)
                     .toggleStyle(CheckboxStyle(alignLabelLeft: false,labelIsOnColor:.black))
                     Spacer()
                     Toggle(isOn: self.$tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .KEEP_DEGREES)]){
                         Text("Same")
-                    }.disabled(tubeViewModel.settingsVar.segment < 2)
+                    }.disabled(tubeViewModel.settingsVar.tube.segment < 2)
                     .toggleStyle(CheckboxStyle(alignLabelLeft: true,labelIsOnColor:.black))
                     .onChange(of: self.tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .KEEP_DEGREES)]){ value in
                         tubeViewModel.rebuild()
@@ -279,7 +279,7 @@ struct TubeSettingsView:View{
         } header: {
             Text("Cut Angles").foregroundColor(Color.systemGray)
         }
-        .opacity(tubeViewModel.settingsVar.segment < 2 ? 0.2 : 1.0)
+        .opacity(tubeViewModel.settingsVar.tube.segment < 2 ? 0.2 : 1.0)
     }
     
     @ViewBuilder
@@ -311,7 +311,7 @@ struct TubeSettingsView:View{
         }
         else{
             Section {
-                SliderSection(sliderValue: $tubeViewModel.settingsVar.center,
+                SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.center,
                               minValue: -CGFloat.infinity,
                               maxValue: CGFloat.infinity,
                               textEnding: "",
