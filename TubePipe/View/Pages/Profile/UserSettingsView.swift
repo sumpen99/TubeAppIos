@@ -12,7 +12,9 @@ struct UserSettingsView:View{
     let settingsOption:[SettingsOption] = SettingsOption.allCases
     
     var changesHasHappend:Bool{ tubeViewModel.settingsVar.hasChanges }
-    
+    var valuesCanBeUpdated:Bool{
+        changesHasHappend && !tubeViewModel.muff.emptyL1OrL2
+    }
     var settingsFooter:some View{
         Text("Specify default values for tube on start up.")
         .listSectionFooter()
@@ -22,23 +24,25 @@ struct UserSettingsView:View{
     
     var tube:some View{ TubeView(tubeInteraction: .IS_STATIC) }
     
-    var overlayError:some View{
-        ZStack{
-            Color.lightText.opacity(0.2)
-            Text("Invalid tubevalues!")
-            .font(.title)
-            .bold()
-            .foregroundColor(.red)
-        }
-        .vTop()
-        .hLeading()
-   }
-    
     @ViewBuilder
+    var overlayError:some View{
+        if tubeViewModel.muff.emptyL1OrL2{
+            ZStack{
+                Color.lightText.opacity(0.2)
+                Text("Invalid tubevalues!")
+                .font(.title)
+                .bold()
+                .foregroundColor(.red)
+            }
+            .vTop()
+            .hLeading()
+        }
+    }
+    
     var tubeWindow:some View{
         ZStack{
-            if tubeViewModel.muff.emptyL1OrL2{ tube;overlayError }
-            else{ tube }
+            tube
+            overlayError
         }
         .padding()
         .border(Color.darkGray,width: 3.0)
@@ -125,6 +129,26 @@ struct UserSettingsView:View{
         }
     }
     
+    @ViewBuilder
+    var leadingButton:some View{
+        if changesHasHappend{
+            Button(action: resetDefaultValues) {
+                Text("Reset").foregroundColor(.red)
+            }
+        }
+        else{
+            BackButton(title: "Profile",color: Color.systemBlue)
+        }
+    }
+    
+    var trailingButton:some View{
+        Button(action: { }) {
+            Text("Save")
+        }
+        .opacity(valuesCanBeUpdated ? 1.0 : 0.0)
+        .disabled(!valuesCanBeUpdated)
+    }
+    
     var body:some View{
         AppBackgroundStack(content: {
             content
@@ -136,25 +160,12 @@ struct UserSettingsView:View{
             resetBackToPreviousValues()
         }
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { }) {
-                    Text("Reset")
-                }
-                .padding(.trailing)
-                .opacity(changesHasHappend ? 1.0 : 0.0)
-                .disabled(!changesHasHappend)
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { }) {
-                    Text("Save")
-                }
-                .opacity(changesHasHappend ? 1.0 : 0.0)
-                .disabled(!changesHasHappend)
-            }
+            ToolbarItem(placement: .navigationBarLeading) { leadingButton }
+            ToolbarItem(placement: .navigationBarTrailing) { trailingButton }
         }
         .onTapGesture{ endTextEditing() }
         .modifier(NavigationViewModifier(title: ""))
-        .hiddenBackButtonWithCustomTitle("Profile")
+        .navigationBarBackButtonHidden()
     }
     
     //MARK: LOAD TUBEVIEWMODEL
@@ -165,6 +176,10 @@ struct UserSettingsView:View{
     }
     func resetBackToPreviousValues(){
         tubeViewModel.settingsVar.drop()
+        tubeViewModel.rebuild()
+    }
+    func resetDefaultValues(){
+        tubeViewModel.loadTubeDefaultValues()
         tubeViewModel.rebuild()
     }
 }

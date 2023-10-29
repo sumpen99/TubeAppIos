@@ -315,7 +315,6 @@ struct TubeView: View{
         .frame(width: tubeViewModel.muff.width,
                height: tubeViewModel.muff.height)
         .contentShape(Rectangle())
-        //tubeViewModel.muff.emptyL1OrL2
     }
     
     // MARK: - DRAW OPTION
