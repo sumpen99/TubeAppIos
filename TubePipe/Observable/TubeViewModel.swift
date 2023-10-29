@@ -955,14 +955,14 @@ extension TubeViewModel{
         }
     }
     
-    func saveUserDefaultTubeValues(_ tubeDefault:TubeDefault){
+    func saveUserDefaultTubeValues(){
         guard let userId = FirebaseAuth.userId else { return }
+        let tubeDefault = settingsVar.generateTubeDefault
         let drawOptions = userDefaultSettingsVar.drawOptions
         let preferredSetting = UserPreferredSetting(
              drawOptions: drawOptions,
              tubeDefault: tubeDefault)
         SharedPreference.writeNewUserSettingsToStorage(userId,userSetting: preferredSetting)
         userDefaultSettingsVar.preferredSetting = preferredSetting
-        userDefaultSettingsVar.showPreferredSettings()
     }
 }

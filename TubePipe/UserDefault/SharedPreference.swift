@@ -29,6 +29,18 @@ struct SettingsVar:Codable{
     var redraw:Bool = false
     var stashedValues: TubeDefault?
     var forceAutoAlign: Bool = false
+    var generateTubeDefault:TubeDefault{
+        TubeDefault(
+            dimension: dimension,
+            segment: segment,
+            steel: steel,
+            grader: grader,
+            radie: radie,
+            lena: lena,
+            lenb: lenb,
+            overlap: overlap,
+            center: center)
+    }
     
     var hasChanges:Bool{
         if let stashedValues = stashedValues{
@@ -51,16 +63,7 @@ struct SettingsVar:Codable{
     }
     
     mutating func stash(){
-        stashedValues = TubeDefault(
-            dimension: dimension,
-            segment: segment,
-            steel: steel,
-            grader: grader,
-            radie: radie,
-            lena: lena,
-            lenb: lenb,
-            overlap: overlap,
-            center: center)
+        stashedValues = generateTubeDefault
         forceAutoAlign = true
     }
     
@@ -83,14 +86,14 @@ struct SettingsVar:Codable{
 }
 
 struct TubeDefault: Equatable,Codable{
-    var dimension:CGFloat = 160
-    var segment:CGFloat = 1
-    var steel:CGFloat = 65
-    var grader:CGFloat = 90
-    var radie:CGFloat = 200
-    var lena:CGFloat = 220
-    var lenb:CGFloat = 220
-    var overlap:CGFloat = 100
+    var dimension:CGFloat = 160.0
+    var segment:CGFloat = 1.0
+    var steel:CGFloat = 65.0
+    var grader:CGFloat = 90.0
+    var radie:CGFloat = 200.0
+    var lena:CGFloat = 220.0
+    var lenb:CGFloat = 220.0
+    var overlap:CGFloat = 100.0
     var center:CGFloat = 0.0
     
     static func == (lhs: TubeDefault, rhs: TubeDefault) -> Bool {

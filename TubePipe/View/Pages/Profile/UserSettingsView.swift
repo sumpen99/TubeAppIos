@@ -132,7 +132,7 @@ struct UserSettingsView:View{
     @ViewBuilder
     var leadingButton:some View{
         if changesHasHappend{
-            Button(action: resetDefaultValues) {
+            Button(action: loadDefaultValues) {
                 Text("Reset").foregroundColor(.red)
             }
         }
@@ -142,7 +142,7 @@ struct UserSettingsView:View{
     }
     
     var trailingButton:some View{
-        Button(action: { }) {
+        Button(action: saveNewDefaultValues) {
             Text("Save")
         }
         .opacity(valuesCanBeUpdated ? 1.0 : 0.0)
@@ -171,14 +171,17 @@ struct UserSettingsView:View{
     //MARK: LOAD TUBEVIEWMODEL
     func setUserDefaultValues(){
         tubeViewModel.settingsVar.stash()
-        tubeViewModel.loadTubeDefaultValues()
-        tubeViewModel.rebuild()
+        loadDefaultValues()
     }
     func resetBackToPreviousValues(){
         tubeViewModel.settingsVar.drop()
         tubeViewModel.rebuild()
     }
-    func resetDefaultValues(){
+    func saveNewDefaultValues(){
+        tubeViewModel.saveUserDefaultTubeValues()
+        loadDefaultValues()
+    }
+    func loadDefaultValues(){
         tubeViewModel.loadTubeDefaultValues()
         tubeViewModel.rebuild()
     }
