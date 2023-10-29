@@ -44,9 +44,12 @@ class FirebaseAuth:ObservableObject{
             guard let strongSelf = self else { return }
             strongSelf.getUserRole(){ role in
                 FirebaseAuth.currentUser = auth.currentUser
-                withAnimation{
-                    strongSelf.loggedInAs = role
+                DispatchQueue.main.async{
+                    withAnimation{
+                        strongSelf.loggedInAs = role
+                    }
                 }
+                
             }
         }
     }

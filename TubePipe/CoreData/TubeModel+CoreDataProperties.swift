@@ -27,6 +27,7 @@ extension TubeModel {
     @NSManaged public var radie: Float
     @NSManaged public var segment: Float
     @NSManaged public var steel: Float
+    @NSManaged public var alreadyCalculated: Bool
     @NSManaged public var image: TubeImage?
 
 }

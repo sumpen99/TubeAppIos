@@ -36,7 +36,7 @@ class TubeViewModel: ObservableObject{
             settingsVar.resetCalculationMode()
         }
         else{
-            settingsVar.alreadyCalculated = true
+            settingsVar.tube.alreadyCalculated = true
         }
         calculate()
     }
@@ -60,7 +60,7 @@ class TubeViewModel: ObservableObject{
    }
     
     func calculateAutoAlign(offsetFromCenter:CGFloat){
-        if offsetFromCenter > 0.0 && !settingsVar.alreadyCalculated{
+        if offsetFromCenter > 0.0 && !settingsVar.tube.alreadyCalculated{
             alignTubeToCenter(offsetFromCenter: offsetFromCenter)
             calculate()
         }
@@ -85,8 +85,6 @@ class TubeViewModel: ObservableObject{
         return  settingsVar.tube.radie <= 0 ||
                 (settingsVar.tube.grader <= 0 && settingsVar.tube.segment != 0) ||
                 (settingsVar.tube.steel <= 0 || settingsVar.tube.steel >= settingsVar.tube.dimension) ||
-                //circleTouchSelf() ||
-                //circleToClose() ||
                 offsetFromCenter.isNaN
     }
     
@@ -99,7 +97,7 @@ class TubeViewModel: ObservableObject{
     
     // MARK: - DO STEP 2
     func drawCenterCircle(){
-        let addHundred = userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ADD_ONE_HUNDRED)] ? 100.0 : 0.0
+        let addHundred = userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ADD_ONE_HUNDRED)] ? settingsVar.tube.overlap : 0.0
         
         let lena = settingsVar.tube.lena + addHundred
         let lenb = settingsVar.tube.lenb + addHundred
@@ -207,7 +205,7 @@ class TubeViewModel: ObservableObject{
             settingsVar.tube.center += (settingsVar.tube.grader <= 180) ? 1 : -1
         }
         else {
-            settingsVar.alreadyCalculated = true
+            settingsVar.tube.alreadyCalculated = true
             let div = settingsVar.first-offsetFromCenter
             settingsVar.first /= div
             settingsVar.tube.center = settingsVar.tube.grader > 180 ? -settingsVar.first : settingsVar.first
@@ -812,13 +810,7 @@ extension TubeViewModel{
         settingsVar.tube.lena = CGFloat(model.lena)
         settingsVar.tube.lenb = CGFloat(model.lenb)
         settingsVar.tube.center = CGFloat(model.center)
-    }
-    
-    func initViewFromStashedValues(){
-        if let model = settingsVar.stashedValues{
-            settingsVar.tube = model
-        }
-        
+        settingsVar.tube.alreadyCalculated = model.alreadyCalculated
     }
     
     func initViewFromSharedValues(_ model:SharedTube) -> Bool{
@@ -829,7 +821,8 @@ extension TubeViewModel{
            let radie = model.radie,
            let lena = model.lena,
            let lenb = model.lenb,
-           let center = model.center{
+           let center = model.center,
+           let alreadyCalculated = model.alreadyCalculated{
             settingsVar.tube.dimension = dimension
             settingsVar.tube.segment = segment
             settingsVar.tube.steel = steel
@@ -838,9 +831,17 @@ extension TubeViewModel{
             settingsVar.tube.lena = lena
             settingsVar.tube.lenb = lenb
             settingsVar.tube.center = center
+            settingsVar.tube.alreadyCalculated = alreadyCalculated
             return true
         }
         return false
+    }
+    
+    func initFromCache(){
+        if let _ = settingsVar.stashedTube{
+            settingsVar.drop()
+            rebuild()
+        }
     }
     
     func buildModelFromCurrentValues(_ model:TubeModel){
@@ -853,6 +854,7 @@ extension TubeViewModel{
         model.lena = Float(settingsVar.tube.lena)
         model.lenb = Float(settingsVar.tube.lenb)
         model.center = Float(settingsVar.tube.center)
+        model.alreadyCalculated = settingsVar.tube.alreadyCalculated
         model.date = Date()
         
     }
@@ -866,7 +868,8 @@ extension TubeViewModel{
             radie: settingsVar.tube.radie,
             lena: settingsVar.tube.lena,
             lenb: settingsVar.tube.lenb,
-            center: settingsVar.tube.center)
+            center: settingsVar.tube.center,
+            alreadyCalculated: settingsVar.tube.alreadyCalculated)
     }
     
     func collectModelRenderState() -> UInt16{
@@ -912,11 +915,14 @@ extension TubeViewModel{
         userDefaultSettingsVar.showPreferredSettings()
     }
     
-    func loadTubeDefaultValues(){
+    func loadTubeDefaultValues(compareTubesMode:Bool = false){
         guard let userId = FirebaseAuth.userId,
               let userSettings = SharedPreference.loadUserSettingsFromStorage(userId)
         else{ return }
         initViewFromTubeDefaultValues(userSettings.tubeDefault)
+        if compareTubesMode{
+            settingsVar.setTubeDefault(userSettings.tubeDefault)
+        }
     }
     
     func setUserdefaultDrawOption(with value:Bool,op:DrawOption){

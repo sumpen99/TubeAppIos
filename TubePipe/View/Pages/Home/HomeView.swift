@@ -16,21 +16,25 @@ enum ActiveHomeSheet: Identifiable {
 }
 
 struct HomeView: View{
+    @EnvironmentObject var tubeViewModel: TubeViewModel
     @State var activeHomeSheet: ActiveHomeSheet?
     var body: some View{
         NavigationView{
             AppBackgroundStack(content: {
                 TubeView(tubeInteraction: .IS_MOVEABLE)
             })
+            .onAppear{
+                tubeViewModel.initFromCache()
+            }
             .sheet(item: $activeHomeSheet){ item in
                 switch item{
                 case ActiveHomeSheet.OPEN_TUBE_SETTINGS:
                     TubeSettingsView()
-                        .presentationDragIndicator(.visible)
-                        .presentationDetents([.medium])
+                    .presentationDragIndicator(.visible)
+                    .presentationDetents([.medium])
                 case ActiveHomeSheet.OPEN_TUBE_DOCUMENT:
-                                    TubeDocumentView()
-                                        .presentationDragIndicator(.visible)
+                    TubeDocumentView()
+                    .presentationDragIndicator(.visible)
                 }
             }
             .toolbar {

@@ -21,7 +21,7 @@ struct ShareDocumentView:View{
     @State var docContent:DocumentContent = DocumentContent()
     @State var sclVar: SortedContactListVar = SortedContactListVar()
     @State private var toast: Toast? = nil
-    
+  
     var buttonIsDisabled:Bool{
         sclVar.currentContact == nil
     }
@@ -130,9 +130,7 @@ struct ShareDocumentView:View{
         }
         .toastView(toast: $toast)
         .onChange(of: sclVar.showingOptions){ value in
-           withAnimation{
-               sclVar.isSuggestionShowing.toggle()
-            }
+           withAnimation{ sclVar.isSuggestionShowing.toggle() }
             
         }
         .halfSheetBackgroundStyle()

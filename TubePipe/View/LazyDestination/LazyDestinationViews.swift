@@ -13,3 +13,15 @@ struct LazyDestination<Destination: View>: View {
         self.destination()
     }
 }
+
+struct PersistentContentView<Content: View>: View, Equatable {
+    static func == (lhs: PersistentContentView<Content>, rhs: PersistentContentView<Content>) -> Bool {
+        true
+    }
+
+    let content: () -> Content
+
+    var body: some View {
+        content()
+    }
+}

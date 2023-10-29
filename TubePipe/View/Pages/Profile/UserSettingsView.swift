@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct UserSettingsView:View{
+    @EnvironmentObject var navViewModel: NavigationViewModel
     @EnvironmentObject var tubeViewModel: TubeViewModel
+    @State private var toast: Toast? = nil
     let settingsOption:[SettingsOption] = SettingsOption.allCases
     
     var changesHasHappend:Bool{ tubeViewModel.settingsVar.hasChanges }
@@ -153,12 +155,8 @@ struct UserSettingsView:View{
         AppBackgroundStack(content: {
             content
         })
-        .onAppear{
-            setUserDefaultValues()
-        }
-        .onDisappear{
-            resetBackToPreviousValues()
-        }
+        .toastView(toast: $toast)
+        .onAppear{ setUserDefaultValues() }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) { leadingButton }
             ToolbarItem(placement: .navigationBarTrailing) { trailingButton }
@@ -174,15 +172,15 @@ struct UserSettingsView:View{
         loadDefaultValues()
     }
     func resetBackToPreviousValues(){
-        tubeViewModel.settingsVar.drop()
-        tubeViewModel.rebuild()
+        tubeViewModel.initFromCache()
     }
     func saveNewDefaultValues(){
         tubeViewModel.saveUserDefaultTubeValues()
         loadDefaultValues()
+        toast = Toast(style: .success, message: "Saved")
     }
     func loadDefaultValues(){
-        tubeViewModel.loadTubeDefaultValues()
+        tubeViewModel.loadTubeDefaultValues(compareTubesMode: true)
         tubeViewModel.rebuild()
     }
 }

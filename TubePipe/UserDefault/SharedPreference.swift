@@ -17,9 +17,9 @@ class Box<T> {
 struct SettingsVar:Codable{
     var tube:TubeDefault = TubeDefault()
     var first: CGFloat = 0.0
-    var alreadyCalculated:Bool = false
     var redraw:Bool = false
-    var stashedValues: TubeDefault?
+    var stashedTube: TubeDefault?
+    var tubeDefault: TubeDefault?
     var forceAutoAlign: Bool = false
     var generateTubeDefault:TubeDefault{
         TubeDefault(
@@ -31,33 +31,38 @@ struct SettingsVar:Codable{
             lena: tube.lena,
             lenb: tube.lenb,
             overlap: tube.overlap,
-            center: tube.center)
+            center: tube.center,
+            alreadyCalculated:tube.alreadyCalculated)
     }
     
     var hasChanges:Bool{
-        if let stashedValues = stashedValues{
-            return tube != stashedValues
+        if let tubeDefault = tubeDefault{
+            return tube != tubeDefault
         }
         return false
     }
     
     mutating func resetCalculationMode(){
-        self.alreadyCalculated = false
         self.first = 0.0
+        self.tube.alreadyCalculated = false
         self.tube.center = 0.0
     }
     
     mutating func stash(){
-        stashedValues = generateTubeDefault
+        stashedTube = generateTubeDefault
         forceAutoAlign = true
     }
     
-    
+    mutating func setTubeDefault(_ tube:TubeDefault){
+        tubeDefault = tube
+    }
+     
     mutating func drop(){
-        if let stashedValues = stashedValues{
-            tube = stashedValues
-            self.stashedValues = nil
-            self.forceAutoAlign = false
+        if let stashedTube = stashedTube{
+            tube = stashedTube
+            self.stashedTube = nil
+            self.tubeDefault = nil
+            self.forceAutoAlign = true
         }
     }
     
@@ -73,6 +78,7 @@ struct TubeDefault: Equatable,Codable{
     var lenb:CGFloat = 220.0
     var overlap:CGFloat = 100.0
     var center:CGFloat = 0.0
+    var alreadyCalculated:Bool = false
     
     static func == (lhs: TubeDefault, rhs: TubeDefault) -> Bool {
         return(

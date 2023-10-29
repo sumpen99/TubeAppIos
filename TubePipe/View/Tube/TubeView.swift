@@ -364,6 +364,7 @@ struct TubeView: View{
                 hitTest
                 tubeBase
                 muff
+                getDrawOption(index:DrawOption.indexOf(op: .CUTLINES))
             }
             .scaleEffect(calculateScale(size: reader.size))
             .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))

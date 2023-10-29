@@ -39,8 +39,9 @@ struct TubeDocFileView:View{
         if let message = tube.message{
             Text(message)
             .font(.callout)
+            .bold()
             .lineLimit(1)
-            .foregroundColor(.systemGray)
+            .foregroundColor(.white)
         }
      }
     
@@ -130,8 +131,9 @@ struct ExtendedTubeDocFileView:View{
         if let message = tube.message{
             Text(message)
             .font(.callout)
+            .bold()
             .lineLimit(1)
-            .foregroundColor(.systemGray)
+            .foregroundColor(.white)
         }
      }
     

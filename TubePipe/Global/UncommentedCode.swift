@@ -315,3 +315,21 @@ extension AppDelegate: MessagingDelegate {
 
 }
 */
+
+/*.task(id: selectedItems) {
+    if let selectedItem = selectedItems.first{
+        selectedItem.loadTransferable(type: Data.self) { result in
+            switch result{
+                case .success(let data?):
+                debugLog(object: data)
+                    //imageData = data
+                default:break
+            }
+         //guard let uiImage = UIImage(data: data) else { return }
+         //resizeUiImage(uiImage)
+         //docContent.data = data
+         //image = Image(uiImage: uiImage)
+     }
+    }
+       
+}*/

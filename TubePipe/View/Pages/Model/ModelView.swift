@@ -33,6 +33,7 @@ struct ModelView: View{
             renderNewScene()
         }
         .onAppear {
+            tubeViewModel.initFromCache()
             renderNewScene()
         }
     }

@@ -81,7 +81,7 @@ struct TubeHelpView: View{
                 }
                 Section {
                     HeaderSubHeaderView(header: "Unit", subHeader: "Millimeter")
-                    HeaderSubHeaderView(header: "Radius", subHeader: "Measure radius from middle of steel")
+                    HeaderSubHeaderView(header: "Radius", subHeader: "Measure from center of tube")
                 } header: {
                     Text("Information").listSectionHeader()
                 } footer: {

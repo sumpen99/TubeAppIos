@@ -12,7 +12,7 @@ struct ImagePickerSwiftUi<LabelText:View>: View {
     let label:LabelText
     @State private var selectedItem: PhotosPickerItem? = nil
     @State var image: Image?
-    
+     
     func resizeUiImage(_ uiImage:UIImage){
         DispatchQueue.global().async{
             uiImage.resizeImageIfNeeded(
@@ -57,26 +57,25 @@ struct ImagePickerSwiftUi<LabelText:View>: View {
         ZStack{
             PhotosPicker(
                 selection: $selectedItem,
-                matching: .images,
-                photoLibrary: .shared()) {
+                matching: .images) {
                     VStack(spacing:V_SPACING_REG){
                         imageLabel
                         fetchedImage
                     }
                     .foregroundColor(Color.systemGray)
                 }
-                .onChange(of: selectedItem) { newItem in
-                    Task {
-                        if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                            guard let uiImage = UIImage(data: data) else { return }
-                            resizeUiImage(uiImage)
-                            //docContent.data = data
-                            //image = Image(uiImage: uiImage)
-                        }
-                    }
+                
+        }
+        .onChange(of: selectedItem) { newItem in
+            Task {
+                if let data = try? await newItem?.loadTransferable(type: Data.self) {
+                    guard let uiImage = UIImage(data: data) else { return }
+                    resizeUiImage(uiImage)
                 }
+            }
         }
         .onChange(of: docContent.clearAttachedImage) { newValue in
+            selectedItem = nil
             image = nil
         }
         .hLeading()

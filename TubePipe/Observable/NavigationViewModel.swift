@@ -17,13 +17,17 @@ enum MainTabItem{
 
 class NavigationViewModel: ObservableObject{
     @Published var selectedTab:MainTabItem = .HOME
+    var delayNavigation:Bool = false
+    var executeBevoreNavigation:(() ->Void)? = nil
     
     func navTo(_ tab:MainTabItem){
         if(isActive(tab)){NavigationUtil.popToRootView()}
-        else{
-            DispatchQueue.main.async {
-                self.selectedTab = tab
-            }
+        else{nav(tab)}
+    }
+    
+    private func nav(_ tab:MainTabItem){
+        DispatchQueue.main.async {
+            self.selectedTab = tab
         }
     }
     

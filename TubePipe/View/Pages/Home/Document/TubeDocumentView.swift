@@ -69,9 +69,8 @@ struct TubeDocumentView: View{
     @State var activeDocumentAction:ActiveDocumentActionSheet?
     let segTypes:[SegType] = [.LENA,.LENB,.SEG1,.SEG2]
     let SEGMENT_HEIGHT:CGFloat = 50.0
-    
     var saveButton:some View{
-        Button(action: { activeDocumentAction = .SAVE_DOCUMENT }){
+        Button(action: saveDocument ){
             HStack{
                 Image(systemName: "arrow.down.doc")
                 Text("Save")
@@ -80,9 +79,9 @@ struct TubeDocumentView: View{
         .buttonStyle(.borderedProminent)
         .trailingHeadline()
     }
-    
+   
     var shareButton:some View{
-        Button(action: { activeDocumentAction = .SHARE_DOCUMENT }){
+        Button(action: shareDocument){
             HStack{
                 Image(systemName: "arrowshape.turn.up.right")
                 Text("Share")
@@ -136,6 +135,9 @@ struct TubeDocumentView: View{
             case .SAVE_DOCUMENT: SaveDocumentView()
             default:EmptyView()
             }
+            
+        }
+        .onChange(of: activeDocumentAction){ _ in
             
         }
     }

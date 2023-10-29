@@ -211,6 +211,10 @@ extension View{
         }
     }
     
+    func persistent() -> some View {
+        PersistentContentView { self }
+    }
+    
     func toastView(toast: Binding<Toast?>) -> some View {
         self.modifier(ToastModifier(toast: toast))
     }

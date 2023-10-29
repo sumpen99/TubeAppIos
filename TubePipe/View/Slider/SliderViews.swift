@@ -81,7 +81,7 @@ struct SliderSection:View{
     var alignemntSliderSection: some View{
         alignmentSliderButtons()
         .onChange(of: sliderValue){ newValue in
-            tubeViewModel.settingsVar.alreadyCalculated = true
+            tubeViewModel.settingsVar.tube.alreadyCalculated = true
             tubeViewModel.calculate()
             tubeViewModel.settingsVar.redraw.toggle()
         }
