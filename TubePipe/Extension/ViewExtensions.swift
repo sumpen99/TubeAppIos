@@ -192,7 +192,7 @@ extension View{
     func halfSheetWhitePadding() -> some View{
         self.padding()
             .background{
-               RoundedRectangle(cornerRadius: 5).fill(Color.white)
+                RoundedRectangle(cornerRadius: 5).fill(Color.white)
             }
     }
     

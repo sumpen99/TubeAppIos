@@ -7,17 +7,6 @@
 
 import SwiftUI
 
-
-enum ActiveDocumentActionSheet: Identifiable {
-    case SHARE_DOCUMENT
-    case SAVE_DOCUMENT
-    case PRINT_DOCUMENT
-    
-    var id: Int {
-        hashValue
-    }
-}
-
 enum ActiveImagePickerActionSheet: Identifiable {
     case ORIGINAL_PICKER
     case MULTIPLE_PICKER
@@ -65,44 +54,8 @@ struct DocumentContent:Codable{
 struct TubeDocumentView: View{
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var tubeViewModel: TubeViewModel
-    @EnvironmentObject var firebaseAuth: FirebaseAuth
-    @State var activeDocumentAction:ActiveDocumentActionSheet?
     let segTypes:[SegType] = [.LENA,.LENB,.SEG1,.SEG2]
     let SEGMENT_HEIGHT:CGFloat = 50.0
-    var saveButton:some View{
-        Button(action: saveDocument ){
-            HStack{
-                Image(systemName: "arrow.down.doc")
-                Text("Save")
-            }
-        }
-        .buttonStyle(.borderedProminent)
-        .trailingHeadline()
-    }
-   
-    var shareButton:some View{
-        Button(action: shareDocument){
-            HStack{
-                Image(systemName: "arrowshape.turn.up.right")
-                Text("Share")
-            }
-        }
-        .buttonStyle(.borderedProminent)
-        .trailingHeadline()
-    }
-    
-    @ViewBuilder
-    var memberButtons:some View{
-        if firebaseAuth.loggedInAs != .ANONYMOUS_USER{
-            HStack{
-                saveButton
-                shareButton
-            }
-            .hCenter()
-            .padding(.bottom)
-        }
-        
-    }
   
     var document:some View{
         List{
@@ -117,29 +70,13 @@ struct TubeDocumentView: View{
         .scrollContentBackground(.hidden)
     }
     
-    var documentPage:some View{
-        VStack(spacing:0){
-            TopMenu(title: "Document", actionCloseButton: closeView)
-            memberButtons
-            document
-        }
-    }
-    
     //MARK: - MAIN BODY
     var body: some View{
-        documentPage
+        VStack(spacing:0){
+            TopMenu(title: "Document", actionCloseButton: closeView)
+            document
+        }
         .modifier(HalfSheetModifier())
-        .sheet(item: $activeDocumentAction){ item in
-            switch item{
-            case .SHARE_DOCUMENT: ShareDocumentView()
-            case .SAVE_DOCUMENT: SaveDocumentView()
-            default:EmptyView()
-            }
-            
-        }
-        .onChange(of: activeDocumentAction){ _ in
-            
-        }
     }
     
     //MARK: - BUTTON FUNCTIONS
@@ -147,13 +84,6 @@ struct TubeDocumentView: View{
         dismiss()
     }
     
-    func saveDocument(){
-        activeDocumentAction = .SAVE_DOCUMENT
-    }
-    
-    func shareDocument(){
-        activeDocumentAction = .SHARE_DOCUMENT
-    }
 }
 
 

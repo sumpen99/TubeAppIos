@@ -447,7 +447,6 @@ struct TubeSettingsView:View{
     
     //MARK: - BODY
     var body: some View{
-        //Color.white.opacity(0.3).background(BackgroundClearView())
         VStack(spacing:10){
             settingsHeaderMenuList
             Divider()

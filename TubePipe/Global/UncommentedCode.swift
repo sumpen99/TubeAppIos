@@ -333,3 +333,23 @@ extension AppDelegate: MessagingDelegate {
     }
        
 }*/
+
+
+/*
+ VStack {
+             SheetPresenter("Present Sheet", style: .sheet) {
+                 SheetView()
+             }
+             SheetPresenter("Present Popover", style: .popover) {
+                 PopoverView()
+             }
+             SheetPresenter("Present Full Screen Cover", style: .fullScreenCover) {
+                 FullScreenCoverView()
+             }
+             SheetPresenter("Present Presentation Detents", style: .detents([.medium(), .large()])) {
+                 PresentationDetentsView()
+             }
+             Text("First")
+         }
+ 
+ */

@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-//[API] Failed to get renderer info
-//warning: could not execute support code to read Objective-C class data in the process. This may reduce the quality of type information available.
-//
-
 @main
 struct TubePipeApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
