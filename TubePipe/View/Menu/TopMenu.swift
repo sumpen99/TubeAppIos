@@ -15,7 +15,8 @@ struct TopMenu:View{
         VStack{
             HStack{
                 topMenuHeaderCell.hLeading()
-                Button("\(Image(systemName: BACK_BUTTON_PRIMARY))", action: actionCloseButton).font(.headline).hTrailing()
+                //"\(Image(systemName: BACK_BUTTON_PRIMARY))"
+                Button("Done", action: actionCloseButton).font(.headline).hTrailing()
             }
             Divider()
         }
@@ -27,6 +28,7 @@ struct TopMenu:View{
         Text(title)
         .font(.headline)
         .foregroundStyle(.primary)
+        .lineLimit(1)
     }
     
     var body: some View{

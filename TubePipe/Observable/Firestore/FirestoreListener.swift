@@ -27,7 +27,7 @@ extension FirestoreViewModel{
     
     func listenForRequestRecievedContacts(_ userId:String){
         let col = repo.requestRecievedCollection(userId)
-        listenerRequestRecieved = col.addSnapshotListener(){ [weak self] (snapshot, err) in
+        self.listenerRequestRecieved = col.addSnapshotListener(){ [weak self] (snapshot, err) in
             guard let documents = snapshot?.documents,
                   let strongSelf = self else { return }
             var newContacts:OrderedDictionary<USERID,Contact> = [:]

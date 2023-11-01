@@ -134,12 +134,8 @@ struct AttachmentView:View{
            let groupid = message.groupId{
             firestoreViewModel.downloadImageFromStorage(groupId: groupid, storageId: storageId){ (error,uiImage) in
                  if let uiImage = uiImage{
-                    self.image = Image(uiImage: uiImage)
+                     self.image = Image(uiImage: uiImage)
                 }
-                else{
-                    debugLog(object: error?.localizedDescription ?? "")
-                }
-                
             }
         }
     }

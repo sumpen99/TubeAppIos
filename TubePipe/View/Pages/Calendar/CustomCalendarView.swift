@@ -60,7 +60,7 @@ struct CustomCalendarView: View {
     
     
     var body: some View {
-        NavigationView{
+        NavigationStack{
             AppBackgroundStack(content: {
                 mainPage
             })

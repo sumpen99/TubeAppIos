@@ -29,7 +29,7 @@ struct AnonymousProfileView:View{
     }
     
     var body: some View{
-        NavigationView{
+        NavigationStack{
             AppBackgroundStack(content: {
                 personalPage
             })

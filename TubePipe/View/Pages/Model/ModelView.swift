@@ -66,7 +66,7 @@ struct ModelView: View{
     }
     
     var body:some View{
-        NavigationView{
+        NavigationStack{
             AppBackgroundStack(content: {
                 modelPage
             })

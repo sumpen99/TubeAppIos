@@ -241,14 +241,14 @@ struct ProfileView: View{
     }
     
     var body: some View{
-        NavigationView{
+        NavigationStack{
             AppBackgroundStack(content: {
                 personalPage
             })
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { replaceDisplayName();endTextEditing(); }) {
-                        Text("Clear")
+                        Text("Done")
                     }
                     .opacity(userNameHasChanged ? 1.0 : 0.0)
                     .disabled(!userNameHasChanged)

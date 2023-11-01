@@ -13,6 +13,7 @@ enum MainTabItem{
     case CALENDAR
     case PROFILE
     case PROFILE_ANONYMOUS
+    case HOME_ANONYMOUS
 }
 
 class NavigationViewModel: ObservableObject{

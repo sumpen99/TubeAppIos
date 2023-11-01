@@ -190,7 +190,7 @@ struct GlobalRingSpinner : View {
                 .opacity(0.3)
                 .foregroundColor(globalLoadingPresentation.loadingIsSuccess ? Color.green : Color.red)
                 .rotationEffect(.degrees(90.0))
-            GlobalInnerRing(stopAnimating: $stopAnimating,pct: pct)
+            GlobalInnerRing(stopAnimating: stopAnimating,pct: pct)
             .stroke(globalLoadingPresentation.loadingIsSuccess ? Color.green : Color.red, lineWidth: LINE_WIDTH_ANIMATED)
             if stopAnimating{
                 Image(systemName: globalLoadingPresentation.loadingIsSuccess ? "checkmark" : "exclamationmark.triangle")
@@ -268,7 +268,7 @@ struct GlobalRingSpinner : View {
 }
 
 struct GlobalInnerRing : Shape {
-    @Binding var stopAnimating:Bool
+    let stopAnimating:Bool
     var pct: Double
     let lagAmmount = 0.35
        

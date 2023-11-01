@@ -58,7 +58,7 @@ extension Text{
         .textFieldStyle(RoundedBorderTextFieldStyle())
     }
     
-    func listSectionHeader(color:Color = .white) -> some View{
+    func listSectionHeader(color:Color = .darkGray) -> some View{
         self.foregroundColor(color).bold()
     }
     

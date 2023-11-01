@@ -1,28 +1,15 @@
 //
-//  ConstructView.swift
+//  AnonymousHomeView.swift
 //  TubePipe
 //
-//  Created by fredrik sundström on 2023-06-10.
+//  Created by fredrik sundström on 2023-11-01.
 //
-
 import SwiftUI
-enum ActiveHomeSheet: Identifiable {
-    case OPEN_TUBE_SETTINGS
-    case OPEN_TUBE_DOCUMENT
-    case OPEN_TUBE_SAVE
-    case OPEN_TUBE_SHARE
-    case OPEN_TUBE_INFORMATION
-    
-    var id: Int {
-        hashValue
-    }
-}
-
-struct HomeView: View{
+struct AnonymousHomeView: View{
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @State var activeHomeSheet: ActiveHomeSheet?
     var body: some View{
-        NavigationStack{
+        NavigationView{
             AppBackgroundStack(content: {
                 TubeView(tubeInteraction: .IS_MOVEABLE)
             })
@@ -39,10 +26,9 @@ struct HomeView: View{
                     TubeDocumentView()
                 case ActiveHomeSheet.OPEN_TUBE_SAVE:
                     SaveDocumentView()
-                case ActiveHomeSheet.OPEN_TUBE_SHARE:
-                    ShareDocumentView()
                 case ActiveHomeSheet.OPEN_TUBE_INFORMATION:
                     TubeHelpView()
+                default:EmptyView()
                 }
             }
             .toolbar {
@@ -54,7 +40,6 @@ struct HomeView: View{
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu{
                         navPrintButton
-                        navShareButton
                         navSaveButton
                         navInfoButton
                     }
@@ -79,16 +64,11 @@ struct HomeView: View{
             Label("Save", systemImage: "arrow.down.doc")
         }
     }
-    
-    var navShareButton:some View{
-        Button(action: { activeHomeSheet = .OPEN_TUBE_SHARE } ){
-            Label("Share", systemImage: "arrowshape.turn.up.right")
-        }
-   }
-    
+   
     var navInfoButton:some View{
         Button(action: { activeHomeSheet = .OPEN_TUBE_INFORMATION } ){
             Label("Help", systemImage: "info.circle")
         }
     }
 }
+

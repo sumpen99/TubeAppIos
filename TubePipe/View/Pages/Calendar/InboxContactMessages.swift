@@ -33,6 +33,7 @@ struct InboxContactMessages:View{
         }
         .onDisappear{
             firestoreViewModel.closeListenerMessageGroups()
+            firestoreViewModel.releaseContactMessageGroups()
         }
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
