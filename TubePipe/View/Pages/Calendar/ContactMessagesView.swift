@@ -13,6 +13,8 @@ struct CmVar{
 
 struct ContactMessagesView:View{
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
+    @EnvironmentObject var tubeViewModel: TubeViewModel
+    @EnvironmentObject var navigationViewModel: NavigationViewModel
     @State var cmVar:CmVar = CmVar()
     let contact:Contact
     let backButtonLabel:String
@@ -125,10 +127,24 @@ struct ContactMessagesView:View{
         AppBackgroundStack(content: {
             mainPage
         })
-        .sheet(item: $cmVar.currentMessage){ message in
+        .onChange(of: cmVar.currentMessage){ message in
+            // THIS FIXES ALOT OF LEAKS ON IOS_17
+            if let message = message{
+                SheetPresentView(style: .sheet){
+                    AttachmentView(message: message,userName:contact.displayName ?? "Back")
+                    .presentationDragIndicator(.visible)
+                    .environmentObject(firestoreViewModel)
+                    .environmentObject(navigationViewModel)
+                    .environmentObject(tubeViewModel)
+                }
+                .makeUIView()
+                
+            }
+        }
+        /*.sheet(item: $cmVar.currentMessage){ message in
             AttachmentView(message: message,userName:contact.displayName ?? "Back")
             .presentationDragIndicator(.visible)
-        }
+        }*/
         .onAppear{
             firestoreViewModel.releaseContactMessages()
             firestoreViewModel.listenForThreadDocumentsFromContact(groupId:contact.groupId)

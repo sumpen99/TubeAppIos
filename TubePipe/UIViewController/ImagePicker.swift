@@ -34,11 +34,7 @@ struct ImagePicker: UIViewControllerRepresentable {
     class Coordinator: NSObject, PHPickerViewControllerDelegate {
         let parent: ImagePicker
         let fileName = USER_PROFILE_PIC_PATH + ".png"
-  
-        /*deinit{
-            debugLog(object: "ImagePicker")
-        }*/
-        
+     
         init(_ parent: ImagePicker) {
              self.parent = parent
         }

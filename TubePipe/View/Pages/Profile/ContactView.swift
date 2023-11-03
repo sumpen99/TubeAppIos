@@ -80,11 +80,20 @@ struct ContactView:View{
                 }
             }
         }
-        .sheet(isPresented: $cVar.isSearchOption){
+        .onChange(of: cVar.isSearchOption){ item in
+            SheetPresentView(style: .detents([.medium(),.large()])){
+                SearchContactsView()
+                .environmentObject(firestoreViewModel)
+                .presentationDragIndicator(.visible)
+            }
+            .makeUIView()
+        }
+        /*.sheet(isPresented: $cVar.isSearchOption){
             SearchContactsView()
+            .environmentObject(firestoreViewModel)
             .presentationDetents([.medium])
             .presentationDragIndicator(.visible)
-        }
+        }*/
         .alert(isPresented: $cVar.isSelectedContact, content: {
             onAlertWithOkAction(actionPrimary: {
                 switch cVar.alertAction{

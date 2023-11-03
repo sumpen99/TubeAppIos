@@ -35,4 +35,5 @@ class NavigationViewModel: ObservableObject{
     func isActive(_ tab:MainTabItem) -> Bool{
         return selectedTab == tab
     }
+    
 }

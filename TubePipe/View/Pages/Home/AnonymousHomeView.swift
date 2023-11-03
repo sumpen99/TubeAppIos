@@ -16,7 +16,39 @@ struct AnonymousHomeView: View{
             .onAppear{
                 tubeViewModel.initFromCache()
             }
-            .sheet(item: $activeHomeSheet){ item in
+            .onChange(of: activeHomeSheet){ item in
+                if let item{
+                    activeHomeSheet = nil
+                    switch item{
+                    case ActiveHomeSheet.OPEN_TUBE_SETTINGS:
+                        SheetPresentView(style: .detents([.medium(),.large()])){
+                            TubeSettingsView()
+                            .environmentObject(tubeViewModel)
+                            .presentationDragIndicator(.visible)
+                        }
+                        .makeUIView()
+                    case ActiveHomeSheet.OPEN_TUBE_DOCUMENT:
+                        SheetPresentView(style: .sheet){
+                            TubeDocumentView()
+                            .environmentObject(tubeViewModel)
+                        }
+                        .makeUIView()
+                    case ActiveHomeSheet.OPEN_TUBE_SAVE:
+                        SheetPresentView(style: .sheet){
+                            SaveDocumentView()
+                            .environmentObject(tubeViewModel)
+                        }
+                        .makeUIView()
+                   case ActiveHomeSheet.OPEN_TUBE_INFORMATION:
+                        SheetPresentView(style: .sheet){
+                            TubeHelpView()
+                        }
+                        .makeUIView()
+                    default: break
+                    }
+                }
+            }
+            /*.sheet(item: $activeHomeSheet){ item in
                 switch item{
                 case ActiveHomeSheet.OPEN_TUBE_SETTINGS:
                     TubeSettingsView()
@@ -30,7 +62,7 @@ struct AnonymousHomeView: View{
                     TubeHelpView()
                 default:EmptyView()
                 }
-            }
+            }*/
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { activeHomeSheet = .OPEN_TUBE_SETTINGS }) {

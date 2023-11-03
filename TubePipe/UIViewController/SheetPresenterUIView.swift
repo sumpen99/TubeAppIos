@@ -91,3 +91,47 @@ struct SheetPresenter<Content>: UIViewRepresentable where Content: View {
     
     func updateUIView(_ uiView: UIButton, context: Context) {}
 }
+
+struct SheetPresentView<Content:View>{
+    let content: () -> Content
+    let style: SheetPresenterStyle
+    
+    init(style: SheetPresenterStyle, @ViewBuilder content: @escaping () -> Content) {
+        self.content = content
+        self.style = style
+    }
+    
+    func makeUIView(){
+        let hostingController = UIHostingController(rootView: content())
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        
+        let viewController = SheetWrapperController(style: style)
+        switch style {
+        case .sheet:
+            viewController.modalPresentationStyle = .automatic
+        case .popover:
+            viewController.modalPresentationStyle = .popover
+        case .fullScreenCover:
+            viewController.modalPresentationStyle = .fullScreen
+        case .detents:
+            viewController.modalPresentationStyle = .automatic
+        }
+        
+        viewController.addChild(hostingController)
+        viewController.view.addSubview(hostingController.view)
+        
+        NSLayoutConstraint.activate([
+            hostingController.view.topAnchor.constraint(equalTo: viewController.view.topAnchor),
+            hostingController.view.leadingAnchor.constraint(equalTo: viewController.view.leadingAnchor),
+            hostingController.view.trailingAnchor.constraint(equalTo: viewController.view.trailingAnchor),
+            hostingController.view.bottomAnchor.constraint(equalTo: viewController.view.bottomAnchor),
+        ])
+        
+        hostingController.didMove(toParent: viewController)
+        
+        if let rootVC = UIApplication.rootViewController() {
+            rootVC.present(viewController, animated: true)
+        }
+    }
+    
+}

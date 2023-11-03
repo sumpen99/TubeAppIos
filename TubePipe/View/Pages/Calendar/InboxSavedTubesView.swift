@@ -177,12 +177,24 @@ struct InboxSavedTubesView:View{
                 }
            })
         })
-        .sheet(item: $iVar.tubeModel){ tube in
+        .onChange(of: iVar.tubeModel){ tube in
+            if let tube = tube{
+                SheetPresentView(style: .sheet){
+                    SelectedTubeView(tubeModel: tube,
+                                     labelBackButton: "List",
+                                     loadViewModelWithTubeModel: loadViewModelWithTubeModel,
+                                     deleteTubeModel: deleteTubeModel)
+                }
+                .makeUIView()
+            }
+            
+        }
+        /*.sheet(item: $iVar.tubeModel){ tube in
             SelectedTubeView(tubeModel: tube,
                              labelBackButton: "List",
                              loadViewModelWithTubeModel: loadViewModelWithTubeModel,
                              deleteTubeModel: deleteTubeModel)
-        }
+        }*/
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 leadingButton
@@ -334,4 +346,5 @@ extension InboxSavedTubesView{
         tubeViewModel.rebuild()
         navigationViewModel.navTo(.HOME)
     }
+    
 }

@@ -20,7 +20,9 @@ enum ActiveHomeSheet: Identifiable {
 
 struct HomeView: View{
     @EnvironmentObject var tubeViewModel: TubeViewModel
+    @EnvironmentObject var firestoreViewModel: FirestoreViewModel
     @State var activeHomeSheet: ActiveHomeSheet?
+   
     var body: some View{
         NavigationStack{
             AppBackgroundStack(content: {
@@ -29,7 +31,47 @@ struct HomeView: View{
             .onAppear{
                 tubeViewModel.initFromCache()
             }
-            .sheet(item: $activeHomeSheet){ item in
+            .onChange(of: activeHomeSheet){ item in
+                if let item{
+                    activeHomeSheet = nil
+                    switch item{
+                    case ActiveHomeSheet.OPEN_TUBE_SETTINGS:
+                        SheetPresentView(style: .detents([.medium(),.large()])){
+                            TubeSettingsView()
+                            .environmentObject(tubeViewModel)
+                            .presentationDragIndicator(.visible)
+                        }
+                        .makeUIView()
+                    case ActiveHomeSheet.OPEN_TUBE_DOCUMENT:
+                        SheetPresentView(style: .sheet){
+                            TubeDocumentView()
+                            .environmentObject(tubeViewModel)
+                        }
+                        .makeUIView()
+                    case ActiveHomeSheet.OPEN_TUBE_SAVE:
+                        SheetPresentView(style: .sheet){
+                            SaveDocumentView()
+                            .environmentObject(tubeViewModel)
+                        }
+                        .makeUIView()
+                    case ActiveHomeSheet.OPEN_TUBE_SHARE:
+                        SheetPresentView(style: .sheet){
+                            ShareDocumentView()
+                            .environmentObject(tubeViewModel)
+                            .environmentObject(firestoreViewModel)
+                        }
+                        .makeUIView()
+                    case ActiveHomeSheet.OPEN_TUBE_INFORMATION:
+                        SheetPresentView(style: .sheet){
+                            TubeHelpView()
+                        }
+                        .makeUIView()
+                    }
+                }
+            }
+            
+            // PREFFERED BUT LEAKS ON IOS_17
+            /*.sheet(item: $activeHomeSheet){ item in
                 switch item{
                 case ActiveHomeSheet.OPEN_TUBE_SETTINGS:
                     TubeSettingsView()
@@ -44,7 +86,7 @@ struct HomeView: View{
                 case ActiveHomeSheet.OPEN_TUBE_INFORMATION:
                     TubeHelpView()
                 }
-            }
+            }*/
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { activeHomeSheet = .OPEN_TUBE_SETTINGS }) {

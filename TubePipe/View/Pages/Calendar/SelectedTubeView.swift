@@ -17,7 +17,7 @@ struct SelectedTubeView: View{
     
     
     var loadButton:some View{
-        Button(action: { loadViewModelWithTubeModel(tubeModel) }){
+        Button(action: { loadViewModelWithTubeModel(tubeModel);closeView() }){
             Text("Load")
         }
         .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemBlue))

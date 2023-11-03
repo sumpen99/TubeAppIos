@@ -72,7 +72,21 @@ struct ModelView: View{
             })
             .environmentObject(tubeSceneViewModel)
             .modifier(NavigationViewModifier(title: ""))
-            .sheet(item: $activeModelSheet){ item in
+            .onChange(of: activeModelSheet){ item in
+                if let item{
+                    activeModelSheet = nil
+                    switch item{
+                    case ActiveModelSheet.OPEN_MODEL_SETTINGS:
+                        SheetPresentView(style: .detents([.medium()])){
+                            ModelSettingsView(renderNewState: $renderNewState)
+                            .environmentObject(tubeViewModel)
+                            .presentationDragIndicator(.visible)
+                        }
+                        .makeUIView()
+                   }
+                }
+            }
+            /*.sheet(item: $activeModelSheet){ item in
                 switch item{
                 case ActiveModelSheet.OPEN_MODEL_SETTINGS:
                     ModelSettingsView(renderNewState: $renderNewState)
@@ -80,7 +94,7 @@ struct ModelView: View{
                     .presentationDetents([.medium])
                 }
                 
-            }
+            }*/
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { activeModelSheet = .OPEN_MODEL_SETTINGS }) {

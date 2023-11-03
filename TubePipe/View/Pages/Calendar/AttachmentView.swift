@@ -108,6 +108,7 @@ struct AttachmentView:View{
         AppBackgroundStack(content: {
             mainPage
         })
+        .onDisappear{ image = nil }
         .toastView(toast: $toast)
         .confirmationDialog("Attention!",
                             isPresented: $showConfirmationDialog,
@@ -132,7 +133,7 @@ struct AttachmentView:View{
     func loadImageFromStorage(){
         if let storageId = message.storageId,
            let groupid = message.groupId{
-            firestoreViewModel.downloadImageFromStorage(groupId: groupid, storageId: storageId){ (error,uiImage) in
+             firestoreViewModel.downloadImageFromStorage(groupId: groupid, storageId: storageId){ (error,uiImage) in
                  if let uiImage = uiImage{
                      self.image = Image(uiImage: uiImage)
                 }
@@ -145,6 +146,7 @@ struct AttachmentView:View{
             if tubeViewModel.initViewFromSharedValues(sharedTube){
                 tubeViewModel.rebuild()
                 navigationViewModel.navTo(.HOME)
+                closeView()
             }
         }
     }

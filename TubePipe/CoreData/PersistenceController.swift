@@ -19,7 +19,6 @@ final class PersistenceController {
             if let error = error {
                 fatalError("Unable to load persistent store \(error)")
             }
-            
         }
         return container
     }()
@@ -28,7 +27,7 @@ final class PersistenceController {
     
     public func saveContext(backgroundContext:NSManagedObjectContext? = nil) throws{
         let context = backgroundContext ?? container.viewContext
-        guard context.hasChanges else { return }
+        guard context.hasChanges else { debugLog(object:"oooops");return }
         try context.save()
         
     }

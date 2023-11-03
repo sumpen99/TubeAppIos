@@ -57,8 +57,6 @@ struct CustomCalendarView: View {
             GridItem(.flexible(minimum: 40))
         ]
     
-    
-    
     var body: some View {
         NavigationStack{
             AppBackgroundStack(content: {
@@ -71,12 +69,24 @@ struct CustomCalendarView: View {
             }
             .modifier(NavigationViewModifier(title: ""))
         }
-        .sheet(item: $selected.tubeModel){ tube in
+        .onChange(of: selected.tubeModel){ tube in
+            if let tube = tube{
+                SheetPresentView(style: .sheet){
+                    SelectedTubeView(tubeModel: tube,
+                                     labelBackButton: "Calendar",
+                                     loadViewModelWithTubeModel: loadViewModelWithTubeModel,
+                                     deleteTubeModel: deleteTubeModel)
+                }
+                .makeUIView()
+            }
+            
+        }
+        /*.sheet(item: $selected.tubeModel){ tube in
             SelectedTubeView(tubeModel: tube,
                              labelBackButton: "Calendar",
                              loadViewModelWithTubeModel: loadViewModelWithTubeModel,
                              deleteTubeModel: deleteTubeModel)
-        }
+        }*/
         .onAppear{
             searchAndSet(year: true, month: true, day: true)
         }
