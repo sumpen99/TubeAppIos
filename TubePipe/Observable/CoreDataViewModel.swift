@@ -56,7 +56,6 @@ class CoreDataService{
         do {
             return try PersistenceController.shared.container.viewContext.fetch(fetchRequest)
         } catch {
-            debugLog(object: "Failed to fetch tubemodels: \(error)")
             return []
         }
      }
@@ -81,7 +80,6 @@ class CoreDataService{
         do {
             return try PersistenceController.shared.container.viewContext.fetch(fetchRequest)
         } catch {
-            debugLog(object: "Failed to fetch tubemodels: \(error)")
             return []
         }
      }

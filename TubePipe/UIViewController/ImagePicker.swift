@@ -34,11 +34,7 @@ struct ImagePicker: UIViewControllerRepresentable {
     class Coordinator: NSObject, PHPickerViewControllerDelegate {
         let parent: ImagePicker
         let fileName = USER_PROFILE_PIC_PATH + ".png"
-  
-        /*deinit{
-            debugLog(object: "ImagePicker")
-        }*/
-        
+     
         init(_ parent: ImagePicker) {
              self.parent = parent
         }
@@ -50,7 +46,10 @@ struct ImagePicker: UIViewControllerRepresentable {
                     itemProvider.loadObject(ofClass: UIImage.self) { [weak self] image, error in
                         guard let strongSelf = self else { return }
                         if let uiImage = image as? UIImage {
-                            FileHandler.removeFileFromDocuments(strongSelf.fileName)
+                            DispatchQueue.main.async {
+                                strongSelf.parent.image = Image(uiImage: uiImage)
+                            }
+                            /*FileHandler.removeFileFromDocuments(strongSelf.fileName)
                             FileHandler.writeImageToDocuments(uiImage, fileName: strongSelf.fileName){ result in
                                 if result.finishedWithoutError{
                                     DispatchQueue.main.async {
@@ -58,7 +57,7 @@ struct ImagePicker: UIViewControllerRepresentable {
                                         
                                     }
                                 }
-                            }
+                            }*/
                             
                             //DispatchQueue.main.async {
                                 //strongSelf.parent.image = Image(uiImage: uiImage)

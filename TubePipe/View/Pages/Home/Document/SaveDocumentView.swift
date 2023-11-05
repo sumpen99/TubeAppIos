@@ -54,11 +54,9 @@ struct SaveDocumentView:View{
     
     func saveNewTube(){
         let model = TubeModel(context:managedObjectContext)
-        
         tubeViewModel.buildModelFromCurrentValues(model)
         docContent.trim()
         model.message = docContent.message
-        
         if docContent.data != nil{
             let image = TubeImage(context:managedObjectContext)
             image.id = model.id
@@ -66,7 +64,7 @@ struct SaveDocumentView:View{
             model.image = image
         }
         do{
-            try PersistenceController.shared.saveContext()
+            try PersistenceController.saveContext()
             closeAfterToast(isSuccess: true,msg:"Document saved!",toast: &toast,action: closeView)
         }
         catch{

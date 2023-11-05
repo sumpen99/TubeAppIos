@@ -25,7 +25,7 @@ struct ContactView:View{
         SortedContactsList(currentContact:$cVar.currentContact,
                            showingOptions: $cVar.showingOptions,
                            contactCardOption: .CONTACT_CARD_ELLIPSE,
-                           contactSectionOption: .WITH_SECTION,
+                           contactSectionOption: .CONTACT_VIEW_SECTION,
                            contactAvatarColor:.black,
                            contactInfoColor: Color.GHOSTWHITE)
     }
@@ -80,11 +80,20 @@ struct ContactView:View{
                 }
             }
         }
-        .sheet(isPresented: $cVar.isSearchOption){
+        .onChange(of: cVar.isSearchOption){ item in
+            SheetPresentView(style: .sheet){
+                SearchContactsView()
+                .environmentObject(firestoreViewModel)
+                .presentationDragIndicator(.visible)
+            }
+            .makeUIView()
+        }
+        /*.sheet(isPresented: $cVar.isSearchOption){
             SearchContactsView()
+            .environmentObject(firestoreViewModel)
             .presentationDetents([.medium])
             .presentationDragIndicator(.visible)
-        }
+        }*/
         .alert(isPresented: $cVar.isSelectedContact, content: {
             onAlertWithOkAction(actionPrimary: {
                 switch cVar.alertAction{

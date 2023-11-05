@@ -21,7 +21,7 @@ class TubeViewModel: ObservableObject{
     var muffDetails = MuffDetails()
     var muff = Muff()
    
-    var muffDiff: CGFloat { settingsVar.center }
+    var muffDiff: CGFloat { settingsVar.tube.center }
     var useAutoAlign:Bool{
         userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .AUTO_ALIGN)]||settingsVar.forceAutoAlign
     }
@@ -36,7 +36,7 @@ class TubeViewModel: ObservableObject{
             settingsVar.resetCalculationMode()
         }
         else{
-            settingsVar.alreadyCalculated = true
+            settingsVar.tube.alreadyCalculated = true
         }
         calculate()
     }
@@ -60,7 +60,7 @@ class TubeViewModel: ObservableObject{
    }
     
     func calculateAutoAlign(offsetFromCenter:CGFloat){
-        if offsetFromCenter > 0.0 && !settingsVar.alreadyCalculated{
+        if offsetFromCenter > 0.0 && !settingsVar.tube.alreadyCalculated{
             alignTubeToCenter(offsetFromCenter: offsetFromCenter)
             calculate()
         }
@@ -82,11 +82,9 @@ class TubeViewModel: ObservableObject{
     }
     
     func shouldAbort(offsetFromCenter:CGFloat) -> Bool{
-        return  settingsVar.radie <= 0 ||
-                (settingsVar.grader <= 0 && settingsVar.segment != 0) ||
-                (settingsVar.steel <= 0 || settingsVar.steel >= settingsVar.dimension) ||
-                //circleTouchSelf() ||
-                //circleToClose() ||
+        return  settingsVar.tube.radie <= 0 ||
+                (settingsVar.tube.grader <= 0 && settingsVar.tube.segment != 0) ||
+                (settingsVar.tube.steel <= 0 || settingsVar.tube.steel >= settingsVar.tube.dimension) ||
                 offsetFromCenter.isNaN
     }
     
@@ -99,20 +97,20 @@ class TubeViewModel: ObservableObject{
     
     // MARK: - DO STEP 2
     func drawCenterCircle(){
-        let addHundred = userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ADD_ONE_HUNDRED)] ? 100.0 : 0.0
+        let addHundred = userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ADD_ONE_HUNDRED)] ? settingsVar.tube.overlap : 0.0
         
-        let lena = settingsVar.lena + addHundred
-        let lenb = settingsVar.lenb + addHundred
+        let lena = settingsVar.tube.lena + addHundred
+        let lenb = settingsVar.tube.lenb + addHundred
         
-        let r = CGFloat(90.0 - settingsVar.grader)
+        let r = CGFloat(90.0 - settingsVar.tube.grader)
         let r1 = r.degToRad()
-        let r2 = settingsVar.grader.degToRad()
+        let r2 = settingsVar.tube.grader.degToRad()
         
-        let x1 = settingsVar.radie
+        let x1 = settingsVar.tube.radie
         let y1 = 0.0
         
-        let x2 = settingsVar.radie * sin(r1)
-        let y2 = settingsVar.radie * cos(r1)
+        let x2 = settingsVar.tube.radie * sin(r1)
+        let y2 = settingsVar.tube.radie * cos(r1)
         
         let x3 = lenb * sin(-r2) + x2
         let y3 = lenb * cos(-r2) + y2
@@ -126,9 +124,9 @@ class TubeViewModel: ObservableObject{
                      r1:r1)
         
         if userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ADD_ONE_HUNDRED)]{
-            let xx3 = settingsVar.lenb * sin(-r2) + x2
-            let yy3 = settingsVar.lenb * cos(-r2) + y2
-            let bb = TPoint(x:x1, y: -settingsVar.lena)
+            let xx3 = settingsVar.tube.lenb * sin(-r2) + x2
+            let yy3 = settingsVar.tube.lenb * cos(-r2) + y2
+            let bb = TPoint(x:x1, y: -settingsVar.tube.lena)
             let pp3 = TPoint(x:xx3,y: yy3)
             tubeBase.setOptionalAddHundred(bb: bb, pp3: pp3)
         }
@@ -142,9 +140,9 @@ class TubeViewModel: ObservableObject{
     
     // MARK: - DO STEP 3
     func setTubeBaseBottomCenter(){
-        let b_r = settingsVar.grader / 2.0
+        let b_r = settingsVar.tube.grader / 2.0
         let b_r1 = CGFloat(90.0 - b_r).degToRad()
-        let r = settingsVar.radie - muffDiff
+        let r = settingsVar.tube.radie - muffDiff
         let b_c_x = r * sin(b_r1)
         let b_c_y = r * cos(b_r1)
         tubeBase.b_c = TPoint(x:b_c_x,y:b_c_y)
@@ -152,7 +150,7 @@ class TubeViewModel: ObservableObject{
     
     // MARK: - DO STEP 4
     func calcDiagonal() -> CGFloat{
-        let b_r = CGFloat(settingsVar.grader / 2.0)
+        let b_r = CGFloat(settingsVar.tube.grader / 2.0)
         let b_r2 = CGFloat(90.0).degToRad()
         let b_r3 = b_r.degToRad()
         
@@ -160,13 +158,13 @@ class TubeViewModel: ObservableObject{
         
         let off_r = (lenA * cos(b_r3))
      
-        tubeBase.off_r = (settingsVar.radie <= settingsVar.center) ? off_r : -off_r
+        tubeBase.off_r = (settingsVar.tube.radie <= settingsVar.tube.center) ? off_r : -off_r
         
-        let b_x1 = (settingsVar.radie + tubeBase.off_r) * sin(b_r2) + tubeBase.b_c.x
-        let b_y1 = (settingsVar.radie + tubeBase.off_r) * cos(b_r2) + tubeBase.b_c.y
+        let b_x1 = (settingsVar.tube.radie + tubeBase.off_r) * sin(b_r2) + tubeBase.b_c.x
+        let b_y1 = (settingsVar.tube.radie + tubeBase.off_r) * cos(b_r2) + tubeBase.b_c.y
         
-        let b_x2 = (settingsVar.radie + tubeBase.off_r) * sin(tubeBase.r1) + tubeBase.b_c.x
-        let b_y2 = (settingsVar.radie + tubeBase.off_r) * cos(tubeBase.r1) + tubeBase.b_c.y
+        let b_x2 = (settingsVar.tube.radie + tubeBase.off_r) * sin(tubeBase.r1) + tubeBase.b_c.x
+        let b_y2 = (settingsVar.tube.radie + tubeBase.off_r) * cos(tubeBase.r1) + tubeBase.b_c.y
         
         let p1 = TPoint(x:b_x1,y:b_y1)
         let p2 = TPoint(x:b_x2,y:b_y2)
@@ -204,25 +202,25 @@ class TubeViewModel: ObservableObject{
     func alignTubeToCenter(offsetFromCenter:CGFloat){
         if settingsVar.first == 0.0 {
             settingsVar.first = offsetFromCenter
-            settingsVar.center += (settingsVar.grader <= 180) ? 1 : -1
+            settingsVar.tube.center += (settingsVar.tube.grader <= 180) ? 1 : -1
         }
         else {
-            settingsVar.alreadyCalculated = true
+            settingsVar.tube.alreadyCalculated = true
             let div = settingsVar.first-offsetFromCenter
             settingsVar.first /= div
-            settingsVar.center = settingsVar.grader > 180 ? -settingsVar.first : settingsVar.first
+            settingsVar.tube.center = settingsVar.tube.grader > 180 ? -settingsVar.first : settingsVar.first
          }
     }
     
     // MARK: - DO STEP 5
     func drawTube() -> Bool{
-        if settingsVar.segment == 0 { return drawTubeSegZero() }
+        if settingsVar.tube.segment == 0 { return drawTubeSegZero() }
         else{ return drawTubeSegments() }
     }
     
     func drawTubeSegZero() -> Bool{
-        if settingsVar.grader > 180 { return false}
-        let r = CGFloat(90.0 - (settingsVar.grader/2.0))
+        if settingsVar.tube.grader > 180 { return false}
+        let r = CGFloat(90.0 - (settingsVar.tube.grader/2.0))
         let r1 = r.degToRad()
         var b_x2: CGFloat
         var b_y2: CGFloat
@@ -236,8 +234,8 @@ class TubeViewModel: ObservableObject{
             b_y2 = p?.y ?? 0.0
         }
         else{
-            b_x2 = (settingsVar.radie+tubeBase.off_r) * sin(r1) + tubeBase.b_c.x
-            b_y2 = (settingsVar.radie+tubeBase.off_r) * cos(r1) + tubeBase.b_c.y
+            b_x2 = (settingsVar.tube.radie+tubeBase.off_r) * sin(r1) + tubeBase.b_c.x
+            b_y2 = (settingsVar.tube.radie+tubeBase.off_r) * cos(r1) + tubeBase.b_c.y
         }
         
         let p1 = TPoint(x:tubeBase.b.x,y:tubeBase.b.y)
@@ -257,7 +255,7 @@ class TubeViewModel: ObservableObject{
     }
     
     func getMuff(c_line:[TPoint]) -> (l1:[CGPoint]?,l2:[CGPoint]?){
-        let n = HalfLine.offsetLineSegments(points: c_line, offset: settingsVar.dimension/2.0)
+        let n = HalfLine.offsetLineSegments(points: c_line, offset: settingsVar.tube.dimension/2.0)
         if Line.checkForLineIntersection(inputSegments: [n.l1,n.l2]){
             return (l1:nil,l2:nil)
         }
@@ -284,7 +282,7 @@ class TubeViewModel: ObservableObject{
         
         let h1 = HalfLine(p: TPoint(x:p1.x,y:p1.y), r: TPoint(x:p11.x,y:p11.y))
         if (h1.angle.isNaN || h1.angle.isInfinite) { return true }
-        let dl = abs(settingsVar.grader - h1.angle)
+        let dl = abs(settingsVar.tube.grader - h1.angle)
         if (0.0 <= dl) && (dl < 1.0){ return true }
         return false
     }
@@ -316,7 +314,7 @@ class TubeViewModel: ObservableObject{
             f2.angleBetweenLines(l2: h2)
             
             if i == 2{
-                if settingsVar.segment == 0{
+                if settingsVar.tube.segment == 0{
                     let p1Inner = f1.halfCgPoint
                     let p1Outer = f2.halfCgPoint
                     let p2Inner = h1.halfCgPoint
@@ -407,16 +405,16 @@ class TubeViewModel: ObservableObject{
     }
     
     func getTotalLenOfMuff(){
-        muffDetails.dim = settingsVar.dimension
-        muffDetails.segments = Int(settingsVar.segment)
+        muffDetails.dim = settingsVar.tube.dimension
+        muffDetails.segments = Int(settingsVar.tube.segment)
         muffDetails.calcTotLen()
     }
     
     // MARK: - DO STEP 7
     func drawLabels(){
         if (muff.l2.count <= 1) || (!muff.equalSizeL1L2) { return }
-        if self.settingsVar.segment == 0{
-            let lbl = CGFloat(self.settingsVar.grader/2).toStringWith(precision: "%.2f")
+        if self.settingsVar.tube.segment == 0{
+            let lbl = CGFloat(self.settingsVar.tube.grader/2).toStringWith(precision: "%.2f")
             let rotation:CGFloat = 0.0
             let pos:CGPoint = muff.l2[1]
             muff.addLabel(DimensionLabel(text: lbl, pos: pos, rotation: rotation))
@@ -473,21 +471,21 @@ class TubeViewModel: ObservableObject{
     
     // MARK: - DO STEP 8
     func alignCenter(){
-        let r = CGFloat(90.0 - settingsVar.grader/2.0)
+        let r = CGFloat(90.0 - settingsVar.tube.grader/2.0)
         let r1 = r.degToRad()
         
-        let x2 = settingsVar.radie * sin(r1) - muff.pMin.x
-        let y2 = settingsVar.radie * cos(r1) - muff.pMin.y
+        let x2 = settingsVar.tube.radie * sin(r1) - muff.pMin.x
+        let y2 = settingsVar.tube.radie * cos(r1) - muff.pMin.y
         tubeBase.centerOfTube = CGPoint(x:x2,y:y2)
        
-        if (settingsVar.segment <= 0) { return }
+        if (settingsVar.tube.segment <= 0) { return }
         
-        if (Int(settingsVar.segment) % 2) == 0 { getEvenMiddleSegmentPoint() }
+        if (Int(settingsVar.tube.segment) % 2) == 0 { getEvenMiddleSegmentPoint() }
         else { getUnEvenMiddleSegmentPoint() }
     }
     
     func getEvenMiddleSegmentPoint(){
-        let index = (Int(settingsVar.segment) / 2) + 1
+        let index = (Int(settingsVar.tube.segment) / 2) + 1
         if !muff.equalSizeL1L2 || index >= muff.l1.count { return }
         
         let ox = muff.pMin.x
@@ -504,7 +502,7 @@ class TubeViewModel: ObservableObject{
     }
     
     func getUnEvenMiddleSegmentPoint(){
-        let index1 = ((Int(settingsVar.segment) - 1) / 2) + 1
+        let index1 = ((Int(settingsVar.tube.segment) - 1) / 2) + 1
         let index2 = index1 + 1
         if !muff.equalSizeL1L2 || ((index1 >= muff.l1.count) || (index2 >= muff.l1.count)) { return }
         
@@ -533,21 +531,21 @@ class TubeViewModel: ObservableObject{
     
     // MARK: - HELPER
     func getPoints() -> [TPoint]{
-        if settingsVar.segment == 0 {
-            self.muffDetails.setDegree(first: settingsVar.grader/2.0, cut: settingsVar.grader/2.0)
+        if settingsVar.tube.segment == 0 {
+            self.muffDetails.setDegree(first: settingsVar.tube.grader/2.0, cut: settingsVar.tube.grader/2.0)
             return []
         }
         var points:[TPoint] = []
-        let segments = settingsVar.segment
+        let segments = settingsVar.tube.segment
         let cuts:CGFloat = CGFloat(segments + 1)
         let p_cnt:Int = Int(segments) - 1
-        let cut_degree:CGFloat = settingsVar.grader / cuts
+        let cut_degree:CGFloat = settingsVar.tube.grader / cuts
         self.muffDetails.setDegree(first: cut_degree, cut: cut_degree)
         
-        let first_degree:CGFloat = (settingsVar.grader - ((CGFloat(segments - 2)) * cut_degree)) / 2.0
+        let first_degree:CGFloat = (settingsVar.tube.grader - ((CGFloat(segments - 2)) * cut_degree)) / 2.0
     
         let fp:CGFloat = first_degree
-        let c:CGFloat = settingsVar.radie + tubeBase.off_r
+        let c:CGFloat = settingsVar.tube.radie + tubeBase.off_r
         var A:CGFloat = fp
         var B:CGFloat = 90.0 - cut_degree
         var C:CGFloat = 180.0 - A - B
@@ -567,7 +565,7 @@ class TubeViewModel: ObservableObject{
                 points.append(TPoint(x:x,y:y))
             }
             else if i == p_cnt - 1{
-                let r = CGFloat(90.0 - (settingsVar.grader - fp)).degToRad()
+                let r = CGFloat(90.0 - (settingsVar.tube.grader - fp)).degToRad()
                 let x = r2 * sin(r) + tubeBase.b_c.x
                 let y = r2 * cos(r) + tubeBase.b_c.y
                 points.append(TPoint(x:x,y:y))
@@ -585,21 +583,21 @@ class TubeViewModel: ObservableObject{
     }
     
     func getPointsDiff() -> [TPoint]{
-        if settingsVar.segment == 0{
-            self.muffDetails.setDegree(first: settingsVar.grader, cut: settingsVar.grader)
+        if settingsVar.tube.segment == 0{
+            self.muffDetails.setDegree(first: settingsVar.tube.grader, cut: settingsVar.tube.grader)
             return []
         }
         
         var points:[TPoint] = []
-        let divider = CGFloat(settingsVar.segment > 0 ? settingsVar.segment : 1)
-        let value = settingsVar.grader / divider
-        let p_cnt = Int(settingsVar.segment) - 1
+        let divider = CGFloat(settingsVar.tube.segment > 0 ? settingsVar.tube.segment : 1)
+        let value = settingsVar.tube.grader / divider
+        let p_cnt = Int(settingsVar.tube.segment) - 1
         self.muffDetails.setDegree(first: value/2.0, cut: value)
         
         for i in (0..<p_cnt){
             let r = CGFloat(90.0-(value*CGFloat(1+i))).degToRad()
-            let x = (settingsVar.radie+tubeBase.off_r) * sin(r) + tubeBase.b_c.x
-            let y = (settingsVar.radie+tubeBase.off_r) * cos(r) + tubeBase.b_c.y
+            let x = (settingsVar.tube.radie+tubeBase.off_r) * sin(r) + tubeBase.b_c.x
+            let y = (settingsVar.tube.radie+tubeBase.off_r) * cos(r) + tubeBase.b_c.y
             points.append(TPoint(x:x,y:y))
         }
         return points
@@ -610,10 +608,10 @@ class TubeViewModel: ObservableObject{
         let segments = STEEL_SEGMENTS
         let cuts:CGFloat = CGFloat(segments + 1)
         let p_cnt:Int = segments - 1
-        let cut_degree:CGFloat = settingsVar.grader / cuts
-        let first_degree:CGFloat = (settingsVar.grader - ((CGFloat(segments - 2)) * cut_degree)) / 2.0
+        let cut_degree:CGFloat = settingsVar.tube.grader / cuts
+        let first_degree:CGFloat = (settingsVar.tube.grader - ((CGFloat(segments - 2)) * cut_degree)) / 2.0
         let fp:CGFloat = first_degree
-        let c:CGFloat = settingsVar.radie
+        let c:CGFloat = settingsVar.tube.radie
         var A:CGFloat = fp
         var B:CGFloat = 90.0 - cut_degree
         var C:CGFloat = 180.0 - A - B
@@ -634,7 +632,7 @@ class TubeViewModel: ObservableObject{
                 points.append(TPoint(x:x,y:y))
             }
             else if i == p_cnt - 1{
-                let r = CGFloat(90.0 - (settingsVar.grader - fp)).degToRad()
+                let r = CGFloat(90.0 - (settingsVar.tube.grader - fp)).degToRad()
                 let x = r2 * sin(r) + tubeBase.centerOfTube.x
                 let y = r2 * cos(r) + tubeBase.centerOfTube.y
                 points.append(TPoint(x:x,y:y))
@@ -652,22 +650,22 @@ class TubeViewModel: ObservableObject{
     }
     
     func getTubeCenterPoint() -> TPoint{
-        let b_r = settingsVar.grader / 2.0
+        let b_r = settingsVar.tube.grader / 2.0
         let b_r1 = CGFloat(90.0 - b_r).degToRad()
-        let r = settingsVar.radie
+        let r = settingsVar.tube.radie
         let b_c_x = r * sin(b_r1)
         let b_c_y = r * cos(b_r1)
         return TPoint(x:b_c_x,y:b_c_y)
     }
     
     func getOffsetFromMiddle(points:[TPoint],p1:TPoint,p2:TPoint) -> CGFloat{
-        if settingsVar.segment == 0 { return 0.0}
-        if settingsVar.segment == 1{
+        if settingsVar.tube.segment == 0 { return 0.0}
+        if settingsVar.tube.segment == 1{
             let l = HalfLine(p: p1, r: p2)
             return Line.calcLengthOfLine(p1: l.half, p2: getTubeCenterPoint())
         }
         else {
-            if Int(settingsVar.segment) % 2 == 0{
+            if Int(settingsVar.tube.segment) % 2 == 0{
                 let index:Int = Int(points.count/2)
                 let p1 = points[index]
                 return Line.calcLengthOfLine(p1: p1, p2: getTubeCenterPoint())
@@ -706,8 +704,8 @@ class TubeViewModel: ObservableObject{
     }
     
     func getDefaultBbox(){
-        let b_r_x = tubeBase.b.x + settingsVar.dimension/2.0
-        let t_l_y = tubeBase.b.y - settingsVar.dimension/2.0
+        let b_r_x = tubeBase.b.x + settingsVar.tube.dimension/2.0
+        let t_l_y = tubeBase.b.y - settingsVar.tube.dimension/2.0
         let t_l_x = b_r_x * -1
         let b_r_y = t_l_y * -1
         muff.setMinMax(m_in:TPoint(x:t_l_x,y:t_l_y),m_ax:TPoint(x:b_r_x,y:b_r_y))
@@ -760,12 +758,12 @@ extension TubeViewModel{
             if i == 1{
                 let lastPoint = muff.points[i-1]
                 let p2 = HalfLine(p: p, r: lastPoint)
-                pointsList.append(p2.pointOnLine(n:settingsVar.radie)) // top of screen
+                pointsList.append(p2.pointOnLine(n:settingsVar.tube.radie)) // top of screen
             }
             else if i == maxCount{
                 let lastPoint = muff.points[i-1]
                 let p2 = HalfLine(p: lastPoint, r: p)
-                pointsList.append(p2.pointOnLine(n:settingsVar.radie)) // bottom of screen
+                pointsList.append(p2.pointOnLine(n:settingsVar.tube.radie)) // bottom of screen
             }
             pointsList.append(p)
         }
@@ -781,13 +779,13 @@ extension TubeViewModel{
         for (i,p) in muff.points.enumerated(){
             if i == 1{
                 let p2 = HalfLine(p: p, r: firstPoint)
-                let scaledFirst = p2.pointOnLine(n:settingsVar.radie)
+                let scaledFirst = p2.pointOnLine(n:settingsVar.tube.radie)
                 tubeBase.setScaledFirst(scaledFirst)
                 pointsList.append(scaledFirst) // top of screen
             }
             else if i == maxCount{
                 let p2 = HalfLine(p: lastPoint, r: p)
-                let scaledLast = p2.pointOnLine(n:settingsVar.radie)
+                let scaledLast = p2.pointOnLine(n:settingsVar.tube.radie)
                 tubeBase.setScaledLast(scaledLast)
                 pointsList.append(scaledLast) // bottom of screen
             }
@@ -800,39 +798,19 @@ extension TubeViewModel{
     
    
     func initViewFromTubeDefaultValues(_ model:TubeDefault){
-        settingsVar.dimension = CGFloat(model.dimension)
-        settingsVar.segment = CGFloat(model.segment)
-        settingsVar.steel = CGFloat(model.steel)
-        settingsVar.grader = CGFloat(model.grader)
-        settingsVar.radie = CGFloat(model.radie)
-        settingsVar.lena = CGFloat(model.lena)
-        settingsVar.lenb = CGFloat(model.lenb)
-        settingsVar.overlap = CGFloat(model.overlap)
+        settingsVar.tube = model
     }
     
     func initViewFromModelValues(_ model:TubeModel){
-        settingsVar.dimension = CGFloat(model.dimension)
-        settingsVar.segment = CGFloat(model.segment)
-        settingsVar.steel = CGFloat(model.steel)
-        settingsVar.grader = CGFloat(model.grader)
-        settingsVar.radie = CGFloat(model.radie)
-        settingsVar.lena = CGFloat(model.lena)
-        settingsVar.lenb = CGFloat(model.lenb)
-        settingsVar.center = CGFloat(model.center)
-    }
-    
-    func initViewFromStashedValues(){
-        if let model = settingsVar.stashedValues{
-            settingsVar.dimension = model.dimension
-            settingsVar.segment = model.segment
-            settingsVar.steel = model.steel
-            settingsVar.grader = model.grader
-            settingsVar.radie = model.radie
-            settingsVar.lena = model.lena
-            settingsVar.lenb = model.lenb
-            settingsVar.center = model.center
-        }
-        
+        settingsVar.tube.dimension = CGFloat(model.dimension)
+        settingsVar.tube.segment = CGFloat(model.segment)
+        settingsVar.tube.steel = CGFloat(model.steel)
+        settingsVar.tube.grader = CGFloat(model.grader)
+        settingsVar.tube.radie = CGFloat(model.radie)
+        settingsVar.tube.lena = CGFloat(model.lena)
+        settingsVar.tube.lenb = CGFloat(model.lenb)
+        settingsVar.tube.center = CGFloat(model.center)
+        settingsVar.tube.alreadyCalculated = model.alreadyCalculated
     }
     
     func initViewFromSharedValues(_ model:SharedTube) -> Bool{
@@ -843,44 +821,55 @@ extension TubeViewModel{
            let radie = model.radie,
            let lena = model.lena,
            let lenb = model.lenb,
-           let center = model.center{
-            settingsVar.dimension = dimension
-            settingsVar.segment = segment
-            settingsVar.steel = steel
-            settingsVar.grader = grader
-            settingsVar.radie = radie
-            settingsVar.lena = lena
-            settingsVar.lenb = lenb
-            settingsVar.center = center
+           let center = model.center,
+           let alreadyCalculated = model.alreadyCalculated{
+            settingsVar.tube.dimension = dimension
+            settingsVar.tube.segment = segment
+            settingsVar.tube.steel = steel
+            settingsVar.tube.grader = grader
+            settingsVar.tube.radie = radie
+            settingsVar.tube.lena = lena
+            settingsVar.tube.lenb = lenb
+            settingsVar.tube.center = center
+            settingsVar.tube.alreadyCalculated = alreadyCalculated
             return true
         }
         return false
     }
     
+    func initFromCache(){
+        if let _ = settingsVar.stashedTube{
+            settingsVar.drop()
+            rebuild()
+        }
+    }
+    
     func buildModelFromCurrentValues(_ model:TubeModel){
         model.id = UUID().uuidString
-        model.dimension = Float(settingsVar.dimension)
-        model.segment = Float(settingsVar.segment)
-        model.steel = Float(settingsVar.steel)
-        model.grader = Float(settingsVar.grader)
-        model.radie = Float(settingsVar.radie)
-        model.lena = Float(settingsVar.lena)
-        model.lenb = Float(settingsVar.lenb)
-        model.center = Float(settingsVar.center)
+        model.dimension = Float(settingsVar.tube.dimension)
+        model.segment = Float(settingsVar.tube.segment)
+        model.steel = Float(settingsVar.tube.steel)
+        model.grader = Float(settingsVar.tube.grader)
+        model.radie = Float(settingsVar.tube.radie)
+        model.lena = Float(settingsVar.tube.lena)
+        model.lenb = Float(settingsVar.tube.lenb)
+        model.center = Float(settingsVar.tube.center)
+        model.alreadyCalculated = settingsVar.tube.alreadyCalculated
         model.date = Date()
         
     }
     
     func buildSharedTubeFromCurrentValues() -> SharedTube{
         return SharedTube(
-            dimension: settingsVar.dimension,
-            segment: settingsVar.segment,
-            steel: settingsVar.steel,
-            grader: settingsVar.grader,
-            radie: settingsVar.radie,
-            lena: settingsVar.lena,
-            lenb: settingsVar.lenb,
-            center: settingsVar.center)
+            dimension: settingsVar.tube.dimension,
+            segment: settingsVar.tube.segment,
+            steel: settingsVar.tube.steel,
+            grader: settingsVar.tube.grader,
+            radie: settingsVar.tube.radie,
+            lena: settingsVar.tube.lena,
+            lenb: settingsVar.tube.lenb,
+            center: settingsVar.tube.center,
+            alreadyCalculated: settingsVar.tube.alreadyCalculated)
     }
     
     func collectModelRenderState() -> UInt16{
@@ -926,11 +915,14 @@ extension TubeViewModel{
         userDefaultSettingsVar.showPreferredSettings()
     }
     
-    func loadTubeDefaultValues(){
+    func loadTubeDefaultValues(compareTubesMode:Bool = false){
         guard let userId = FirebaseAuth.userId,
               let userSettings = SharedPreference.loadUserSettingsFromStorage(userId)
         else{ return }
         initViewFromTubeDefaultValues(userSettings.tubeDefault)
+        if compareTubesMode{
+            settingsVar.setTubeDefault(userSettings.tubeDefault)
+        }
     }
     
     func setUserdefaultDrawOption(with value:Bool,op:DrawOption){

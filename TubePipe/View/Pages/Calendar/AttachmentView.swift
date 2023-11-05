@@ -80,7 +80,8 @@ struct AttachmentView:View{
     
     var topMenu:  some View{
         VStack{
-            BackButton(title: userName).hLeading()
+            //BackButton(title: userName).hLeading()
+            Button("back", action: closeView)
             Divider().overlay{ Color.white}.hLeading()
         }
         .frame(height:MENU_HEIGHT)
@@ -108,6 +109,7 @@ struct AttachmentView:View{
         AppBackgroundStack(content: {
             mainPage
         })
+        .onDisappear{ image = nil }
         .toastView(toast: $toast)
         .confirmationDialog("Attention!",
                             isPresented: $showConfirmationDialog,
@@ -132,14 +134,10 @@ struct AttachmentView:View{
     func loadImageFromStorage(){
         if let storageId = message.storageId,
            let groupid = message.groupId{
-            firestoreViewModel.downloadImageFromStorage(groupId: groupid, storageId: storageId){ (error,uiImage) in
+             firestoreViewModel.downloadImageFromStorage(groupId: groupid, storageId: storageId){ (error,uiImage) in
                  if let uiImage = uiImage{
-                    self.image = Image(uiImage: uiImage)
+                     self.image = Image(uiImage: uiImage)
                 }
-                else{
-                    debugLog(object: error?.localizedDescription ?? "")
-                }
-                
             }
         }
     }
@@ -149,6 +147,10 @@ struct AttachmentView:View{
             if tubeViewModel.initViewFromSharedValues(sharedTube){
                 tubeViewModel.rebuild()
                 navigationViewModel.navTo(.HOME)
+                closeView()
+            }
+            else{
+                toast = Toast(style: .error, message: "Failed to load tube!")
             }
         }
     }
@@ -168,6 +170,7 @@ struct AttachmentView:View{
     }
     
     func closeView(){
+        navigationViewModel.clearPath()
         dismiss()
     }
     

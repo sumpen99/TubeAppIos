@@ -19,7 +19,6 @@ final class PersistenceController {
             if let error = error {
                 fatalError("Unable to load persistent store \(error)")
             }
-            
         }
         return container
     }()

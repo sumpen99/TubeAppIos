@@ -7,17 +7,6 @@
 
 import SwiftUI
 
-
-enum ActiveDocumentActionSheet: Identifiable {
-    case SHARE_DOCUMENT
-    case SAVE_DOCUMENT
-    case PRINT_DOCUMENT
-    
-    var id: Int {
-        hashValue
-    }
-}
-
 enum ActiveImagePickerActionSheet: Identifiable {
     case ORIGINAL_PICKER
     case MULTIPLE_PICKER
@@ -65,45 +54,8 @@ struct DocumentContent:Codable{
 struct TubeDocumentView: View{
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var tubeViewModel: TubeViewModel
-    @EnvironmentObject var firebaseAuth: FirebaseAuth
-    @State var activeDocumentAction:ActiveDocumentActionSheet?
     let segTypes:[SegType] = [.LENA,.LENB,.SEG1,.SEG2]
     let SEGMENT_HEIGHT:CGFloat = 50.0
-    
-    var saveButton:some View{
-        Button(action: { activeDocumentAction = .SAVE_DOCUMENT }){
-            HStack{
-                Image(systemName: "arrow.down.doc")
-                Text("Save")
-            }
-        }
-        .buttonStyle(.borderedProminent)
-        .trailingHeadline()
-    }
-    
-    var shareButton:some View{
-        Button(action: { activeDocumentAction = .SHARE_DOCUMENT }){
-            HStack{
-                Image(systemName: "arrowshape.turn.up.right")
-                Text("Share")
-            }
-        }
-        .buttonStyle(.borderedProminent)
-        .trailingHeadline()
-    }
-    
-    @ViewBuilder
-    var memberButtons:some View{
-        if firebaseAuth.loggedInAs != .ANONYMOUS_USER{
-            HStack{
-                saveButton
-                shareButton
-            }
-            .hCenter()
-            .padding(.bottom)
-        }
-        
-    }
   
     var document:some View{
         List{
@@ -118,26 +70,13 @@ struct TubeDocumentView: View{
         .scrollContentBackground(.hidden)
     }
     
-    var documentPage:some View{
-        VStack(spacing:0){
-            TopMenu(title: "Document", actionCloseButton: closeView)
-            memberButtons
-            document
-        }
-    }
-    
     //MARK: - MAIN BODY
     var body: some View{
-        documentPage
-        .modifier(HalfSheetModifier())
-        .sheet(item: $activeDocumentAction){ item in
-            switch item{
-            case .SHARE_DOCUMENT: ShareDocumentView()
-            case .SAVE_DOCUMENT: SaveDocumentView()
-            default:EmptyView()
-            }
-            
+        VStack(spacing:0){
+            TopMenu(title: "Document", actionCloseButton: closeView)
+            document
         }
+        .modifier(HalfSheetModifier())
     }
     
     //MARK: - BUTTON FUNCTIONS
@@ -145,13 +84,6 @@ struct TubeDocumentView: View{
         dismiss()
     }
     
-    func saveDocument(){
-        activeDocumentAction = .SAVE_DOCUMENT
-    }
-    
-    func shareDocument(){
-        activeDocumentAction = .SHARE_DOCUMENT
-    }
 }
 
 
@@ -218,12 +150,12 @@ extension TubeDocumentView{
             VStack(spacing:10){
                 SubHeaderSubHeaderView(subMain: Text("Total length:"),
                                        subSecond: Text("\(tubeViewModel.muffDetails.sum_len,specifier: "%.0f") mm"))
-                SubHeaderSubHeaderView(subMain: Text("Degrees:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.grader))°"))
-                SubHeaderSubHeaderView(subMain: Text("Dimension:"), subSecond: Text("ø\(Int(tubeViewModel.settingsVar.dimension))"))
-                SubHeaderSubHeaderView(subMain: Text("Steel:"), subSecond: Text("ø\(Int(tubeViewModel.settingsVar.steel))"))
-                SubHeaderSubHeaderView(subMain: Text("Radius:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.radie)) mm"))
-                SubHeaderSubHeaderView(subMain: Text("LenA:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.lena)) mm"))
-                SubHeaderSubHeaderView(subMain: Text("LenB:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.lenb)) mm"))
+                SubHeaderSubHeaderView(subMain: Text("Degrees:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.tube.grader))°"))
+                SubHeaderSubHeaderView(subMain: Text("Dimension:"), subSecond: Text("ø\(Int(tubeViewModel.settingsVar.tube.dimension))"))
+                SubHeaderSubHeaderView(subMain: Text("Steel:"), subSecond: Text("ø\(Int(tubeViewModel.settingsVar.tube.steel))"))
+                SubHeaderSubHeaderView(subMain: Text("Radius:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.tube.radie)) mm"))
+                SubHeaderSubHeaderView(subMain: Text("LenA:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.tube.lena)) mm"))
+                SubHeaderSubHeaderView(subMain: Text("LenB:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.tube.lenb)) mm"))
              }
             
         } header:{

@@ -33,6 +33,7 @@ struct ModelView: View{
             renderNewScene()
         }
         .onAppear {
+            tubeViewModel.initFromCache()
             renderNewScene()
         }
     }
@@ -43,8 +44,8 @@ struct ModelView: View{
             tubeSceneViewModel.setRenderState(tubeViewModel.collectModelRenderState())
             tubeSceneViewModel.buildModelFromTubePoints(tubeViewModel.pointsWithAddedCircle(
                 renderSizePart: tubeSceneViewModel.renderSizePart),
-                                                        dimension: tubeViewModel.settingsVar.dimension)
-            tubeSceneViewModel.buildSteelFromTubePoints(tubeViewModel.steelPotentiallyScaled(renderSizePart: tubeSceneViewModel.renderSizePart),dimension: tubeViewModel.settingsVar.steel)
+                                                        dimension: tubeViewModel.settingsVar.tube.dimension)
+            tubeSceneViewModel.buildSteelFromTubePoints(tubeViewModel.steelPotentiallyScaled(renderSizePart: tubeSceneViewModel.renderSizePart),dimension: tubeViewModel.settingsVar.tube.steel)
              
             tubeSceneViewModel.addWorldAxis()
             tubeSceneViewModel.rotateParentNode()
@@ -65,13 +66,27 @@ struct ModelView: View{
     }
     
     var body:some View{
-        NavigationView{
+        NavigationStack{
             AppBackgroundStack(content: {
                 modelPage
             })
             .environmentObject(tubeSceneViewModel)
             .modifier(NavigationViewModifier(title: ""))
-            .sheet(item: $activeModelSheet){ item in
+            .onChange(of: activeModelSheet){ item in
+                if let item{
+                    activeModelSheet = nil
+                    switch item{
+                    case ActiveModelSheet.OPEN_MODEL_SETTINGS:
+                        SheetPresentView(style: .detents([.medium()])){
+                            ModelSettingsView(renderNewState: $renderNewState)
+                            .environmentObject(tubeViewModel)
+                            .presentationDragIndicator(.visible)
+                        }
+                        .makeUIView()
+                   }
+                }
+            }
+            /*.sheet(item: $activeModelSheet){ item in
                 switch item{
                 case ActiveModelSheet.OPEN_MODEL_SETTINGS:
                     ModelSettingsView(renderNewState: $renderNewState)
@@ -79,7 +94,7 @@ struct ModelView: View{
                     .presentationDetents([.medium])
                 }
                 
-            }
+            }*/
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { activeModelSheet = .OPEN_MODEL_SETTINGS }) {
@@ -101,7 +116,7 @@ struct ModelView: View{
                     }
                 }
             }
-         }
+          }
    }
     
 }

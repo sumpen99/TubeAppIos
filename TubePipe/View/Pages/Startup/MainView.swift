@@ -43,7 +43,7 @@ struct MainView: View{
         VStack{
             SplitLineProgressView(isLoading: $globalDialogPresentation.isLoading)
             LazyVGrid(columns: layoutAnonymous, pinnedViews: [.sectionHeaders]){
-                menuItem(tabItem: MainTabItem.HOME, img: "house.fill", label: "Home")
+                menuItem(tabItem: MainTabItem.HOME_ANONYMOUS, img: "house.fill", label: "Home")
                 menuItem(tabItem: MainTabItem.MODEL, img: "rotate.3d", label: "Model")
                 menuItem(tabItem: MainTabItem.PROFILE_ANONYMOUS, img: "person.fill", label: "Profile")
             }
@@ -75,6 +75,7 @@ struct MainView: View{
             case .CALENDAR:             CustomCalendarView()
             case .PROFILE:              ProfileView()
             case .PROFILE_ANONYMOUS:    AnonymousProfileView()
+            case .HOME_ANONYMOUS:       AnonymousHomeView()
             }
         }
         .safeAreaInset(edge: .bottom){ bottomMenu }

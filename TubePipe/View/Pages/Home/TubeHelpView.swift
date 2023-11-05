@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TubeHelpView: View{
+    @Environment(\.dismiss) private var dismiss
     @GestureState private var pinchMagnification: CGFloat = 1.0
     @GestureState private var twistAngle: Angle = Angle.zero
     @GestureState private var fingerLocation: CGPoint? = nil
@@ -58,10 +59,11 @@ struct TubeHelpView: View{
     }
     
     var body:some View{
-        AppBackgroundStack(content: {
+        VStack(spacing:0){
+            TopMenu(title: "Information", actionCloseButton: closeView)
             helpBody
-        })
-        .hiddenBackButtonWithCustomTitle("Home")
+        }
+        .modifier(HalfSheetModifier())
     }
     
     var helpBody: some View{
@@ -75,21 +77,26 @@ struct TubeHelpView: View{
                         .rotationEffect(currentRotation + twistAngle)
                         .simultaneousGesture(rotationGesture.simultaneously(with: magnificationGesture))
                 } header: {
-                    Text("Measurement").listSectionHeader()
+                    Text("Measurement")
                 } footer: {
                     Text("")
                 }
                 Section {
-                    HeaderSubHeaderView(header: "Unit", subHeader: "Millimeter")
-                    HeaderSubHeaderView(header: "Radius", subHeader: "Measure radius from middle of steel")
+                    HeaderSubHeaderView(header: "Unit", subHeader: "Millimeter").foregroundColor(Color.darkGray)
+                    HeaderSubHeaderView(header: "Radius", subHeader: "Measure from center of tube").foregroundColor(Color.darkGray)
                 } header: {
-                    Text("Information").listSectionHeader()
+                    Text("Information")
                 } footer: {
                     Text("")
                 }
            }
            .scrollContentBackground(.hidden)
         }
+    }
+    
+    //MARK: - BUTTON FUNCTIONS
+    func closeView(){
+        dismiss()
     }
     
 }

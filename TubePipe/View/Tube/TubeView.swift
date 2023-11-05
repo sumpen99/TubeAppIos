@@ -90,15 +90,15 @@ struct TubeView: View{
             path.addLine(to: CGPoint(x: tubeViewModel.tubeBase.p1.x - ox, y:tubeViewModel.tubeBase.p1.y - oy))
             // TUBE
             path.addArc(center: CGPoint(x:-ox,y:-oy),
-                        radius: tubeViewModel.settingsVar.radie,
+                        radius: tubeViewModel.settingsVar.tube.radie,
                         startAngle: Angle(degrees:0),
-                        endAngle: Angle(degrees:tubeViewModel.settingsVar.grader),
+                        endAngle: Angle(degrees:tubeViewModel.settingsVar.tube.grader),
                         clockwise: false)
             // LEN B UPPER
             path.move(to: CGPoint(x:tubeViewModel.tubeBase.p2.x - ox,y: tubeViewModel.tubeBase.p2.y - oy))
             path.addLine(to: CGPoint(x:tubeViewModel.tubeBase.pp3.x - ox, y: tubeViewModel.tubeBase.pp3.y - oy))
         }
-        .tubeStroke(steel: tubeViewModel.settingsVar.steel)
+        .tubeStroke(steel: tubeViewModel.settingsVar.tube.steel)
     }
     
     // MARK: - TUBE BASE DIAGONAL LINE TO CENTER
@@ -128,7 +128,7 @@ struct TubeView: View{
             let ox = tubeViewModel.muff.pMin.x
             let oy = tubeViewModel.muff.pMin.y
             path.addArc(center: CGPoint(x:-ox,y:-oy),
-                        radius: tubeViewModel.settingsVar.radie,
+                        radius: tubeViewModel.settingsVar.tube.radie,
                         startAngle: Angle(degrees:0),
                         endAngle: Angle(degrees:360),
                         clockwise: true)
@@ -364,6 +364,7 @@ struct TubeView: View{
                 hitTest
                 tubeBase
                 muff
+                getDrawOption(index:DrawOption.indexOf(op: .CUTLINES))
             }
             .scaleEffect(calculateScale(size: reader.size))
             .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))

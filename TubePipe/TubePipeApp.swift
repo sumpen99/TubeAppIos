@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
-
-//[API] Failed to get renderer info
-//warning: could not execute support code to read Objective-C class data in the process. This may reduce the quality of type information available.
-//
-
+/*
+ 
+ TODO:  CHANGE BACKNAVIGATION, USE NAVMODEL AND POP VIEWS FROM PATH. SEEMS LIKE THAT SOLVES MEMORY LEAKS
+ 
+ 
+ */
 @main
 struct TubePipeApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate

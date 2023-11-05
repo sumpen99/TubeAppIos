@@ -21,7 +21,7 @@ struct ShareDocumentView:View{
     @State var docContent:DocumentContent = DocumentContent()
     @State var sclVar: SortedContactListVar = SortedContactListVar()
     @State private var toast: Toast? = nil
-    
+  
     var buttonIsDisabled:Bool{
         sclVar.currentContact == nil
     }
@@ -46,7 +46,7 @@ struct ShareDocumentView:View{
         SortedContactsList(currentContact:$sclVar.currentContact,
                            showingOptions: $sclVar.showingOptions,
                            contactCardOption: .CONTACT_CARD_TAP_ON_CARD,
-                           contactSectionOption: .WITHOUT_SECTION,
+                           contactSectionOption: .SHARE_DOCUMENT_VIEW_SECTION,
                            contactAvatarColor: .black,
                            contactInfoColor: .black)
         .frame(maxWidth: .infinity,
@@ -130,9 +130,7 @@ struct ShareDocumentView:View{
         }
         .toastView(toast: $toast)
         .onChange(of: sclVar.showingOptions){ value in
-           withAnimation{
-               sclVar.isSuggestionShowing.toggle()
-            }
+           withAnimation{ sclVar.isSuggestionShowing.toggle() }
             
         }
         .halfSheetBackgroundStyle()

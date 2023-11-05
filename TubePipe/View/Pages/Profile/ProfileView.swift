@@ -22,6 +22,20 @@ enum ActiveProfileSheet: Identifiable {
     }
 }
 
+enum ProfileRoute: Identifiable{
+    case ROUTE_ISSUE
+    case ROUTE_INFO
+    case ROUTE_FEATURE
+    case ROUTE_CONTACTS
+    case ROUTE_MESSAGES
+    case ROUTE_SETTINGS_TUBE
+    
+    var id: Int {
+        hashValue
+    }
+    
+}
+
 enum ProfileAlertAction: Identifiable{
     case ALERT_LOGOUT
     case ALERT_MISSING_DISPLAYNAME
@@ -76,6 +90,7 @@ struct ProfileView: View{
     @Namespace var animation
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
+    @EnvironmentObject var navigationViewModel: NavigationViewModel
     @EnvironmentObject var globalLoadingPresentation: GlobalLoadingPresentation
     @EnvironmentObject var firebaseAuth: FirebaseAuth
     @FocusState var focusField: Field?
@@ -241,14 +256,27 @@ struct ProfileView: View{
     }
     
     var body: some View{
-        NavigationView{
+        NavigationStack(path:$navigationViewModel.pathTo){
             AppBackgroundStack(content: {
                 personalPage
             })
+            .navigationDestination(for: Contact.self){  contact in
+                ContactMessagesView(contact: contact,backButtonLabel: "Messages")
+            }
+            .navigationDestination(for: ProfileRoute.self){  route in
+                switch route{
+                case .ROUTE_SETTINGS_TUBE:  UserSettingsView()
+                case .ROUTE_MESSAGES:       InboxContactMessages()
+                case .ROUTE_CONTACTS:       ContactView()
+                case .ROUTE_FEATURE:        FeatureView()
+                case .ROUTE_ISSUE:          IssueView()
+                default:                    EmptyView()
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { replaceDisplayName();endTextEditing(); }) {
-                        Text("Clear")
+                        Text("Done")
                     }
                     .opacity(userNameHasChanged ? 1.0 : 0.0)
                     .disabled(!userNameHasChanged)
@@ -289,49 +317,68 @@ struct ProfileView: View{
     
     //MARK: NAVIGATIONBUTTONS
     var contactButton: some View{
-        NavigationLink(destination:LazyDestination(destination: {
+        /*NavigationLink(destination:LazyDestination(destination: {
             ContactView()
          })){
             Label("Contacts",systemImage: "person.2").foregroundColor(.black)
         }
         .fullListWidthSeperator()
+        .disabled(!userHasAllowedSharing)*/
+        Button(action: { navigationViewModel.switchRouteTo(ProfileRoute.ROUTE_CONTACTS)}, label: {
+            buttonAsNavigationLink(title: "Default Tube", systemImage: "smallcircle.circle")
+        })
+        .fullListWidthSeperator()
         .disabled(!userHasAllowedSharing)
     }
     
     var navigateToUserSettings:some View{
-        NavigationLink(destination:LazyDestination(destination: {
+        /*NavigationLink(destination:LazyDestination(destination: {
             UserSettingsView()
         })){
             Label("Default Tube", systemImage: "smallcircle.circle").foregroundColor(.black)
-        }
+        }*/
+        Button(action: { navigationViewModel.switchRouteTo(ProfileRoute.ROUTE_SETTINGS_TUBE)}, label: {
+            buttonAsNavigationLink(title: "Default Tube", systemImage: "smallcircle.circle")
+        })
     }
     
     var navigateToMessages:some View{
-        NavigationLink(destination:LazyDestination(destination: {
+        /*NavigationLink(destination:LazyDestination(destination: {
             InboxContactMessages()
         })){
             Label("Messages", systemImage: "tray").foregroundColor(.black)
         }
+        .disabled(!userHasAllowedSharing)*/
+        Button(action: { navigationViewModel.switchRouteTo(ProfileRoute.ROUTE_MESSAGES)}, label: {
+            buttonAsNavigationLink(title: "Messages", systemImage: "tray")
+        })
         .disabled(!userHasAllowedSharing)
     }
     
     var navigateToFileBug:some View{
-        NavigationLink(destination:LazyDestination(destination: {
+        /*NavigationLink(destination:LazyDestination(destination: {
             IssueView()
         })){
             Label("Report an issue",systemImage: "exclamationmark.triangle").foregroundColor(.black)
         }
+        .fullListWidthSeperator()*/
+        Button(action: { navigationViewModel.switchRouteTo(ProfileRoute.ROUTE_ISSUE)}, label: {
+            buttonAsNavigationLink(title: "Report an issue", systemImage: "exclamationmark.triangle")
+        })
         .fullListWidthSeperator()
     }
     
-    //lifepreserver
     var navigateToHelpCenter:some View{
-        NavigationLink(destination:LazyDestination(destination: {
+        /*NavigationLink(destination:LazyDestination(destination: {
             FeatureView()
         })){
             Label("Request a new feature",systemImage: "lightbulb").foregroundColor(.black)
             .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemRed))
         }
+        .fullListWidthSeperator()*/
+        Button(action: { navigationViewModel.switchRouteTo(ProfileRoute.ROUTE_FEATURE)}, label: {
+            buttonAsNavigationLink(title: "Request a new feature", systemImage: "lightbulb")
+        })
         .fullListWidthSeperator()
     }
     

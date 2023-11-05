@@ -14,13 +14,14 @@ enum ContactCardOption{
 }
 
 enum ContactSectionOption{
-    case WITH_SECTION
-    case WITHOUT_SECTION
-    case WITHOUT_SECTION_MESSAGES_ONLY
+    case CONTACT_VIEW_SECTION
+    case SHARE_DOCUMENT_VIEW_SECTION
+    case INBOX_CONTACT_MESSAGES_VIEW_SECTION
 }
 
 struct SortedContactsList: View{
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
+    @EnvironmentObject var navigationViewModel: NavigationViewModel
     @Binding var currentContact:Contact?
     @Binding var showingOptions:Bool
     let contactCardOption:ContactCardOption
@@ -28,7 +29,7 @@ struct SortedContactsList: View{
     let contactAvatarColor:Color
     let contactInfoColor:Color
     var navigateToContact:((Contact) -> Void)?
-    
+   
     var personAvatar: some View{
         Image(systemName: "person.circle.fill")
             .resizable()
@@ -110,57 +111,18 @@ struct SortedContactsList: View{
     
     var body:some View{
         switch contactSectionOption {
-        case .WITH_SECTION:                 withContactSection
-        case .WITHOUT_SECTION:              withOutContactSection
-        case .WITHOUT_SECTION_MESSAGES_ONLY: withOutContactSectionMessagesOnly
+        case .CONTACT_VIEW_SECTION:                     contactViewSection
+        case .SHARE_DOCUMENT_VIEW_SECTION:              shareDocumentViewSection
+        case .INBOX_CONTACT_MESSAGES_VIEW_SECTION:      inboxContactMessagesViewSection
         }
-        
     }
-}
 
-//MARK: SHARE DOCUMENT
-extension SortedContactsList{
-    
-    var withOutContactSection: some View{
-        ScrollView{
-            LazyVStack{
-                ForEach(firestoreViewModel.confirmedContacts.keys.sorted(by: <),id:\.self){ initial in
-                    contactNoSection(initial)
-                }
-            }
-        }
-    }
-    
-    func contactNoSection(_ initial:String) -> some View{
-        ForEach(firestoreViewModel.confirmedContacts[initial] ?? [],id:\.self){ contact in
-            contactDescription(contact)
-        }
-    }
-    
-    func contactCardTapOnCard(_ contact:Contact) -> some View{
-        VStack{
-            HStack{
-                let initial = contact.initial
-                contactAvatar(c: initial)
-                contactRow(contact: contact)
-                .vCenter()
-            }
-            .padding()
-            .hLeading()
-            .contentShape(Rectangle())
-            .onTapGesture {
-                currentContact = contact
-                showingOptions.toggle()
-            }
-            Divider()
-        }
-    }
 }
 
 //MARK: CONTACT VIEW
 extension SortedContactsList{
     
-    var withContactSection: some View{
+    var contactViewSection: some View{
         ScrollView{
             LazyVStack{
                 ForEach(firestoreViewModel.confirmedContacts.keys.sorted(by: <),id:\.self){ initial in
@@ -202,10 +164,51 @@ extension SortedContactsList{
     
 }
 
+//MARK: SHARE DOCUMENT
+extension SortedContactsList{
+    
+    var shareDocumentViewSection: some View{
+        ScrollView{
+            LazyVStack{
+                ForEach(firestoreViewModel.confirmedContacts.keys.sorted(by: <),id:\.self){ initial in
+                    contactNoSection(initial)
+                }
+            }
+        }
+    }
+    
+    func contactNoSection(_ initial:String) -> some View{
+        ForEach(firestoreViewModel.confirmedContacts[initial] ?? [],id:\.self){ contact in
+            contactDescription(contact)
+        }
+    }
+    
+    func contactCardTapOnCard(_ contact:Contact) -> some View{
+        VStack{
+            HStack{
+                let initial = contact.initial
+                contactAvatar(c: initial)
+                contactRow(contact: contact)
+                .vCenter()
+            }
+            .padding()
+            .hLeading()
+            .contentShape(Rectangle())
+            .onTapGesture {
+                currentContact = contact
+                showingOptions.toggle()
+            }
+            Divider()
+        }
+    }
+}
+
+
+
 //MARK: INBOX CONTACT MESSAGES
 extension SortedContactsList{
     
-    var withOutContactSectionMessagesOnly: some View{
+    var inboxContactMessagesViewSection: some View{
         ScrollView{
             LazyVStack{
                 ForEach(firestoreViewModel.confirmedContacts.keys.sorted(by: <),id:\.self){ initial in
@@ -215,7 +218,7 @@ extension SortedContactsList{
         }
     }
     
-    func contactNoSectionMessagesOnly(_ initial:String) -> some View{
+    func contactNoSectionMessagesOnly(_ initial:String) -> some View{ 
         ForEach(firestoreViewModel.confirmedContacts[initial] ?? [],id:\.self){ contact in
             if firestoreViewModel.contactInMessageGroup(contact.groupId){
                 contactDescription(contact)
@@ -224,7 +227,20 @@ extension SortedContactsList{
     }
     
     func contactCardMessagesOnly(_ contact:Contact) -> some View{
-        NavigationLink(destination:LazyDestination(destination: {
+        Button(action: {
+            navigationViewModel.appendToPathWith(contact:contact)
+             //currentContact = contact
+        }, label: {
+            HStack{
+                personAvatar
+                contactRowMessage(contact: contact)
+                navigationChevron(contact: contact)
+            }
+            .padding()
+            .hLeading()
+        })
+        .buttonStyle(ButtonStyleNavigationLink())
+         /*NavigationLink(destination:LazyDestination(destination: {
             ContactMessagesView(contact: contact,backButtonLabel: "Messages") })) {
                 HStack{
                     personAvatar
@@ -234,7 +250,7 @@ extension SortedContactsList{
                 .padding()
                 .hLeading()
         }
-        .buttonStyle(ButtonStyleNavigationLink())
+        .buttonStyle(ButtonStyleNavigationLink())*/
     }
     
 }

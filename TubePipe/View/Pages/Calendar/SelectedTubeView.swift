@@ -17,7 +17,7 @@ struct SelectedTubeView: View{
     
     
     var loadButton:some View{
-        Button(action: { loadViewModelWithTubeModel(tubeModel) }){
+        Button(action: { loadViewModelWithTubeModel(tubeModel);closeView() }){
             Text("Load")
         }
         .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemBlue))
@@ -38,9 +38,7 @@ struct SelectedTubeView: View{
                 deleteButton
             }},
             header: {Text("Action:").listSectionHeader()}) {
-            
         }
-        
     }
     
     var muffSummary: some View{
@@ -70,15 +68,6 @@ struct SelectedTubeView: View{
         }
     }
     
-    var topMenu:  some View{
-        VStack{
-            BackButton(title: labelBackButton).hLeading()
-            Divider().overlay{ Color.white}.hLeading()
-        }
-        .frame(height:MENU_HEIGHT)
-        .padding()
-   }
-    
     var data:some View{
         List{
             if let data = tubeModel.image?.data,
@@ -90,17 +79,15 @@ struct SelectedTubeView: View{
             buttons
         }
         .listStyle(.automatic)
+        .scrollContentBackground(.hidden)
     }
     
     var body:some View{
-         AppBackgroundStack(content: {
-             VStack(spacing:0){
-                 topMenu
-                 data
-             }
-            
-        })
-        .modifier(NavigationViewModifier(title: ""))
+        VStack(spacing:0){
+            TopMenu(title: tubeModel.date?.formattedString() ?? "Saved tube", actionCloseButton: closeView)
+            data
+        }
+        .halfSheetBackgroundStyle()
         .alert(isPresented: $isDeleteTube, content: {
             onAlertWithOkAction(actionPrimary: {
                 deleteTubeModel(tubeModel)

@@ -185,6 +185,7 @@ struct SharedTube:Codable{
     var lena:CGFloat?
     var lenb:CGFloat?
     var center:CGFloat?
+    var alreadyCalculated:Bool?
 }
 
 struct Contact:Codable,Identifiable,Hashable{

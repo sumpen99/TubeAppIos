@@ -315,3 +315,41 @@ extension AppDelegate: MessagingDelegate {
 
 }
 */
+
+/*.task(id: selectedItems) {
+    if let selectedItem = selectedItems.first{
+        selectedItem.loadTransferable(type: Data.self) { result in
+            switch result{
+                case .success(let data?):
+                debugLog(object: data)
+                    //imageData = data
+                default:break
+            }
+         //guard let uiImage = UIImage(data: data) else { return }
+         //resizeUiImage(uiImage)
+         //docContent.data = data
+         //image = Image(uiImage: uiImage)
+     }
+    }
+       
+}*/
+
+
+/*
+ VStack {
+             SheetPresenter("Present Sheet", style: .sheet) {
+                 SheetView()
+             }
+             SheetPresenter("Present Popover", style: .popover) {
+                 PopoverView()
+             }
+             SheetPresenter("Present Full Screen Cover", style: .fullScreenCover) {
+                 FullScreenCoverView()
+             }
+             SheetPresenter("Present Presentation Detents", style: .detents([.medium(), .large()])) {
+                 PresentationDetentsView()
+             }
+             Text("First")
+         }
+ 
+ */

@@ -6,6 +6,7 @@
         <relationship name="tube" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="TubeModel" inverseName="image" inverseEntity="TubeModel"/>
     </entity>
     <entity name="TubeModel" representedClassName="TubeModel" syncable="YES">
+        <attribute name="alreadyCalculated" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="center" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
         <attribute name="date" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="dimension" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
