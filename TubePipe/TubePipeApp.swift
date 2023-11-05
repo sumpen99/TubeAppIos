@@ -6,7 +6,12 @@
 //
 
 import SwiftUI
-
+/*
+ 
+ TODO:  CHANGE BACKNAVIGATION, USE NAVMODEL AND POP VIEWS FROM PATH. SEEMS LIKE THAT SOLVES MEMORY LEAKS
+ 
+ 
+ */
 @main
 struct TubePipeApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
