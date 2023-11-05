@@ -227,6 +227,16 @@ extension View{
         }
     }
     
+    
+    
+}
+
+func buttonAsNavigationLink(title:String,systemImage:String) -> some View{
+    return HStack{
+        Label(title, systemImage: systemImage).foregroundColor(.black).hLeading()
+        Spacer()
+        Image(systemName: "chevron.right").foregroundColor(.tertiaryLabel).font(.subheadline).bold()
+    }
 }
 
 func backButton(title:String = "Back",action:@escaping ()->Void) -> some View{

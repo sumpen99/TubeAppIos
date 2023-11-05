@@ -179,6 +179,7 @@ struct InboxSavedTubesView:View{
         })
         .onChange(of: iVar.tubeModel){ tube in
             if let tube = tube{
+                iVar.tubeModel = nil
                 SheetPresentView(style: .sheet){
                     SelectedTubeView(tubeModel: tube,
                                      labelBackButton: "List",

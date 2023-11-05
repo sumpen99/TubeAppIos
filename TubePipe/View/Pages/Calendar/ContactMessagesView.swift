@@ -130,6 +130,7 @@ struct ContactMessagesView:View{
         .onChange(of: cmVar.currentMessage){ message in
             // THIS FIXES ALOT OF LEAKS ON IOS_17
             if let message = message{
+                cmVar.currentMessage = nil
                 SheetPresentView(style: .sheet){
                     AttachmentView(message: message,userName:contact.displayName ?? "Back")
                     .presentationDragIndicator(.visible)

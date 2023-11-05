@@ -19,8 +19,3 @@ func debugLog(object: Any, functionName: String = #function, fileName: String = 
     print("<\(className)> \(functionName) [#\(lineNumber)]| \(object)\n")
   #endif
 }
-
-func printBody(_ msg:String = "") -> some View{
-    debugLog(object:msg)
-    return EmptyView()
-}

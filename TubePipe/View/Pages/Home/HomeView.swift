@@ -36,7 +36,7 @@ struct HomeView: View{
                     activeHomeSheet = nil
                     switch item{
                     case ActiveHomeSheet.OPEN_TUBE_SETTINGS:
-                        SheetPresentView(style: .detents([.medium(),.large()])){
+                        SheetPresentView(style: .detents([.medium()])){
                             TubeSettingsView()
                             .environmentObject(tubeViewModel)
                             .presentationDragIndicator(.visible)

@@ -27,7 +27,7 @@ final class PersistenceController {
     
     public func saveContext(backgroundContext:NSManagedObjectContext? = nil) throws{
         let context = backgroundContext ?? container.viewContext
-        guard context.hasChanges else { debugLog(object:"oooops");return }
+        guard context.hasChanges else { return }
         try context.save()
         
     }

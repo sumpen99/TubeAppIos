@@ -46,7 +46,7 @@ struct ShareDocumentView:View{
         SortedContactsList(currentContact:$sclVar.currentContact,
                            showingOptions: $sclVar.showingOptions,
                            contactCardOption: .CONTACT_CARD_TAP_ON_CARD,
-                           contactSectionOption: .WITHOUT_SECTION,
+                           contactSectionOption: .SHARE_DOCUMENT_VIEW_SECTION,
                            contactAvatarColor: .black,
                            contactInfoColor: .black)
         .frame(maxWidth: .infinity,

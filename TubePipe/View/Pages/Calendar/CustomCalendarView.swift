@@ -71,6 +71,7 @@ struct CustomCalendarView: View {
         }
         .onChange(of: selected.tubeModel){ tube in
             if let tube = tube{
+                selected.tubeModel = nil
                 SheetPresentView(style: .sheet){
                     SelectedTubeView(tubeModel: tube,
                                      labelBackButton: "Calendar",

@@ -80,7 +80,8 @@ struct AttachmentView:View{
     
     var topMenu:  some View{
         VStack{
-            BackButton(title: userName).hLeading()
+            //BackButton(title: userName).hLeading()
+            Button("back", action: closeView)
             Divider().overlay{ Color.white}.hLeading()
         }
         .frame(height:MENU_HEIGHT)
@@ -148,6 +149,9 @@ struct AttachmentView:View{
                 navigationViewModel.navTo(.HOME)
                 closeView()
             }
+            else{
+                toast = Toast(style: .error, message: "Failed to load tube!")
+            }
         }
     }
     
@@ -166,6 +170,7 @@ struct AttachmentView:View{
     }
     
     func closeView(){
+        navigationViewModel.clearPath()
         dismiss()
     }
     

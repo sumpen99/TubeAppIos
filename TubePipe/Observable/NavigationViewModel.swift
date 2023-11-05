@@ -18,9 +18,7 @@ enum MainTabItem{
 
 class NavigationViewModel: ObservableObject{
     @Published var selectedTab:MainTabItem = .HOME
-    var delayNavigation:Bool = false
-    var executeBevoreNavigation:(() ->Void)? = nil
-    
+    @Published var pathTo:NavigationPath = NavigationPath()
     func navTo(_ tab:MainTabItem){
         if(isActive(tab)){NavigationUtil.popToRootView()}
         else{nav(tab)}
@@ -35,5 +33,28 @@ class NavigationViewModel: ObservableObject{
     func isActive(_ tab:MainTabItem) -> Bool{
         return selectedTab == tab
     }
+    
+    func switchRouteTo(_ route:ProfileRoute){
+        if pathTo.count > 0{
+            pathTo.removeLast(pathTo.count)
+        }
+        pathTo.append(route)
+    }
+    
+    func replaceRouteWith(_ contact:Contact){
+        if pathTo.count > 0{
+            pathTo.removeLast(pathTo.count)
+        }
+        pathTo.append(contact)
+    }
+    
+    func appendToPathWith(contact toShow:Contact){
+        pathTo.append(toShow)
+    }
+    
+    func clearPath(){
+        pathTo.removeLast(pathTo.count)
+    }
+    
     
 }
