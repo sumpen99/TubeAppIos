@@ -42,8 +42,8 @@ struct ContentView: View {
     }
     
     func releaseData(){
-        firestoreViewModel.releaseAllData()
-        firestoreViewModel.closeAllListeners()
+        firestoreViewModel.releaseData(FirestoreData.all())
+        firestoreViewModel.closeListeners(FirestoreListener.all())
     }
     
     func setUserDataIfNeededData(){

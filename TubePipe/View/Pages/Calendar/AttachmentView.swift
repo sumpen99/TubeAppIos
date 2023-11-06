@@ -80,8 +80,7 @@ struct AttachmentView:View{
     
     var topMenu:  some View{
         VStack{
-            //BackButton(title: userName).hLeading()
-            Button("back", action: closeView)
+            BackButton(title: userName).hLeading()
             Divider().overlay{ Color.white}.hLeading()
         }
         .frame(height:MENU_HEIGHT)
@@ -101,7 +100,7 @@ struct AttachmentView:View{
         VStack(spacing:0){
             topMenu
             messageData
-            .onAppear{ loadImageFromStorage() }
+            .task{ loadImageFromStorage() }
         }
     }
     
@@ -170,7 +169,6 @@ struct AttachmentView:View{
     }
     
     func closeView(){
-        navigationViewModel.clearPath()
         dismiss()
     }
     

@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MainView: View{
     @EnvironmentObject var firebaseAuth: FirebaseAuth
+    @EnvironmentObject var firestoreViewModel: FirestoreViewModel
     @StateObject var tubeViewModel = TubeViewModel()
     @StateObject var globalDialogPresentation = GlobalLoadingPresentation()
     @StateObject var coreDataViewModel = CoreDataViewModel()
@@ -77,6 +78,10 @@ struct MainView: View{
             case .PROFILE_ANONYMOUS:    AnonymousProfileView()
             case .HOME_ANONYMOUS:       AnonymousHomeView()
             }
+        }
+        .onChange(of: navigationViewModel.selectedTab){ tab in
+            //firestoreViewModel.closeListeners(FirestoreListener.messages())
+            //firestoreViewModel.releaseData(FirestoreData.messages())
         }
         .safeAreaInset(edge: .bottom){ bottomMenu }
         .globalLoadingDialog(presentationManager: globalDialogPresentation)

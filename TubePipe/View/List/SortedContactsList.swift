@@ -228,8 +228,7 @@ extension SortedContactsList{
     
     func contactCardMessagesOnly(_ contact:Contact) -> some View{
         Button(action: {
-            navigationViewModel.appendToPathWith(contact:contact)
-             //currentContact = contact
+            navigationViewModel.appendToPathWithContact(contact)
         }, label: {
             HStack{
                 personAvatar
@@ -240,18 +239,7 @@ extension SortedContactsList{
             .hLeading()
         })
         .buttonStyle(ButtonStyleNavigationLink())
-         /*NavigationLink(destination:LazyDestination(destination: {
-            ContactMessagesView(contact: contact,backButtonLabel: "Messages") })) {
-                HStack{
-                    personAvatar
-                    contactRowMessage(contact: contact)
-                    navigationChevron(contact: contact)
-                }
-                .padding()
-                .hLeading()
-        }
-        .buttonStyle(ButtonStyleNavigationLink())*/
-    }
+     }
     
 }
 

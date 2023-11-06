@@ -77,10 +77,10 @@ extension FirestoreViewModel{
     
     func listenForMessageGroups(){
          if let groupIds = groupIds{
-            let col = repo.messageGroupCollection.whereField("groupId", in: groupIds)
-            listenerMessageGroups = col.addSnapshotListener(){ [weak self] (snapshot, err) in
+            let col = repo.messageGroupCollection
+            listenerMessageGroups = col.whereField("groupId", in: groupIds).addSnapshotListener(){ [weak self] (snapshot, err) in
                 guard let documents = snapshot?.documents,
-                      let strongSelf = self else { return }
+                      let strongSelf = self else { debugLog(object:"no strong self group"); return }
                 for document in documents {
                     guard let group = try? document.data(as : MessageGroup.self),
                           let groupId = group.groupId
@@ -96,7 +96,7 @@ extension FirestoreViewModel{
             let col = repo.messageGroupThreadCollection(groupId)
             listenerMessages = col.order(by: "date",descending: false).addSnapshotListener{ [weak self] (snapshot, error) in
                 guard let documents = snapshot?.documents,
-                      let strongSelf = self else{ return }
+                      let strongSelf = self else{ debugLog(object:"no strong self"); return }
                 var newMessages:[Message] = []
                 for document in documents{
                     guard let message = try? document.data(as : Message.self)

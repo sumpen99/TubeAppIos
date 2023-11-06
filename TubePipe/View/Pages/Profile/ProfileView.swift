@@ -299,7 +299,7 @@ struct ProfileView: View{
             case .ALERT_MISSING_USERID: return actionSheetWithCancel(alert.rawValue)
             }
         }
-        .onAppear(){
+        .onAppear{
             pVar.updateUserVar(currentUser: firestoreViewModel.currentUser)
             tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ALLOW_SHARING)] = firestoreViewModel.isCurrentUserPublic
         }
@@ -317,66 +317,35 @@ struct ProfileView: View{
     
     //MARK: NAVIGATIONBUTTONS
     var contactButton: some View{
-        /*NavigationLink(destination:LazyDestination(destination: {
-            ContactView()
-         })){
-            Label("Contacts",systemImage: "person.2").foregroundColor(.black)
-        }
-        .fullListWidthSeperator()
-        .disabled(!userHasAllowedSharing)*/
-        Button(action: { navigationViewModel.switchRouteTo(ProfileRoute.ROUTE_CONTACTS)}, label: {
-            buttonAsNavigationLink(title: "Default Tube", systemImage: "smallcircle.circle")
+        Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_CONTACTS)}, label: {
+            buttonAsNavigationLink(title: "Contacts", systemImage: "smallcircle.circle")
         })
         .fullListWidthSeperator()
         .disabled(!userHasAllowedSharing)
     }
     
     var navigateToUserSettings:some View{
-        /*NavigationLink(destination:LazyDestination(destination: {
-            UserSettingsView()
-        })){
-            Label("Default Tube", systemImage: "smallcircle.circle").foregroundColor(.black)
-        }*/
-        Button(action: { navigationViewModel.switchRouteTo(ProfileRoute.ROUTE_SETTINGS_TUBE)}, label: {
+        Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_SETTINGS_TUBE)}, label: {
             buttonAsNavigationLink(title: "Default Tube", systemImage: "smallcircle.circle")
         })
     }
     
     var navigateToMessages:some View{
-        /*NavigationLink(destination:LazyDestination(destination: {
-            InboxContactMessages()
-        })){
-            Label("Messages", systemImage: "tray").foregroundColor(.black)
-        }
-        .disabled(!userHasAllowedSharing)*/
-        Button(action: { navigationViewModel.switchRouteTo(ProfileRoute.ROUTE_MESSAGES)}, label: {
+        Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_MESSAGES)},label: {
             buttonAsNavigationLink(title: "Messages", systemImage: "tray")
         })
         .disabled(!userHasAllowedSharing)
     }
     
     var navigateToFileBug:some View{
-        /*NavigationLink(destination:LazyDestination(destination: {
-            IssueView()
-        })){
-            Label("Report an issue",systemImage: "exclamationmark.triangle").foregroundColor(.black)
-        }
-        .fullListWidthSeperator()*/
-        Button(action: { navigationViewModel.switchRouteTo(ProfileRoute.ROUTE_ISSUE)}, label: {
+        Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_ISSUE)}, label: {
             buttonAsNavigationLink(title: "Report an issue", systemImage: "exclamationmark.triangle")
         })
         .fullListWidthSeperator()
     }
     
     var navigateToHelpCenter:some View{
-        /*NavigationLink(destination:LazyDestination(destination: {
-            FeatureView()
-        })){
-            Label("Request a new feature",systemImage: "lightbulb").foregroundColor(.black)
-            .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemRed))
-        }
-        .fullListWidthSeperator()*/
-        Button(action: { navigationViewModel.switchRouteTo(ProfileRoute.ROUTE_FEATURE)}, label: {
+        Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_FEATURE)}, label: {
             buttonAsNavigationLink(title: "Request a new feature", systemImage: "lightbulb")
         })
         .fullListWidthSeperator()
@@ -455,10 +424,10 @@ extension ProfileView{
     }
     
     func deleteAccountAndAllDataPart2(){
-        firestoreViewModel.closeAllListeners()
+        firestoreViewModel.closeListeners(FirestoreListener.all())
         PersistenceController.deleteAllData()
         firestoreViewModel.deleteAccount(){ result in
-            firestoreViewModel.releaseAllData()
+            firestoreViewModel.releaseData(FirestoreData.all())
             signOut()
         }
         

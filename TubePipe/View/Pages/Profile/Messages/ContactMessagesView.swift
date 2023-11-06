@@ -142,17 +142,12 @@ struct ContactMessagesView:View{
                 
             }
         }
-        /*.sheet(item: $cmVar.currentMessage){ message in
-            AttachmentView(message: message,userName:contact.displayName ?? "Back")
-            .presentationDragIndicator(.visible)
-        }*/
         .onAppear{
-            firestoreViewModel.releaseContactMessages()
             firestoreViewModel.listenForThreadDocumentsFromContact(groupId:contact.groupId)
-        }
-        .onDisappear{
-            firestoreViewModel.releaseContactMessages()
+       }
+        .onDisappear(){
             firestoreViewModel.closeListenerMessages()
+            firestoreViewModel.releaseContactMessages()
         }
         .hiddenBackButtonWithCustomTitle(backButtonLabel)
     }

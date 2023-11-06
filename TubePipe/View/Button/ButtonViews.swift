@@ -50,10 +50,14 @@ struct BackButton:View{
     @Environment(\.dismiss) private var dismiss
     var title:String = "Back"
     var color:Color = Color.systemBlue
+    var action: (() -> Void)? = nil
     
     var body: some View{
         HStack{
-            Button(action:{ dismiss()}) {
+            Button(action:{
+                action?()
+                dismiss()
+            }){
                 HStack(spacing: 5){
                     Image(systemName: "chevron.left").bold()
                     Text(title)

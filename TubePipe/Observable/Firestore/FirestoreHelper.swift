@@ -9,77 +9,6 @@ import SwiftUI
 
 extension FirestoreViewModel{
     
-    func releaseAllData(){
-        releaseContactSuggestions()
-        releaseContactRequests()
-        releaseCurrentUser()
-    }
-    
-    func releaseCurrentUser(){
-        currentUser = nil
-    }
-    
-    func releaseContactMessages(){
-        contactMessages.removeAll()
-    }
-    
-    func releaseContactMessageGroups(){
-        messageGroups.removeAll()
-    }
-    
-    func releaseContactSuggestions(){
-        contactSuggestions.removeAll()
-    }
-    
-    func releaseContactRequests(){
-        recievedContacts.removeAll()
-        pendingContacts.removeAll()
-        confirmedContacts.removeAll()
-    }
-    
-    func closeAllListeners(){
-        closeListenerContactRequests()
-        closeListenerMessageGroups()
-        closeListenerAppUser()
-        closeListenerMessages()
-    }
-    
-    func initializeListenerContactRequestsIfUserIsPublic(){
-        if isCurrentUserPublic{
-            releaseContactRequests()
-            initializeListenerContactRequests()
-        }
-        else{
-            releaseContactRequests()
-            closeListenerContactRequests()
-        }
-    }
-    
-    func initializeListenerContactRequests(){
-        guard let userId = FirebaseAuth.userId else { return }
-        listenForRequestRecievedContacts(userId)
-        listenForRequestPendingContacts(userId)
-        listenForRequestConfirmedContacts(userId)
-    }
-    func closeListenerContactRequests(){
-        listenerRequestRecieved?.remove()
-        listenerRequestPending?.remove()
-        listenerRequestConfirmed?.remove()
-    }
-    
-    func closeListenerAppUser(){
-        listenerAppUser?.remove()
-    }
-    
-    func closeListenerMessageGroups(){
-        listenerMessageGroups?.remove()
-    }
-    
-    func closeListenerMessages(){
-        listenerMessages?.remove()
-    }
-    
-    
     var groupIds:[String]?{
         if let user = currentUser,
            let groupIds = user.groupIds{
@@ -91,11 +20,7 @@ extension FirestoreViewModel{
     var possibleBadgeCount:Int{
         recievedContacts.count + pendingContacts.count
     }
-    
-    /*var possibleBadgeCount:Int{
-        recievedContacts.count
-    }*/
-    
+      
     var isCurrentUserPublic: Bool{
         guard let user = currentUser,
               let mode = user.userMode else { return false }
@@ -198,5 +123,148 @@ extension FirestoreViewModel{
         return MessageGroup(groupId: groupId, userIds: [currentUserId,otherUserId], groupInitialized: Date())
     }
     
+}
+
+//MARK: -- RELEASE DATA
+enum FirestoreData{
+    case DATA_USER
+    case DATA_CONTACT_REQUEST
+    case DATA_CONTACT_SUGGESTION
+    case DATA_CONTACT_MESSAGES
+    case DATA_CONTACT_MESSAGE_GROUPS
+}
+
+extension FirestoreData{
+    
+    static func all() -> [FirestoreData]{
+        return [.DATA_USER,
+                .DATA_CONTACT_REQUEST,
+                .DATA_CONTACT_SUGGESTION,
+                .DATA_CONTACT_MESSAGES,
+                .DATA_CONTACT_MESSAGE_GROUPS]
+    }
+    
+    static func messages() -> [FirestoreData]{
+        return [.DATA_CONTACT_MESSAGES,
+                .DATA_CONTACT_MESSAGE_GROUPS]
+    }
+}
+
+extension FirestoreViewModel{
+    
+    func releaseData(_ dataList:[FirestoreData]){
+        for data in dataList{
+            switch data{
+            case .DATA_USER:                    releaseCurrentUser()
+            case .DATA_CONTACT_REQUEST:         releaseContactRequests()
+            case .DATA_CONTACT_SUGGESTION:      releaseContactSuggestions()
+            case .DATA_CONTACT_MESSAGES:        releaseContactMessages()
+            case .DATA_CONTACT_MESSAGE_GROUPS:  releaseContactMessageGroups()
+            }
+        }
+    }
+    
+    func releaseCurrentUser(){
+        currentUser = nil
+    }
+    
+    func releaseContactRequests(){
+        recievedContacts.removeAll()
+        pendingContacts.removeAll()
+        confirmedContacts.removeAll()
+    }
+    
+    func releaseContactSuggestions(){
+        contactSuggestions.removeAll()
+    }
+    
+    func releaseContactMessages(){
+        contactMessages.removeAll()
+    }
+    
+    func releaseContactMessageGroups(){
+        messageGroups.removeAll()
+    }
+}
+
+//MARK: -- INITIALIZE LISTENER
+extension FirestoreViewModel{
+    func initializeListenerContactRequestsIfUserIsPublic(){
+        if isCurrentUserPublic{
+            releaseContactRequests()
+            initializeListenerContactRequests()
+        }
+        else{
+            releaseContactRequests()
+            closeListenerContactRequests()
+        }
+    }
+    
+    func initializeListenerContactRequests(){
+        guard let userId = FirebaseAuth.userId else { return }
+        listenForRequestRecievedContacts(userId)
+        listenForRequestPendingContacts(userId)
+        listenForRequestConfirmedContacts(userId)
+    }
+}
+
+
+//MARK: -- CLOSE LISTENERS
+enum FirestoreListener{
+    case LISTENER_USER
+    case LISTENER_MESSAGES
+    case LISTENER_MESSAGE_GROUPS
+    case LISTENER_CONTACT_REQUESTS
+}
+
+extension FirestoreListener{
+  
+    static func all() -> [FirestoreListener]{
+        return [.LISTENER_USER,
+                .LISTENER_MESSAGES,
+                .LISTENER_MESSAGE_GROUPS,
+                .LISTENER_CONTACT_REQUESTS]
+    }
+    
+    static func messages() -> [FirestoreListener]{
+        return [.LISTENER_MESSAGES,
+                .LISTENER_MESSAGE_GROUPS]
+    }
+}
+extension FirestoreViewModel{
+    func closeListeners(_ listenerList:[FirestoreListener]){
+        for listener in listenerList{
+            switch listener{
+            case .LISTENER_USER:                closeListenerAppUser()
+            case .LISTENER_MESSAGES:            closeListenerMessages()
+            case .LISTENER_MESSAGE_GROUPS:      closeListenerMessageGroups()
+            case .LISTENER_CONTACT_REQUESTS:    closeListenerContactRequests()
+            }
+        }
+    }
+    
+    func closeListenerAppUser(){
+        //listenerAppUser?.remove()
+        listenerAppUser = nil
+    }
+    
+    func closeListenerMessages(){
+        //listenerMessages?.remove()
+        listenerMessages = nil
+    }
+    
+    func closeListenerMessageGroups(){
+        //listenerMessageGroups?.remove()
+        listenerMessageGroups = nil
+    }
+    
+    func closeListenerContactRequests(){
+        //listenerRequestPending?.remove()
+        //listenerRequestRecieved?.remove()
+        //listenerRequestConfirmed?.remove()
+        listenerRequestPending = nil
+        listenerRequestRecieved = nil
+        listenerRequestConfirmed = nil
+    }
 }
 

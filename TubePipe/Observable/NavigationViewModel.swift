@@ -19,6 +19,9 @@ enum MainTabItem{
 class NavigationViewModel: ObservableObject{
     @Published var selectedTab:MainTabItem = .HOME
     @Published var pathTo:NavigationPath = NavigationPath()
+    
+    var notEmptyPath:Bool{ pathTo.count > 0 }
+    
     func navTo(_ tab:MainTabItem){
         if(isActive(tab)){NavigationUtil.popToRootView()}
         else{nav(tab)}
@@ -26,6 +29,7 @@ class NavigationViewModel: ObservableObject{
     
     private func nav(_ tab:MainTabItem){
         DispatchQueue.main.async {
+            self.clearPath()
             self.selectedTab = tab
         }
     }
@@ -34,27 +38,25 @@ class NavigationViewModel: ObservableObject{
         return selectedTab == tab
     }
     
-    func switchRouteTo(_ route:ProfileRoute){
-        if pathTo.count > 0{
-            pathTo.removeLast(pathTo.count)
-        }
+    func switchPathToRoute(_ route:ProfileRoute){
+        clearPath()
         pathTo.append(route)
     }
     
-    func replaceRouteWith(_ contact:Contact){
-        if pathTo.count > 0{
-            pathTo.removeLast(pathTo.count)
-        }
+    func appendToPathWithContact(_ contact:Contact){
         pathTo.append(contact)
     }
     
-    func appendToPathWith(contact toShow:Contact){
-        pathTo.append(toShow)
+    func appendToPathWithMessage(_ message:Message){
+        pathTo.append(message)
     }
     
     func clearPath(){
-        pathTo.removeLast(pathTo.count)
+        if notEmptyPath{ pathTo.removeLast(pathTo.count) }
     }
     
-    
+    func popPath(){
+        if notEmptyPath{ pathTo.removeLast() }
+    }
+        
 }
