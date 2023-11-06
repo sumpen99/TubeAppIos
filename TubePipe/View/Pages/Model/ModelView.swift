@@ -32,7 +32,7 @@ struct ModelView: View{
         .onChange(of: renderNewState){ newValue in
             renderNewScene()
         }
-        .onAppear {
+        .task {
             tubeViewModel.initFromCache()
             renderNewScene()
         }

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct InboxContactMessages:View{
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
-    @EnvironmentObject var tubeViewModel: TubeViewModel
     @EnvironmentObject var navigationViewModel: NavigationViewModel
     @State var cVar = ContactVar()
         
@@ -26,19 +25,6 @@ struct InboxContactMessages:View{
         AppBackgroundStack(content: {
             contactList
         })
-        /*.onChange(of: cVar.currentContact){ contact in
-            if let contact = contact{
-                cVar.currentContact = nil
-                SheetPresentView(style: .sheet){
-                    ContactMessagesView(contact: contact,backButtonLabel: "Messages")
-                    .presentationDragIndicator(.visible)
-                    .environmentObject(firestoreViewModel)
-                    .environmentObject(tubeViewModel)
-                    .environmentObject(navigationViewModel)
-                }
-                .makeUIView()
-            }
-        }*/
         .onAppear{
             firestoreViewModel.listenForMessageGroups()
         }
@@ -46,12 +32,8 @@ struct InboxContactMessages:View{
             firestoreViewModel.closeListenerMessageGroups()
             firestoreViewModel.releaseContactMessageGroups()
         }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                BackButton(title: "Profile")
-            }
-       }
-        .navigationBarBackButtonHidden()
+        .hiddenBackButtonWithCustomTitle("Profile")
         .modifier(NavigationViewModifier(title: ""))
     }
+    
 }

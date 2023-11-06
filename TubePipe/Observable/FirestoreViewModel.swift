@@ -66,13 +66,13 @@ class FirestoreViewModel: ObservableObject{
     @Published var messageGroups:OrderedDictionary<USERID,[Message]> = [:]
     @Published var contactSuggestions:[Contact] = []
     @Published var contactMessages:[Message] = []
+    @Published var currentUser:AppUser?
     var listenerAppUser: ListenerRegistration?
     var listenerRequestRecieved: ListenerRegistration?
     var listenerRequestPending: ListenerRegistration?
     var listenerRequestConfirmed: ListenerRegistration?
     var listenerMessageGroups: ListenerRegistration?
     var listenerMessages: ListenerRegistration?
-    @Published var currentUser:AppUser?
     
 }
   
