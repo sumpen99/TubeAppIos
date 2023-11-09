@@ -20,7 +20,7 @@ struct TubePipeApp: App {
     @StateObject var firebaseAuth = FirebaseAuth()
     @StateObject var firestoreViewModel = FirestoreViewModel()
     let persistenceController = PersistenceController.shared
-  
+    
     var body: some Scene {
         StyledWindowGroup {
             ContentView()

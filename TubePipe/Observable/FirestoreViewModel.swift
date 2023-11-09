@@ -60,6 +60,7 @@ class FirestoreViewModel: ObservableObject{
     let repo = FirestoreRepository()
     typealias USERID = String
     typealias INITIAL = String
+    typealias LISTENER_ID = String
     @Published var recievedContacts:OrderedDictionary<USERID,Contact> = [:]
     @Published var pendingContacts:OrderedDictionary<USERID,Contact> = [:]
     @Published var confirmedContacts:OrderedDictionary<INITIAL,[Contact]> = [:]
@@ -67,12 +68,6 @@ class FirestoreViewModel: ObservableObject{
     @Published var contactSuggestions:[Contact] = []
     @Published var contactMessages:[Message] = []
     @Published var currentUser:AppUser?
-    var listenerAppUser: ListenerRegistration?
-    var listenerRequestRecieved: ListenerRegistration?
-    var listenerRequestPending: ListenerRegistration?
-    var listenerRequestConfirmed: ListenerRegistration?
-    var listenerMessageGroups: ListenerRegistration?
-    var listenerMessages: ListenerRegistration?
+    var listenerContainer:[LISTENER_ID:ListenerRegistration?] = [:]
     
 }
-  

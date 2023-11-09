@@ -26,11 +26,12 @@ struct InboxContactMessages:View{
             contactList
         })
         .onAppear{
-            firestoreViewModel.listenForMessageGroups()
+            //firestoreViewModel.listenForMessageGroups()
         }
         .onDisappear{
-            firestoreViewModel.closeListenerMessageGroups()
-            firestoreViewModel.releaseContactMessageGroups()
+            //firestoreViewModel.closeListenerMessageGroups()
+            //firestoreViewModel.closeListener(FirestoreListener.LISTENER_MESSAGE_GROUPS)
+            //firestoreViewModel.releaseContactMessageGroups()
         }
         .hiddenBackButtonWithCustomTitle("Profile")
         .modifier(NavigationViewModifier(title: ""))

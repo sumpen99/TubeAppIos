@@ -79,10 +79,6 @@ struct MainView: View{
             case .HOME_ANONYMOUS:       AnonymousHomeView()
             }
         }
-        .onChange(of: navigationViewModel.selectedTab){ tab in
-            //firestoreViewModel.closeListeners(FirestoreListener.messages())
-            //firestoreViewModel.releaseData(FirestoreData.messages())
-        }
         .safeAreaInset(edge: .bottom){ bottomMenu }
         .globalLoadingDialog(presentationManager: globalDialogPresentation)
     }
@@ -97,6 +93,7 @@ struct MainView: View{
         }
         
     }
+    
     
     var body: some View{
         mainContent

@@ -7,11 +7,13 @@
 
 import SwiftUI
 import OrderedCollections
+
+
 extension FirestoreViewModel{
     func listenForCurrentUser(){
         guard let userId = FirebaseAuth.userId else { return; }
         let doc = repo.userDocument(userId)
-        listenerAppUser = doc.addSnapshotListener{ [weak self] snapshot, error in
+        let listenerAppUser = doc.addSnapshotListener{ [weak self] snapshot, error in
             guard let strongSelf = self else { return }
             guard let changes = snapshot else { return }
             do {
@@ -23,11 +25,12 @@ extension FirestoreViewModel{
                 debugLog(object: error.localizedDescription)
             }
         }
+        self.listenerContainer[FirestoreListener.LISTENER_USER.rawValue] = listenerAppUser
     }
     
     func listenForRequestRecievedContacts(_ userId:String){
         let col = repo.requestRecievedCollection(userId)
-        self.listenerRequestRecieved = col.addSnapshotListener(){ [weak self] (snapshot, err) in
+        let listenerRequestRecieved = col.addSnapshotListener(){ [weak self] (snapshot, err) in
             guard let documents = snapshot?.documents,
                   let strongSelf = self else { return }
             var newContacts:OrderedDictionary<USERID,Contact> = [:]
@@ -38,11 +41,12 @@ extension FirestoreViewModel{
             }
             strongSelf.recievedContacts = newContacts
         }
+        self.listenerContainer[FirestoreListener.LISTENER_CONTACT_REQUESTS_RECIEVED.rawValue] = listenerRequestRecieved
         
     }
     func listenForRequestPendingContacts(_ userId:String){
         let col = repo.requestPendingCollection(userId)
-        listenerRequestPending = col.addSnapshotListener(){ [weak self] (snapshot, err) in
+        let listenerRequestPending = col.addSnapshotListener(){ [weak self] (snapshot, err) in
             guard let documents = snapshot?.documents,
                   let strongSelf = self else { return }
             var newContacts:OrderedDictionary<USERID,Contact> = [:]
@@ -53,12 +57,13 @@ extension FirestoreViewModel{
             }
             strongSelf.pendingContacts = newContacts
         }
+        self.listenerContainer[FirestoreListener.LISTENER_CONTACT_REQUESTS_PENDING.rawValue] = listenerRequestPending
         
     }
     
     func listenForRequestConfirmedContacts(_ userId:String){
         let col = repo.requestConfirmedCollection(userId)
-        listenerRequestConfirmed = col.addSnapshotListener(){ [weak self] (snapshot, err) in
+        let listenerRequestConfirmed = col.addSnapshotListener(){ [weak self] (snapshot, err) in
             guard let documents = snapshot?.documents,
                   let strongSelf = self else { return }
             var newContacts:OrderedDictionary<INITIAL,[Contact]> = [:]
@@ -73,14 +78,15 @@ extension FirestoreViewModel{
             }
             strongSelf.confirmedContacts = newContacts
         }
+        self.listenerContainer[FirestoreListener.LISTENER_CONTACT_REQUESTS_CONFIRMED.rawValue] = listenerRequestConfirmed
     }
     
     func listenForMessageGroups(){
          if let groupIds = groupIds{
             let col = repo.messageGroupCollection
-            listenerMessageGroups = col.whereField("groupId", in: groupIds).addSnapshotListener(){ [weak self] (snapshot, err) in
+            let listenerMessageGroups = col.whereField("groupId", in: groupIds).addSnapshotListener(){ [weak self] (snapshot, err) in
                 guard let documents = snapshot?.documents,
-                      let strongSelf = self else { debugLog(object:"no strong self group"); return }
+                      let strongSelf = self else { return }
                 for document in documents {
                     guard let group = try? document.data(as : MessageGroup.self),
                           let groupId = group.groupId
@@ -88,15 +94,17 @@ extension FirestoreViewModel{
                     strongSelf.getThreadDocumentsFromGroup(groupId)
                 }
             }
+            //self.closeListener(FirestoreListener.LISTENER_MESSAGE_GROUPS)
+            self.listenerContainer[FirestoreListener.LISTENER_MESSAGE_GROUPS.rawValue] = listenerMessageGroups
         }
     }
     
     func listenForThreadDocumentsFromContact(groupId:String?){
          if let groupId = groupId{
             let col = repo.messageGroupThreadCollection(groupId)
-            listenerMessages = col.order(by: "date",descending: false).addSnapshotListener{ [weak self] (snapshot, error) in
+            let listenerMessages = col.order(by: "date",descending: false).addSnapshotListener{ [weak self] (snapshot, error) in
                 guard let documents = snapshot?.documents,
-                      let strongSelf = self else{ debugLog(object:"no strong self"); return }
+                      let strongSelf = self else{ return }
                 var newMessages:[Message] = []
                 for document in documents{
                     guard let message = try? document.data(as : Message.self)
@@ -105,6 +113,8 @@ extension FirestoreViewModel{
                 }
                 strongSelf.contactMessages = newMessages
             }
+            self.closeListener(FirestoreListener.LISTENER_MESSAGES)
+            self.listenerContainer[FirestoreListener.LISTENER_MESSAGES.rawValue] = listenerMessages
         }
         
     }

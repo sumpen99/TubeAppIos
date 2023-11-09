@@ -96,7 +96,7 @@ struct ProfileView: View{
     @FocusState var focusField: Field?
     @State var pVar:ProfileVariables = ProfileVariables()
     @State var animateText:Bool = false
-    
+  
     var showPlaceholderText:Bool{
         (pVar.displayName.isEmpty && focusField != .PROFILE_DISPLAY_NAME)
     }
@@ -302,6 +302,12 @@ struct ProfileView: View{
         .onAppear{
             pVar.updateUserVar(currentUser: firestoreViewModel.currentUser)
             tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ALLOW_SHARING)] = firestoreViewModel.isCurrentUserPublic
+            firestoreViewModel.listenForMessageGroups()
+            
+        }
+        .onDisappear{
+            firestoreViewModel.closeListenerMessages()
+            firestoreViewModel.releaseData([.DATA_CONTACT_MESSAGE_GROUPS,.DATA_CONTACT_MESSAGES])
         }
     }
     

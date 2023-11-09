@@ -74,7 +74,7 @@ struct SearchContactsView: View{
                              when: (focusField != .FIND_USER) && (sVar.searchText.isEmpty))
                 .hLeading()
                 .onSubmit {
-                    firestoreViewModel.releaseContactSuggestions()
+                    firestoreViewModel.releaseData([.DATA_CONTACT_SUGGESTION])
                     firestoreViewModel.queryUsers(sVar.searchText)
                 }
             Spacer()
@@ -128,7 +128,7 @@ struct SearchContactsView: View{
         })
         .onTapGesture{ endTextEditing() }
         .onAppear{
-            firestoreViewModel.releaseContactSuggestions()
+            firestoreViewModel.releaseData([.DATA_CONTACT_SUGGESTION])
             focusField = .FIND_USER
         }
     }
@@ -148,7 +148,7 @@ struct SearchContactsView: View{
     }
     
     func fireSentRequestAlert(isSuccess:Bool,message:String,displayInfo:String){
-        firestoreViewModel.releaseContactSuggestions()
+        firestoreViewModel.releaseData([.DATA_CONTACT_SUGGESTION])
         if !isSuccess{
              ALERT_TITLE = "Attention"
             ALERT_MESSAGE = message

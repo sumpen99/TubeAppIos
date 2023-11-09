@@ -10,7 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var firebaseAuth: FirebaseAuth
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
-    
+     
     init(){
         UITabBar.changeAppearance()
         UINavigationBar.changeAppearance()
