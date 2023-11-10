@@ -7,7 +7,7 @@
 
 import SwiftUI
 import OrderedCollections
-
+import Firebase
 
 extension FirestoreViewModel{
     func listenForCurrentUser(){
@@ -25,7 +25,7 @@ extension FirestoreViewModel{
                 debugLog(object: error.localizedDescription)
             }
         }
-        self.listenerContainer[FirestoreListener.LISTENER_USER.rawValue] = listenerAppUser
+        self.addNewListener(listenerAppUser,type:FirestoreListener.LISTENER_USER)
     }
     
     func listenForRequestRecievedContacts(_ userId:String){
@@ -41,9 +41,8 @@ extension FirestoreViewModel{
             }
             strongSelf.recievedContacts = newContacts
         }
-        self.listenerContainer[FirestoreListener.LISTENER_CONTACT_REQUESTS_RECIEVED.rawValue] = listenerRequestRecieved
-        
-    }
+        self.addNewListener(listenerRequestRecieved,type:FirestoreListener.LISTENER_CONTACT_REQUESTS_RECIEVED)
+     }
     func listenForRequestPendingContacts(_ userId:String){
         let col = repo.requestPendingCollection(userId)
         let listenerRequestPending = col.addSnapshotListener(){ [weak self] (snapshot, err) in
@@ -57,8 +56,7 @@ extension FirestoreViewModel{
             }
             strongSelf.pendingContacts = newContacts
         }
-        self.listenerContainer[FirestoreListener.LISTENER_CONTACT_REQUESTS_PENDING.rawValue] = listenerRequestPending
-        
+        self.addNewListener(listenerRequestPending,type:FirestoreListener.LISTENER_CONTACT_REQUESTS_PENDING)
     }
     
     func listenForRequestConfirmedContacts(_ userId:String){
@@ -78,34 +76,37 @@ extension FirestoreViewModel{
             }
             strongSelf.confirmedContacts = newContacts
         }
-        self.listenerContainer[FirestoreListener.LISTENER_CONTACT_REQUESTS_CONFIRMED.rawValue] = listenerRequestConfirmed
+        self.addNewListener(listenerRequestConfirmed,type:FirestoreListener.LISTENER_CONTACT_REQUESTS_CONFIRMED)
     }
     
     func listenForMessageGroups(){
          if let groupIds = groupIds{
             let col = repo.messageGroupCollection
-            let listenerMessageGroups = col.whereField("groupId", in: groupIds).addSnapshotListener(){ [weak self] (snapshot, err) in
+            //col.whereField("groupId", in: groupIds) ->  memory leak
+            let listenerMessageGroups = col.addSnapshotListener(){ [weak self] (snapshot, err) in
                 guard let documents = snapshot?.documents,
                       let strongSelf = self else { return }
                 for document in documents {
                     guard let group = try? document.data(as : MessageGroup.self),
                           let groupId = group.groupId
                     else{ continue }
-                    strongSelf.getThreadDocumentsFromGroup(groupId)
+                    if groupIds.contains(where: {$0 == groupId}){
+                        strongSelf.getThreadDocumentsFromGroup(groupId)
+                    }
                 }
             }
-            //self.closeListener(FirestoreListener.LISTENER_MESSAGE_GROUPS)
-            self.listenerContainer[FirestoreListener.LISTENER_MESSAGE_GROUPS.rawValue] = listenerMessageGroups
+            self.addNewListener(listenerMessageGroups,type:FirestoreListener.LISTENER_MESSAGE_GROUPS)
         }
     }
     
     func listenForThreadDocumentsFromContact(groupId:String?){
          if let groupId = groupId{
             let col = repo.messageGroupThreadCollection(groupId)
-            let listenerMessages = col.order(by: "date",descending: false).addSnapshotListener{ [weak self] (snapshot, error) in
+             let listenerMessages = col.order(by: "date",descending: false).addSnapshotListener{ [weak self] (snapshot, error) in
                 guard let documents = snapshot?.documents,
                       let strongSelf = self else{ return }
                 var newMessages:[Message] = []
+                
                 for document in documents{
                     guard let message = try? document.data(as : Message.self)
                     else{ continue }
@@ -113,10 +114,14 @@ extension FirestoreViewModel{
                 }
                 strongSelf.contactMessages = newMessages
             }
-            self.closeListener(FirestoreListener.LISTENER_MESSAGES)
-            self.listenerContainer[FirestoreListener.LISTENER_MESSAGES.rawValue] = listenerMessages
+            self.addNewListener(listenerMessages,type:FirestoreListener.LISTENER_MESSAGES)
         }
         
+    }
+    
+    private func addNewListener(_ listener:ListenerRegistration,type:FirestoreListener){
+        closeListener(type)
+        listenerContainer[type.rawValue] = listener
     }
     
 }

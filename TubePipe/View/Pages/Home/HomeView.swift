@@ -93,18 +93,17 @@ struct HomeView: View{
                         Image(systemName: "ruler")
                     }
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Menu{
-                        navPrintButton
-                        navShareButton
-                        navSaveButton
-                        navInfoButton
-                    }
-                    label:{
-                        Label("Info",systemImage: "ellipsis")
-                    }
-                    
-                }
+                 ToolbarItem(placement: .navigationBarTrailing) {
+                     Menu{
+                         navPrintButton.padding()
+                         navShareButton.padding()
+                         navSaveButton.padding()
+                         navInfoButton.padding()
+                     }
+                     label:{
+                         Label("Info",systemImage: "ellipsis").imageScale(.large)
+                     }
+                 }
             }
         }
         

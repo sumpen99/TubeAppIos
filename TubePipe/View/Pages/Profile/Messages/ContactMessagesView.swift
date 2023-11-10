@@ -145,12 +145,11 @@ struct ContactMessagesView:View{
         .onAppear{
             firestoreViewModel.listenForThreadDocumentsFromContact(groupId:contact.groupId)
        }
-        .onDisappear(){
-            //firestoreViewModel.closeListener(FirestoreListener.LISTENER_MESSAGES)
-            //firestoreViewModel.closeListenerMessages()
-            //firestoreViewModel.releaseContactMessages()
+        .onDisappear{
+            firestoreViewModel.closeListener(.LISTENER_MESSAGES)
+            firestoreViewModel.releaseData([.DATA_CONTACT_MESSAGES])
         }
-        .hiddenBackButtonWithCustomTitle(backButtonLabel)
+       .hiddenBackButtonWithCustomTitle(backButtonLabel)
     }
     
 }

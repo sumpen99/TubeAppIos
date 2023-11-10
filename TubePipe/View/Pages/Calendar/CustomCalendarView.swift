@@ -67,7 +67,7 @@ struct CustomCalendarView: View {
                     navigateToSavedTubesButton
                 }
             }
-            .modifier(NavigationViewModifier(title: ""))
+             .modifier(NavigationViewModifier(title: ""))
         }
         .onChange(of: selected.tubeModel){ tube in
             if let tube = tube{
