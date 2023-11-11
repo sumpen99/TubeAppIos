@@ -10,8 +10,9 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var firebaseAuth: FirebaseAuth
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
-    
+     
     init(){
+        UIView.changeUIAlertTintColor()
         UITabBar.changeAppearance()
         UINavigationBar.changeAppearance()
     }

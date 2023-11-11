@@ -29,7 +29,6 @@ struct ShareDocumentView:View{
     @ViewBuilder
     var toogleContactsButton:some View{
         Image(systemName: sclVar.isSuggestionShowing ? "chevron.up" : "chevron.down")
-        .foregroundColor(Color.systemGray)
         .hTrailing()
     }
     
@@ -38,7 +37,7 @@ struct ShareDocumentView:View{
             Text("Send").hCenter()
         })
         .disabled(buttonIsDisabled)
-        .buttonStyle(ButtonStyleDisabledable(lblColor:Color.black,backgroundColor: Color.tertiarySystemFill))
+        .buttonStyle(ButtonStyleDisabledable(lblColor:Color.black,backgroundColor: Color.backgroundSecondary))
         .padding()
     }
     
@@ -57,7 +56,7 @@ struct ShareDocumentView:View{
     @ViewBuilder
     var contactField:some View{
         HStack{
-            Label("Send to: ",systemImage: "person.crop.square").foregroundColor(Color.systemGray)
+            Label("Send to: ",systemImage: "person.crop.square")
              toogleContactsButton
             
         }
@@ -125,7 +124,7 @@ struct ShareDocumentView:View{
             Section {
                 mainContent
             } header:{
-                Text(Date().formattedString()).sectionTextSecondary(color:.tertiaryLabel).padding(.leading)
+                Text(Date().formattedString()).sectionTextSecondary(color:.darkGray).padding(.leading)
             }
         }
         .toastView(toast: $toast)

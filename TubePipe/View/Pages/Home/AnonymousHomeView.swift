@@ -68,6 +68,7 @@ struct AnonymousHomeView: View{
                     Button(action: { activeHomeSheet = .OPEN_TUBE_SETTINGS }) {
                         Image(systemName: "ruler")
                     }
+                    .toolbarFontAndPadding()
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu{
@@ -77,7 +78,9 @@ struct AnonymousHomeView: View{
                     }
                     label:{
                         Label("Info",systemImage: "ellipsis")
+                        .toolbarFontAndPadding()
                     }
+                    
                     
                 }
             }

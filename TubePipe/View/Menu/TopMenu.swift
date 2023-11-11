@@ -16,7 +16,10 @@ struct TopMenu:View{
             HStack{
                 topMenuHeaderCell.hLeading()
                 //"\(Image(systemName: BACK_BUTTON_PRIMARY))"
-                Button("Done", action: actionCloseButton).font(.headline).hTrailing()
+                Button("Done", action: actionCloseButton)
+                .font(.headline)
+                .foregroundColor(Color.sheetCloseButton)
+                .hTrailing()
             }
             Divider()
         }

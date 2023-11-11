@@ -13,11 +13,11 @@ struct CheckboxStyle: ToggleStyle {
     func makeBody(configuration: Self.Configuration) -> some View {
         if alignLabelLeft{
             HStack{
-                configuration.label.foregroundColor(configuration.isOn ? labelIsOnColor : Color.systemGray).font(.caption)
+                configuration.label.foregroundColor(configuration.isOn ? Color.backgroundPrimary : Color.tertiaryLabel).font(.caption)
                 Image(systemName: configuration.isOn ? "checkmark.circle.fill" : "circle")
                     .resizable()
                     .frame(width: 24, height: 24)
-                    .foregroundColor(configuration.isOn ? Color.systemGreen : .gray)
+                    .foregroundColor(configuration.isOn ? Color.backgroundPrimary : Color.tertiaryLabel)
                     .font(.system(size: 20, weight: .bold, design: .default))
                     .onTapGesture {
                         withAnimation{
@@ -31,7 +31,7 @@ struct CheckboxStyle: ToggleStyle {
                 Image(systemName: configuration.isOn ? "checkmark.circle.fill" : "circle")
                     .resizable()
                     .frame(width: 24, height: 24)
-                    .foregroundColor(configuration.isOn ? Color.systemGreen : .gray)
+                    .foregroundColor(configuration.isOn ? Color.backgroundPrimary : Color.tertiaryLabel)
                     .font(.system(size: 20, weight: .bold, design: .default))
                     .onTapGesture {
                         withAnimation{
@@ -54,7 +54,7 @@ struct CapsuleCheckboxStyle: ToggleStyle {
                 configuration.label
                 Spacer()
                 Capsule()
-                .fill(configuration.isOn ? Color.systemGreen : Color.tertiaryLabel)
+                .fill(configuration.isOn ? Color.backgroundPrimary : Color.tertiaryLabel)
                 .animation(.default, value: configuration.isOn)
                 .frame(width: 48, height: 30)
                 .overlay(alignment: configuration.isOn ? .trailing : .leading){
@@ -71,7 +71,7 @@ struct CapsuleCheckboxStyle: ToggleStyle {
         else{
             HStack{
                 Capsule()
-                .fill(configuration.isOn ? Color.systemGreen : Color.tertiaryLabel)
+                .fill(configuration.isOn ? Color.backgroundPrimary : Color.tertiaryLabel)
                 .animation(.default, value: configuration.isOn)
                 .frame(width: 48, height: 30)
                 .overlay(alignment: configuration.isOn ? .trailing : .leading){
@@ -100,7 +100,7 @@ struct XMarkCheckboxStyle: ToggleStyle {
     func makeBody(configuration: Self.Configuration) -> some View {
         if alignLabelLeft{
             HStack{
-                configuration.label.foregroundColor(configuration.isOn ? Color.black : Color.systemGray).font(.caption)
+                configuration.label.foregroundColor(configuration.isOn ? Color.backgroundPrimary : Color.tertiaryLabel).font(.caption)
                 Image(systemName: configuration.isOn ? "xmark.circle.fill" : "circle")
                     .resizable()
                     .frame(width: 24, height: 24)
@@ -125,7 +125,7 @@ struct XMarkCheckboxStyle: ToggleStyle {
                             configuration.isOn.toggle()
                         }
                     }
-                configuration.label.foregroundColor(configuration.isOn ? Color.black : Color.systemGray).font(.caption)
+                configuration.label.foregroundColor(configuration.isOn ? Color.backgroundPrimary : Color.tertiaryLabel).font(.caption)
             }
         }
        

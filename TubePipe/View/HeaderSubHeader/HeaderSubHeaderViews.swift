@@ -73,8 +73,8 @@ struct HeaderSubHeaderView: View{
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text(header).fontWeight(.bold)
-            Text(subHeader).fontWeight(.regular)
+            Text(header).font(.headline)
+            Text(subHeader).font(.callout)
         }.hLeading()
     }
 }
@@ -97,8 +97,8 @@ struct BoldSubHeaderSubHeaderView: View{
     
     var body: some View {
         HStack{
-            subMain.font(.headline).hLeading()
-            subSecond.font(.body).hTrailing()
+            subMain.font(.body).hLeading()
+            subSecond.font(.callout).hTrailing()
         }
         .padding()
     }

@@ -93,7 +93,6 @@ struct TubeSettingsVar{
 }
 
 struct TubeSettingsView:View{
-    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @State var tsVar:TubeSettingsVar = TubeSettingsVar()
     @Namespace var animation
@@ -115,23 +114,18 @@ struct TubeSettingsView:View{
     
     //MARK: - HORIZONTAL MENU-SCROLLVIEWS
     var settingsHeaderMenuList:  some View{
-        ZStack{
-            HStack{
-                ScrollView(.horizontal){
-                    LazyHStack(alignment: .top, spacing: 30, pinnedViews: [.sectionHeaders]){
-                        ForEach(settingsHeader, id: \.self) { header in
-                            settingsHeaderCell(header)
-                       }
-                    }
-                    
+        HStack{
+            ScrollView(.horizontal){
+                LazyHStack(alignment: .top, spacing: 30, pinnedViews: [.sectionHeaders]){
+                    ForEach(settingsHeader, id: \.self) { header in
+                        settingsHeaderCell(header)
+                   }
                 }
-                .scrollIndicators(.never)
-                Spacer()
-                Button("\(Image(systemName: BACK_BUTTON_PRIMARY))", action: closeView)
             }
-            .padding([.leading,.trailing,.top])
-            
+            .scrollIndicators(.never)
         }
+        .hCenter()
+        .padding([.leading,.trailing,.top])
         .frame(height:MENU_HEIGHT)
     }
     
@@ -158,7 +152,7 @@ struct TubeSettingsView:View{
         .background(
              ZStack{
                  if setting == tsVar.settingsHeader{
-                     Color.systemBlue
+                     Color.backgroundPrimary
                      .frame(height: 1)
                      .offset(y: 14)
                      .matchedGeometryEffect(id: "CURRENTHEADER", in: animation)
@@ -461,8 +455,4 @@ struct TubeSettingsView:View{
         }
     }
     
-    //MARK: - HELPER
-    func closeView(){
-        dismiss()
-    }
 }

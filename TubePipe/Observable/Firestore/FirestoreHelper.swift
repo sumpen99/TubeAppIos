@@ -164,25 +164,25 @@ extension FirestoreViewModel{
         }
     }
     
-    func releaseCurrentUser(){
+    private func releaseCurrentUser(){
         currentUser = nil
     }
     
-    func releaseContactRequests(){
+    private func releaseContactRequests(){
         recievedContacts.removeAll()
         pendingContacts.removeAll()
         confirmedContacts.removeAll()
     }
     
-    func releaseContactSuggestions(){
+    private func releaseContactSuggestions(){
         contactSuggestions.removeAll()
     }
     
-    func releaseContactMessages(){
+    private func releaseContactMessages(){
         contactMessages.removeAll()
     }
     
-    func releaseContactMessageGroups(){
+    private func releaseContactMessageGroups(){
         messageGroups.removeAll()
     }
 }
@@ -210,11 +210,13 @@ extension FirestoreViewModel{
 
 
 //MARK: -- CLOSE LISTENERS
-enum FirestoreListener{
-    case LISTENER_USER
-    case LISTENER_MESSAGES
-    case LISTENER_MESSAGE_GROUPS
-    case LISTENER_CONTACT_REQUESTS
+enum FirestoreListener:String{
+    case LISTENER_USER = "USER"
+    case LISTENER_MESSAGES = "MESSAGES"
+    case LISTENER_MESSAGE_GROUPS = "MESSAGES_GROUPS"
+    case LISTENER_CONTACT_REQUESTS_PENDING = "CONTACT_REQUESTS_PENDING"
+    case LISTENER_CONTACT_REQUESTS_RECIEVED = "CONTACT_REQUESTS_RECIEVED"
+    case LISTENER_CONTACT_REQUESTS_CONFIRMED = "CONTACT_REQUESTS_CONFIRMED"
 }
 
 extension FirestoreListener{
@@ -223,7 +225,9 @@ extension FirestoreListener{
         return [.LISTENER_USER,
                 .LISTENER_MESSAGES,
                 .LISTENER_MESSAGE_GROUPS,
-                .LISTENER_CONTACT_REQUESTS]
+                .LISTENER_CONTACT_REQUESTS_PENDING,
+                .LISTENER_CONTACT_REQUESTS_RECIEVED,
+                .LISTENER_CONTACT_REQUESTS_CONFIRMED]
     }
     
     static func messages() -> [FirestoreListener]{
@@ -232,39 +236,29 @@ extension FirestoreListener{
     }
 }
 extension FirestoreViewModel{
-    func closeListeners(_ listenerList:[FirestoreListener]){
-        for listener in listenerList{
-            switch listener{
-            case .LISTENER_USER:                closeListenerAppUser()
-            case .LISTENER_MESSAGES:            closeListenerMessages()
-            case .LISTENER_MESSAGE_GROUPS:      closeListenerMessageGroups()
-            case .LISTENER_CONTACT_REQUESTS:    closeListenerContactRequests()
-            }
-        }
-    }
-    
-    func closeListenerAppUser(){
-        //listenerAppUser?.remove()
-        listenerAppUser = nil
+    func closeListenerContactRequests(){
+        closeListeners([.LISTENER_CONTACT_REQUESTS_PENDING,
+                        .LISTENER_CONTACT_REQUESTS_RECIEVED,
+                        .LISTENER_CONTACT_REQUESTS_CONFIRMED])
     }
     
     func closeListenerMessages(){
-        //listenerMessages?.remove()
-        listenerMessages = nil
+        closeListeners([.LISTENER_MESSAGE_GROUPS,
+                        .LISTENER_MESSAGES])
     }
     
-    func closeListenerMessageGroups(){
-        //listenerMessageGroups?.remove()
-        listenerMessageGroups = nil
+    func closeListeners(_ listenerList:[FirestoreListener]){
+        for fListener in listenerList{
+            closeListener(fListener)
+        }
     }
     
-    func closeListenerContactRequests(){
-        //listenerRequestPending?.remove()
-        //listenerRequestRecieved?.remove()
-        //listenerRequestConfirmed?.remove()
-        listenerRequestPending = nil
-        listenerRequestRecieved = nil
-        listenerRequestConfirmed = nil
+    func closeListener(_ fListener:FirestoreListener){
+        if let listener = listenerContainer[fListener.rawValue]{
+            listener?.remove()
+            listenerContainer.removeValue(forKey: fListener.rawValue)
+        }
     }
+    
 }
 

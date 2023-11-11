@@ -135,17 +135,19 @@ struct UserSettingsView:View{
     var leadingButton:some View{
         if changesHasHappend{
             Button(action: loadDefaultValues) {
-                Text("Reset").foregroundColor(.red)
+                Text("Reset").foregroundColor(.systemRed).bold()
             }
+            .toolbarFontAndPadding()
         }
         else{
-            BackButton(title: "Profile",color: Color.systemBlue)
+            BackButton(title: "Profile",color: Color.accentColor)
+            .toolbarFontAndPadding()
         }
     }
     
     var trailingButton:some View{
         Button(action: saveNewDefaultValues) {
-            Text("Save")
+            Text("Save").foregroundColor(.systemBlue).bold()
         }
         .opacity(valuesCanBeUpdated ? 1.0 : 0.0)
         .disabled(!valuesCanBeUpdated)

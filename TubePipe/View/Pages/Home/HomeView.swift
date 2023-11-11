@@ -69,43 +69,28 @@ struct HomeView: View{
                     }
                 }
             }
-            
-            // PREFFERED BUT LEAKS ON IOS_17
-            /*.sheet(item: $activeHomeSheet){ item in
-                switch item{
-                case ActiveHomeSheet.OPEN_TUBE_SETTINGS:
-                    TubeSettingsView()
-                    .presentationDragIndicator(.visible)
-                    .presentationDetents([.medium])
-                case ActiveHomeSheet.OPEN_TUBE_DOCUMENT:
-                    TubeDocumentView()
-                case ActiveHomeSheet.OPEN_TUBE_SAVE:
-                    SaveDocumentView()
-                case ActiveHomeSheet.OPEN_TUBE_SHARE:
-                    ShareDocumentView()
-                case ActiveHomeSheet.OPEN_TUBE_INFORMATION:
-                    TubeHelpView()
-                }
-            }*/
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { activeHomeSheet = .OPEN_TUBE_SETTINGS }) {
                         Image(systemName: "ruler")
                     }
+                    .toolbarFontAndPadding()
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Menu{
-                        navPrintButton
-                        navShareButton
-                        navSaveButton
-                        navInfoButton
-                    }
-                    label:{
-                        Label("Info",systemImage: "ellipsis")
-                    }
-                    
-                }
+                     Menu{
+                         navPrintButton.padding()
+                         navShareButton.padding()
+                         navSaveButton.padding()
+                         navInfoButton.padding()
+                     }
+                     label:{
+                         Label("Info",systemImage: "ellipsis.circle").imageScale(.large)
+                         .toolbarFontAndPadding()
+                     }
+                 }
+                
             }
+            
         }
         
     }
@@ -126,6 +111,8 @@ struct HomeView: View{
         Button(action: { activeHomeSheet = .OPEN_TUBE_SHARE } ){
             Label("Share", systemImage: "arrowshape.turn.up.right")
         }
+        .opacity(firestoreViewModel.isCurrentUserPublic ? 1.0 : 0.3)
+        .disabled(!firestoreViewModel.isCurrentUserPublic)
    }
     
     var navInfoButton:some View{

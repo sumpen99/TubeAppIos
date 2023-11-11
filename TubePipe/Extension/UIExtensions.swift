@@ -15,6 +15,7 @@ extension UITabBar{
         tabBarAppearance.shadowColor = .white
         UITabBar.appearance().standardAppearance = tabBarAppearance
         UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
+        
     }
 }
 
@@ -50,7 +51,7 @@ extension UINavigationBar {
         appearance.titleTextAttributes = attrsSmall
         appearance.largeTitleTextAttributes = attrsLarge
         appearance.shadowColor = .white
-        
+      
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         UINavigationBar.appearance().compactAppearance = appearance
@@ -60,6 +61,13 @@ extension UINavigationBar {
     }
 }
 
+extension UIView{
+    
+    static func changeUIAlertTintColor(){
+        UIView.appearance(whenContainedInInstancesOf: [UIAlertController.self])
+            .tintColor = UIColor(Color.systemBlue)
+    }
+}
 
 
 extension UIApplication {

@@ -77,15 +77,15 @@ struct TubeHelpView: View{
                         .rotationEffect(currentRotation + twistAngle)
                         .simultaneousGesture(rotationGesture.simultaneously(with: magnificationGesture))
                 } header: {
-                    Text("Measurement")
+                    Text("Measurement").foregroundColor(.darkGray)
                 } footer: {
                     Text("")
                 }
                 Section {
-                    HeaderSubHeaderView(header: "Unit", subHeader: "Millimeter").foregroundColor(Color.darkGray)
-                    HeaderSubHeaderView(header: "Radius", subHeader: "Measure from center of tube").foregroundColor(Color.darkGray)
+                    HeaderSubHeaderView(header: "Unit", subHeader: "Millimeter")
+                    HeaderSubHeaderView(header: "Radius", subHeader: "Measure from center of tube")
                 } header: {
-                    Text("Information")
+                    Text("Information").foregroundColor(.darkGray)
                 } footer: {
                     Text("")
                 }

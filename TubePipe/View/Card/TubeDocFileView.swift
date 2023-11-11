@@ -88,7 +88,7 @@ struct ExtendedTubeDocFileView:View{
         .background{
             Circle().fill(Color.white).frame(width: 26, height: 26)
         }
-        .foregroundColor(Color.systemBlue)
+        .foregroundColor(Color.backgroundPrimary)
     }
     
     @ViewBuilder

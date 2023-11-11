@@ -124,7 +124,7 @@ struct FeatureView:View{
             Text("Submit").hCenter()
         })
         .disabled(buttonIsDisabled)
-        .buttonStyle(ButtonStyleDisabledable(lblColor:Color.blue,backgroundColor: Color.GHOSTWHITE))
+        .buttonStyle(ButtonStyleDisabledable(lblColor:Color.black,backgroundColor: Color.white))
         .padding()
     }
            

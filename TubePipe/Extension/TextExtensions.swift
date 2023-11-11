@@ -89,6 +89,7 @@ extension TextField{
             .keyboardType(.emailAddress)
             .padding([.bottom,.top],10)
             .removePredictiveSuggestions()
+            .accentColor(.black)
             .background(RoundedRectangle(cornerRadius: 5).fill(Color.clear))
     }
     
@@ -97,6 +98,7 @@ extension TextField{
             .font(Font(UIFont.preferredFont(forTextStyle: .title3)))
             .keyboardType(UIKeyboardType.asciiCapable)
             .removePredictiveSuggestions()
+            .accentColor(.black)
             .padding(5.0)
     }
     
@@ -112,6 +114,7 @@ extension TextField{
                     .stroke(lineWidth: 1)
             )
             .foregroundColor(Color.GHOSTWHITE)
+            .accentColor(.black)
     }
     
     func preferedProfileSettingsField() -> some View{
@@ -125,6 +128,7 @@ extension TextField{
                 Rectangle().frame(height: 1.0).vBottom().foregroundColor(Color.tertiaryLabel)
             )
             .foregroundColor(Color.primary)
+            .accentColor(.black)
             
     }
     
@@ -135,6 +139,7 @@ extension TextField{
             .keyboardType(UIKeyboardType.asciiCapable)
             .removePredictiveSuggestions()
             .foregroundColor(Color.black)
+            .accentColor(.black)
             .hLeading()
     }
     
@@ -150,12 +155,13 @@ extension TextField{
                     .stroke(lineWidth: 1)
             )
             .foregroundColor(Color.black)
+            .accentColor(.black)
     }
    
 }
 
 extension SecureField{
     func preferedSecureField() -> some View{
-        self.padding([.top,.bottom],10).textContentType(.oneTimeCode).foregroundColor(Color.black)
+        self.padding([.top,.bottom],10).textContentType(.oneTimeCode).foregroundColor(Color.black).accentColor(.black)
     }
 }

@@ -127,6 +127,7 @@ struct ContactRequestView:View{
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 BackButton(title: "Contacts")
+                .toolbarFontAndPadding()
             }
          }
         .navigationBarBackButtonHidden()

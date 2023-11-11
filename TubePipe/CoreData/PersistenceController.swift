@@ -8,6 +8,10 @@
 import SwiftUI
 import CoreData
 
+enum CoreDataError:Error{
+    case SAVE_FAILED(String)
+}
+
 final class PersistenceController {
     // A singleton for our entire app to use
     static let shared = PersistenceController()
@@ -27,14 +31,14 @@ final class PersistenceController {
     
     public func saveContext(backgroundContext:NSManagedObjectContext? = nil) throws{
         let context = backgroundContext ?? container.viewContext
-        guard context.hasChanges else { return }
+        guard context.hasChanges else { throw CoreDataError.SAVE_FAILED("Context has no changes") }
         try context.save()
         
     }
     
     static func saveContext(backgroundContext:NSManagedObjectContext? = nil) throws{
         let context = backgroundContext ?? shared.container.viewContext
-        guard context.hasChanges else { return }
+        guard context.hasChanges else { throw CoreDataError.SAVE_FAILED("Context has no changes") }
         try context.save()
         
     }

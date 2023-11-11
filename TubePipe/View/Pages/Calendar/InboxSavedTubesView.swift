@@ -138,24 +138,11 @@ struct InboxSavedTubesView:View{
             topMenuList
             savedTubesList
         }
-    }
-    
-    @ViewBuilder
-    var pageBasedOnData:some View{
-        itemsLoadedPage
-        /*if coreDataViewModel.hasItemsLoaded{
-            itemsLoadedPage
-        }
-        else{
-            noItemsToShowPage
-        }*/
+        .padding()
     }
     
     var mainpage:some View{
-        ZStack{
-            pageBasedOnData
-        }
-        .padding()
+        itemsLoadedPage
         .onAppear{
             coreDataViewModel.setChildViewDimension(childViewHeight)
             coreDataViewModel.requestInitialSetOfItems()
@@ -190,16 +177,10 @@ struct InboxSavedTubesView:View{
             }
             
         }
-        /*.sheet(item: $iVar.tubeModel){ tube in
-            SelectedTubeView(tubeModel: tube,
-                             labelBackButton: "List",
-                             loadViewModelWithTubeModel: loadViewModelWithTubeModel,
-                             deleteTubeModel: deleteTubeModel)
-        }*/
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 leadingButton
-            }
+             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 toggleEditButton
             }
@@ -240,13 +221,12 @@ extension InboxSavedTubesView{
     //MARK: -- BUTTONS
     var selectAllButton:some View{
         Button("Select all", action: selectAllItems )
-        .buttonStyle(ButtonStyleList(color: Color.systemBlue))
+        .buttonStyle(ButtonStyleList(color: Color.editorieButton))
     }
     
     var removeButton:some View{
         Button("Remove", action: removeTubeAlert )
         .buttonStyle(ButtonStyleList(color: Color.systemRed)).hLeading()
-        .padding(.bottom)
     }
     
     var cancelButton:some View{
@@ -256,7 +236,7 @@ extension InboxSavedTubesView{
                 iVar.userWillEditTubes.toggle()
             }
         })
-        .buttonStyle(ButtonStyleList(color: Color.systemBlue))
+        .buttonStyle(ButtonStyleList(color: Color.systemRed))
     }
     
     var editButton:some View{
@@ -265,7 +245,7 @@ extension InboxSavedTubesView{
                 iVar.userWillEditTubes.toggle()
             }
         })
-        .buttonStyle(ButtonStyleList(color: Color.systemBlue))
+        .buttonStyle(ButtonStyleList(color: Color.editorieButton))
     }
     
     @ViewBuilder
@@ -275,6 +255,7 @@ extension InboxSavedTubesView{
         }
         else{
             BackButton(title: "Calendar")
+            .toolbarFontAndPadding()
         }
    }
     

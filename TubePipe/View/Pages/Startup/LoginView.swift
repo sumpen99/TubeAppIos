@@ -46,7 +46,7 @@ struct LoginView : View {
                 Image(systemName: "mail")
                 TextField("",text:$lVar.email,onCommit: { })
                     .preferedEmailField(textColor: Color.black)
-                    .placeholder("email",when: lVar.email.isEmpty)
+                    .placeholder(when: focusField != .LOGIN_EMAIL && lVar.email.isEmpty){ Text("email").foregroundColor(.darkGray)}
                     .focused($focusField,equals: .LOGIN_EMAIL)
                     .hLeading()
             }
@@ -65,8 +65,7 @@ struct LoginView : View {
                 Image(systemName: "lock")
                 SecureField("",text:$lVar.password,onCommit: { })
                     .preferedSecureField()
-                    .placeholder("password",
-                                 when: lVar.password.isEmpty)
+                    .placeholder(when: focusField != .LOGIN_SECURE_PASSWORD && lVar.password.isEmpty){ Text("password").foregroundColor(.darkGray)}
                     .focused($focusField,equals: .LOGIN_SECURE_PASSWORD)
                     .hLeading()
             }
@@ -94,7 +93,7 @@ struct LoginView : View {
             Button(action:logUserIn,label: {
                 Text("Log in").hCenter()
             })
-            .buttonStyle(ButtonStyleSheet())
+            .buttonStyle(ButtonStyleLogin())
         }
         .padding()
     }

@@ -39,6 +39,9 @@ extension Color {
     
     static var backgroundPrimary:Color          = Color(hex:0x424242)
     static var backgroundSecondary:Color        = Color(hex:0xEEEEEE)
+    static var calendarButton:Color             = Color.systemGray
+    static var sheetCloseButton:Color           = Color.systemBlue
+    static var editorieButton:Color             = Color.systemBlue
     static var APP_MID_BACKGROUND_COLOR: Color  = Color(dRed: 62.0, dGreen: 62.0, dBlue: 62.0)
    
     // MARK: - Text Colors

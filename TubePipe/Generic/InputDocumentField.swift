@@ -15,7 +15,7 @@ struct InputDocumentField<LabelText: View,Content: View>: View {
         HStack{
             ZStack{
                 Text("Description").hidden()
-                label.foregroundColor(.blue)
+                label.foregroundColor(Color.darkGray)
             }
             Divider()
             content.hLeading()
