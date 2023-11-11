@@ -13,12 +13,27 @@ struct ContactView:View{
     @State var cVar = ContactVar()
     @State var isMoveToMessages:Bool = false
     
+    var showNoContactsLabel:Bool{
+        return possibleBadgeCount <= 0 && firestoreViewModel.confirmedContacts.isEmpty
+    }
+    
     var possibleBadgeCount:Int{
         firestoreViewModel.possibleBadgeCount
     }
     
     var contactsLabel:some View{
-        Text("Contacts").font(.largeTitle).bold().foregroundColor(.white).hLeading()
+        Text("Contacts")
+        .font(.largeTitle)
+        .bold()
+        .foregroundColor(.white)
+        .hLeading()
+    }
+    
+    var noContactsLabel:some View{
+        Text("Add contacts by searching for other TubePipe users, either by username or email")
+        .noDataBackgroundNoPadding()
+        .hCenter()
+        .vTop()
     }
     
     var confirmedContactRequestSection:some View{
@@ -48,13 +63,30 @@ struct ContactView:View{
             Image(systemName: "person.badge.plus")
         }
     }
-     
-    var mainpage:some View{
+    
+    var hasContacts:some View{
         VStack(spacing:V_SPACING_REG){
             contactsLabel
             confirmedContactRequestSection
         }
         .padding()
+    }
+    
+    var noContactsSection:some View{
+        Text("Add contacts by searching for other TubePipe users, either by username or email")
+        .noDataBackgroundNoPadding()
+        .hCenter()
+        .vTop()
+    }
+    
+    @ViewBuilder
+    var mainpage:some View{
+        if showNoContactsLabel{
+            noContactsLabel
+        }
+        else{
+            hasContacts
+        }
     }
     
     var body: some View{
@@ -69,14 +101,13 @@ struct ContactView:View{
                         cVar.isSearchOption.toggle()
                     }}){
                         Label("Search", systemImage: "magnifyingglass")
+                        .toolbarFontAndPadding()
                     }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 if possibleBadgeCount > 0 {
                     badgedContactRequestButton
-                }
-                else{
-                    unBadgedContactRequestButton
+                    .toolbarFontAndPadding()
                 }
             }
         }
@@ -88,12 +119,6 @@ struct ContactView:View{
             }
             .makeUIView()
         }
-        /*.sheet(isPresented: $cVar.isSearchOption){
-            SearchContactsView()
-            .environmentObject(firestoreViewModel)
-            .presentationDetents([.medium])
-            .presentationDragIndicator(.visible)
-        }*/
         .alert(isPresented: $cVar.isSelectedContact, content: {
             onAlertWithOkAction(actionPrimary: {
                 switch cVar.alertAction{

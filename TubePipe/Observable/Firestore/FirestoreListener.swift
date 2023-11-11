@@ -101,7 +101,7 @@ extension FirestoreViewModel{
     
     func listenForThreadDocumentsFromContact(groupId:String?){
          if let groupId = groupId{
-            let col = repo.messageGroupThreadCollection(groupId)
+             let col = repo.messageGroupThreadCollection(groupId)
              let listenerMessages = col.order(by: "date",descending: false).addSnapshotListener{ [weak self] (snapshot, error) in
                 guard let documents = snapshot?.documents,
                       let strongSelf = self else{ return }

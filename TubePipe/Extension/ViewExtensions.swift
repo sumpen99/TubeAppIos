@@ -202,11 +202,16 @@ extension View{
         }
     }
     
-    func hiddenBackButtonWithCustomTitle(_ title:String = "",color:Color = Color.systemBlue) -> some View{
+    func toolbarFontAndPadding() -> some View{
+        self.padding([.top,.bottom]).font(.title3)
+    }
+    
+    func hiddenBackButtonWithCustomTitle(_ title:String = "",color:Color = Color.accentColor) -> some View{
         self.navigationBarBackButtonHidden()
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 BackButton(title: title,color: color)
+                .toolbarFontAndPadding()
             }
         }
     }
@@ -253,7 +258,7 @@ func backButton(title:String = "Back",action:@escaping ()->Void) -> some View{
 
 var splitLine: some View{
     HStack{
-        Rectangle().fill(Color.white).frame(height: 1).opacity(0.85)
+        Rectangle().fill(Color.systemGray).frame(height: 1)
     }
 }
 
@@ -300,9 +305,9 @@ var clearSpaceAtBottom: some View{
 }
 
 func actionSheetWithCancel(_ dat:(title:String,message:String,cancel:String)) -> ActionSheet{
-    return ActionSheet(title: Text(dat.title), message: Text(dat.message), buttons: [
-        .cancel(Text(dat.cancel))
-    ])
+    return ActionSheet(title: Text(dat.title),
+                       message: Text(dat.message),
+                       buttons: [.cancel(Text(dat.cancel))])
 }
 
 func actionSheetDefault() -> ActionSheet{

@@ -86,20 +86,12 @@ struct ModelView: View{
                    }
                 }
             }
-            /*.sheet(item: $activeModelSheet){ item in
-                switch item{
-                case ActiveModelSheet.OPEN_MODEL_SETTINGS:
-                    ModelSettingsView(renderNewState: $renderNewState)
-                    .presentationDragIndicator(.visible)
-                    .presentationDetents([.medium])
-                }
-                
-            }*/
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { activeModelSheet = .OPEN_MODEL_SETTINGS }) {
                         Image(systemName: "gear")
                     }
+                    .toolbarFontAndPadding()
                 }
                 ToolbarItem(placement: .principal) {
                     Button(action: toggleWorldAxis){
@@ -107,6 +99,7 @@ struct ModelView: View{
                                             self.$tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .SHOW_WORLD_AXIS)],
                                         name: "move.3d")
                     }
+                    .toolbarFontAndPadding()
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     NavigationLink(destination:LazyDestination(destination: {
@@ -114,6 +107,7 @@ struct ModelView: View{
                     })){
                         Image(systemName: "info.circle")
                     }
+                    .toolbarFontAndPadding()
                 }
             }
             

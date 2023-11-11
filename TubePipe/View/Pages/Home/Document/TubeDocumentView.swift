@@ -103,7 +103,7 @@ extension TubeDocumentView{
                     SubHeaderSubHeaderView(subMain: Text("Outer length:"), subSecond: Text(segment.outerLength))
                  }
             } header: {
-                Text(segment.seg_type.rawValue)
+                Text(segment.seg_type.rawValue).foregroundColor(.darkGray)
             } footer: {
                 Text("")
             }
@@ -111,7 +111,7 @@ extension TubeDocumentView{
     }
     
     var muffSection: some View{
-        return Section { muff } header: { Text("Muff") } footer: { Text("") }
+        return Section { muff } header: { Text("Muff").foregroundColor(.darkGray) } footer: { Text("") }
     }
     
     var muff: some View{
@@ -159,7 +159,7 @@ extension TubeDocumentView{
              }
             
         } header:{
-            Text("Summary")
+            Text("Summary").foregroundColor(.darkGray)
         } footer:{
             Text("")
         }

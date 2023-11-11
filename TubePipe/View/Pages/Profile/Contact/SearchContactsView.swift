@@ -44,7 +44,7 @@ struct SearchContactsView: View{
                 sVar.currentContact = contact
                 sVar.showingOptions.toggle()
             }, label: {
-                Text("\(Image(systemName: "person.badge.plus"))").font(.title)
+                Text("\(Image(systemName: "person.badge.plus"))").font(.title).foregroundColor(.systemBlue)
             })
         default:
             Text(contact.status?.searchResultLabel() ?? "").font(.caption).lineLimit(1)
@@ -70,6 +70,7 @@ struct SearchContactsView: View{
             Image(systemName: "magnifyingglass").padding(.leading,2)
             TextField("",text:$sVar.searchText.max(MAX_TEXTFIELD_LEN))
                 .preferedSearchField()
+                .focused($focusField,equals: .FIND_USER)
                 .placeholder("find user",
                              when: (focusField != .FIND_USER) && (sVar.searchText.isEmpty))
                 .hLeading()
@@ -105,7 +106,7 @@ struct SearchContactsView: View{
             Button("Send request") {
                 sendContactRequest()
             }
-            Button("Cancel", role: .cancel){}
+            Button("Cancel", role: .destructive){}
         }
         
     }

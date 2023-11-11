@@ -36,7 +36,7 @@ struct MainView: View{
                 Image(systemName: img).font(.title2)
                 Text(label).font(.caption)
             }
-            .foregroundColor(navigationViewModel.isActive(tabItem) ? Color.systemBlue : Color.systemGray)
+            .foregroundColor(navigationViewModel.isActive(tabItem) ? Color.accentColor : Color.systemGray)
         })
     }
     

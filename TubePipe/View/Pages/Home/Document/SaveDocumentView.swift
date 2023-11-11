@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SaveDocumentView:View{
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.managedObjectContext) private var managedObjectContext
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @State var docContent:DocumentContent = DocumentContent()
     @State private var toast: Toast? = nil
@@ -40,7 +39,7 @@ struct SaveDocumentView:View{
             Section {
                 mainContent
             } header: {
-                Text(Date().formattedString()).sectionTextSecondary(color:.tertiaryLabel).padding(.leading)
+                Text(Date().formattedString()).sectionTextSecondary(color:.darkGray).padding(.leading)
             }
         }
         .toastView(toast: $toast)
@@ -53,6 +52,7 @@ struct SaveDocumentView:View{
     }
     
     func saveNewTube(){
+        let managedObjectContext = PersistenceController.shared.container.viewContext
         let model = TubeModel(context:managedObjectContext)
         tubeViewModel.buildModelFromCurrentValues(model)
         docContent.trim()

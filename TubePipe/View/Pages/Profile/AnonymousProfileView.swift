@@ -36,6 +36,7 @@ struct AnonymousProfileView:View{
             .toolbar {
                  ToolbarItem(placement: .navigationBarTrailing) {
                      navigateToInfoPage
+                     .toolbarFontAndPadding()
                  }
             }
             .modifier(NavigationViewModifier(title: ""))

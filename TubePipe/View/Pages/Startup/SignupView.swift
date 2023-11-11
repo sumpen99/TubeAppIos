@@ -52,7 +52,9 @@ struct SignupView : View {
                 Image(systemName: "mail")
                 TextField("",text:$sVar.passwordHelper.emailText,onCommit: { })
                     .preferedEmailField(textColor: Color.black)
-                    .placeholder("email",when: sVar.passwordHelper.emailText.isEmpty)
+                    .placeholder(when: focusField != .SIGNUP_EMAIL && sVar.passwordHelper.emailText.isEmpty){
+                        Text("email").foregroundColor(.darkGray)
+                    }
                     .focused($focusField,equals: .SIGNUP_EMAIL)
                     .hLeading()
             }
@@ -71,8 +73,9 @@ struct SignupView : View {
                 Image(systemName: sVar.passwordHelper.passwordsLevel != .NONE ? "lock" : "lock.open")
                 SecureField("",text:$sVar.passwordHelper.password,onCommit: { })
                     .preferedSecureField()
-                    .placeholder("password",
-                                 when: sVar.passwordHelper.password.isEmpty)
+                    .placeholder(when: focusField != .SIGNUP_SECURE_PASSWORD && sVar.passwordHelper.password.isEmpty){
+                        Text("password").foregroundColor(.darkGray)
+                    }
                     .focused($focusField,equals: .SIGNUP_SECURE_PASSWORD)
                     .hLeading()
             }
@@ -90,8 +93,9 @@ struct SignupView : View {
                 Image(systemName: sVar.passwordHelper.passwordsIsAMatch != .NOT_ACCEPTED ? "lock" : "lock.open")
                 SecureField("",text:$sVar.passwordHelper.confirmedPassword,onCommit: { })
                     .preferedSecureField()
-                    .placeholder("verify password",
-                                 when: sVar.passwordHelper.confirmedPassword.isEmpty)
+                    .placeholder(when: focusField != .SIGNUP_RETYPE_SECURE_PASSWORD && sVar.passwordHelper.confirmedPassword.isEmpty){
+                        Text("verify password").foregroundColor(.darkGray)
+                    }
                     .focused($focusField,equals: .SIGNUP_RETYPE_SECURE_PASSWORD)
                     .hLeading()
             }
@@ -121,7 +125,7 @@ struct SignupView : View {
                 .hCenter()
             })
             .buttonStyle(ButtonStyleDisabledable(lblColor: Color.white,
-                                                 backgroundColor: Color.tertiarySystemFill))
+                                                 backgroundColor: Color.backgroundPrimary))
             //.disabled(sVar.hideButton)
         }
         .padding()

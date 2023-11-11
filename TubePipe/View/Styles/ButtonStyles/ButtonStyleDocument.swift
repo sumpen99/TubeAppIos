@@ -12,14 +12,13 @@ struct ButtonStyleDocument: ButtonStyle {
         configuration.label
             .padding([.leading,.trailing],10)
             .padding([.bottom,.top],20)
-            .background( Color.tertiarySystemFill )
+            .background( Color.backgroundSecondary )
             .overlay(
-                RoundedRectangle(cornerRadius: 16)
+                RoundedRectangle(cornerRadius: 24)
                     .stroke(Color.black, lineWidth: 1)
             )
             .opacity(configuration.isPressed ? 0.5 : 1.0)
             .foregroundColor(Color.black)
-            .cornerRadius(16)
             .fontWeight(.semibold)
     }
 

@@ -73,9 +73,9 @@ struct FilterSearchMenu:View{
     var categoriesLabel:some View{
         HStack{
             Text("Filter")
-            .sectionText(font: .subheadline,color: Color.systemGray)
+            .sectionText(font: .subheadline,color: Color.darkGray)
             Spacer()
-            toggleCategoriesButton.foregroundColor(Color.systemBlue)
+            toggleCategoriesButton.foregroundColor(Color.darkGray)
         }
         .padding([.leading,.trailing,.top])
         .contentShape(Rectangle())
@@ -127,8 +127,7 @@ extension FilterSearchMenu{
     var textField:some View{
         TextField("",text:$iVar.searchText.max(MAX_TEXTFIELD_LEN))
             .preferedSearchField()
-            .placeholder("search",
-                         when: (focusField != .FIND_STORED_TUBE) && (iVar.searchText.isEmpty))
+            .placeholder(when: focusField != .FIND_STORED_TUBE && iVar.searchText.isEmpty){ Text("search").foregroundColor(.darkGray)}
             .focused($focusField,equals: .FIND_STORED_TUBE)
             .hLeading()
             .onSubmit {

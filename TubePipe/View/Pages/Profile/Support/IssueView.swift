@@ -43,7 +43,7 @@ struct IssueView:View{
                 collapseFooter.toggle()
             }
         })
-        .buttonStyle(ButtonStyleList(color: Color.systemBlue))
+        .buttonStyle(ButtonStyleList(color: Color.systemGray))
     }
     
     var issueHeader:some View{

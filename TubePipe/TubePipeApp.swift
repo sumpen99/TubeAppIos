@@ -6,13 +6,8 @@
 //
 
 import SwiftUI
-/*
- 
- USE NAVMODEL AND POP VIEWS FROM PATH. SEEMS TO SOLVE MEMORY LEAKS FROM FIREBASE
- UPDATE 231106: IT DID NOT,  LISTENERREGISTRATION.REMOVE() MIGHT BE THE PROBLEM. SETTING TO NIL INSTEAD
- TO BE CONTINUED...
-  
- */
+
+
 @main
 struct TubePipeApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate

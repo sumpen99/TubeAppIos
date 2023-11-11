@@ -42,7 +42,6 @@ struct CustomCalendarView: View {
     @EnvironmentObject var navigationViewModel: NavigationViewModel
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
     @EnvironmentObject var firebaseAuth: FirebaseAuth
-    @Environment(\.managedObjectContext) var managedObjectContext
     @State var selected:Selected = Selected()
   
     let columns = [ GridItem(),GridItem(),GridItem(),GridItem()]
@@ -82,12 +81,6 @@ struct CustomCalendarView: View {
             }
             
         }
-        /*.sheet(item: $selected.tubeModel){ tube in
-            SelectedTubeView(tubeModel: tube,
-                             labelBackButton: "Calendar",
-                             loadViewModelWithTubeModel: loadViewModelWithTubeModel,
-                             deleteTubeModel: deleteTubeModel)
-        }*/
         .onAppear{
             searchAndSet(year: true, month: true, day: true)
         }
@@ -280,13 +273,13 @@ extension CustomCalendarView{
             if selected.year > TP_RELEASE_YEAR{
                 selected.year -= 1
             }
-        },label: {Text("\(Image(systemName: "chevron.left"))").foregroundColor(.systemBlue)})
+        },label: {Text("\(Image(systemName: "chevron.left"))").foregroundColor(.calendarButton).toolbarFontAndPadding()})
     }
     
     var addYearButton:some View{
         Button(action: {
             selected.year += 1
-        },label: {Text("\(Image(systemName: "chevron.right"))").foregroundColor(.systemBlue)})
+        },label: {Text("\(Image(systemName: "chevron.right"))").foregroundColor(.calendarButton).toolbarFontAndPadding()})
     }
     
     var navigateToSavedTubesButton:some View{
@@ -294,6 +287,7 @@ extension CustomCalendarView{
             InboxSavedTubesView()
         })){
             Image(systemName: "list.bullet")
+            .toolbarFontAndPadding()
         }
     }
     
@@ -303,7 +297,7 @@ extension CustomCalendarView{
                 selected.collapseYear.toggle()
             }
         })
-        .buttonStyle(ButtonStyleList(color: Color.systemBlue))
+        .buttonStyle(ButtonStyleList(color: .calendarButton))
      }
     
     var toggleMonthButton:some View{
@@ -312,7 +306,7 @@ extension CustomCalendarView{
                 selected.collapseMonth.toggle()
             }
         })
-        .buttonStyle(ButtonStyleList(color: Color.systemBlue))
+        .buttonStyle(ButtonStyleList(color: .calendarButton))
     }
     
     var toggleDayButton:some View{
@@ -321,7 +315,7 @@ extension CustomCalendarView{
                 selected.collapseDay.toggle()
             }
         })
-        .buttonStyle(ButtonStyleList(color: Color.systemBlue))
+        .buttonStyle(ButtonStyleList(color: .calendarButton))
     }
     
     //MARK: - BADGES

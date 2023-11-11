@@ -133,9 +133,8 @@ struct ProfileView: View{
     @ViewBuilder
     var placeHolderText:some View{
         if userAllowSharing{
-            BouncingText(isAnimating:$animateText,
-                         text: " username",
-                         color: .red)
+            Text(" username")
+            .foregroundColor(.systemRed)
         }
         else{
             Text(" username")
@@ -275,16 +274,18 @@ struct ProfileView: View{
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: { replaceDisplayName();endTextEditing(); }) {
-                        Text("Done")
+                    Button(action: { replaceDisplayName();replacePublicMode();endTextEditing(); }) {
+                        Text("Dismiss").foregroundColor(.systemRed).bold()
                     }
+                    .toolbarFontAndPadding()
                     .opacity(userNameHasChanged ? 1.0 : 0.0)
                     .disabled(!userNameHasChanged)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { saveChanges();endTextEditing(); }) {
-                        Text("Save")
+                        Text("Save").foregroundColor(.systemBlue).bold()
                     }
+                    .toolbarFontAndPadding()
                     .opacity(changesHasHappend ? 1.0 : 0.0)
                     .disabled(!changesHasHappend)
                 }
@@ -294,9 +295,9 @@ struct ProfileView: View{
         .modifier(DeleteAccountModifier(isPresented: $pVar.isDeleteAccount,email: firestoreViewModel.currentUserEmail, onAction: deleteAccountAndAllData))
         .actionSheet(item: $pVar.profileAlertAction){ alert in
             switch alert{
-            case .ALERT_LOGOUT: return actionSheetLogout
-            case .ALERT_MISSING_DISPLAYNAME: return actionSheetWithCancel(alert.rawValue)
-            case .ALERT_MISSING_USERID: return actionSheetWithCancel(alert.rawValue)
+            case .ALERT_LOGOUT:                 return actionSheetLogout
+            case .ALERT_MISSING_DISPLAYNAME:    return actionSheetWithCancel(alert.rawValue)
+            case .ALERT_MISSING_USERID:         return actionSheetWithCancel(alert.rawValue)
             }
         }
         .onAppear{
@@ -315,6 +316,10 @@ struct ProfileView: View{
         pVar.displayName = firestoreViewModel.currentUserDisplayName
     }
     
+    func replacePublicMode(){
+        tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ALLOW_SHARING)] = firestoreViewModel.isCurrentUserPublic
+    }
+    
     func replaceDisplaynameIfEmpty(_ field:Field?){
         if field != .PROFILE_DISPLAY_NAME && pVar.displayName.isEmpty{
             pVar.displayName = firestoreViewModel.currentUserDisplayName
@@ -326,7 +331,7 @@ struct ProfileView: View{
         Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_CONTACTS)}, label: {
             buttonAsNavigationLink(title: "Contacts", systemImage: "smallcircle.circle")
         })
-        .fullListWidthSeperator()
+        .opacity(userHasAllowedSharing ? 1.0 : 0.3)
         .disabled(!userHasAllowedSharing)
     }
     
@@ -340,6 +345,7 @@ struct ProfileView: View{
         Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_MESSAGES)},label: {
             buttonAsNavigationLink(title: "Messages", systemImage: "tray")
         })
+        .opacity(userHasAllowedSharing ? 1.0 : 0.3)
         .disabled(!userHasAllowedSharing)
     }
     
@@ -360,8 +366,8 @@ struct ProfileView: View{
     //MARK: ACTIONSHEET
     var actionSheetLogout:ActionSheet{
         ActionSheet(title: Text("Sign out"), message: Text("Do you want to sign out from your device or did the wrong button accidentally get pressed?"), buttons: [
-            .destructive(Text("Yepp, sign me out!")) { signOut() },
-            .cancel(Text("Cancel please"))
+            .default(Text("Yepp, sign me out!").foregroundColor(.blue)) { signOut() },
+            .cancel(Text("Cancel please").foregroundColor(.red))
         ])
     }
     

@@ -11,7 +11,7 @@ struct TapAndHoldButton: View{
     let tapAction: (Any) -> Void
     let holdAction: () -> Void
     let imageName:String
-    var color:Color = Color.systemBlue
+    var color:Color = Color.darkGray
     @GestureState var pressingState = false
   
     var body: some View{
@@ -49,7 +49,7 @@ struct TapAndHoldButton: View{
 struct BackButton:View{
     @Environment(\.dismiss) private var dismiss
     var title:String = "Back"
-    var color:Color = Color.systemBlue
+    var color:Color = Color.accentColor
     var action: (() -> Void)? = nil
     
     var body: some View{
@@ -59,7 +59,7 @@ struct BackButton:View{
                 dismiss()
             }){
                 HStack(spacing: 5){
-                    Image(systemName: "chevron.left").bold()
+                    Image(systemName: "chevron.left").font(.callout)
                     Text(title)
                 }
                 .foregroundColor(color)

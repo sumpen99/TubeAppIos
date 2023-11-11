@@ -12,6 +12,7 @@ struct ContentView: View {
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
      
     init(){
+        UIView.changeUIAlertTintColor()
         UITabBar.changeAppearance()
         UINavigationBar.changeAppearance()
     }

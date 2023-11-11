@@ -8,23 +8,18 @@
 import SwiftUI
 
 struct ModelSettingsView:View{
-    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @Binding var renderNewState:Bool
      
     var modelHeaderMenuList:  some View{
-        ZStack{
-            HStack{
-                Text("Displayoption")
-                .font(.headline)
-                .frame(height: 33)
-                Button("\(Image(systemName: BACK_BUTTON_PRIMARY))", action: closeView)
-                .hTrailing()
-            }
-            .padding([.leading,.trailing,.top])
-            
+        HStack{
+            Text("Displayoption")
+            .font(.headline)
+            .frame(height: 33)
         }
+        .padding([.leading,.trailing,.top])
         .frame(height:MENU_HEIGHT)
+        .hLeading()
     }
     
     //MARK: - SWITCHES
@@ -187,8 +182,4 @@ struct ModelSettingsView:View{
         }
     }
     
-    //MARK: - HELPER
-    func closeView(){
-        dismiss()
-    }
 }

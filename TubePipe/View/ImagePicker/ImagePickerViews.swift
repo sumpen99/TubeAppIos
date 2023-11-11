@@ -36,7 +36,7 @@ struct ImagePickerSwiftUi<LabelText:View>: View {
                         image = nil
                     }
                 })
-                .font(.title)
+                .font(.headline)
                 .foregroundColor(.red)
             }
             else{
@@ -63,7 +63,7 @@ struct ImagePickerSwiftUi<LabelText:View>: View {
                     imageLabel
                     fetchedImage
                 }
-                .foregroundColor(Color.systemGray)
+                .foregroundColor(Color.black)
             }
             .onChange(of: selectedItem) { newItem in
                 Task {

@@ -28,14 +28,14 @@ struct ButtonStyleDisabledable: ButtonStyle {
             configuration.label
                 .padding([.leading,.trailing],10)
                 .padding([.bottom,.top],20)
-                .foregroundColor(isEnabled ? lblColor : Color.placeholderText)
+                .foregroundColor(lblColor)
                 .background(backgroundColor)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: 24)
                         .stroke(Color.black, lineWidth: 1)
+                        .opacity(isEnabled ? 0.3 : 1.0)
                 )
-                .opacity(isEnabled ? (configuration.isPressed ? 0.8 : 1.0) : 0.8)
-                .cornerRadius(16)
+                .opacity(isEnabled ? (configuration.isPressed ? 0.3 : 1.0) : 0.3)
                 .fontWeight(.semibold)
                 .disabled(!isEnabled)
         }
