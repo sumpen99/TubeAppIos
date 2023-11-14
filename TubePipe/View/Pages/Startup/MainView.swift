@@ -9,20 +9,15 @@ import SwiftUI
 
 struct MainView: View{
     @EnvironmentObject var firebaseAuth: FirebaseAuth
-    @EnvironmentObject var firestoreViewModel: FirestoreViewModel
-    @StateObject var tubeViewModel = TubeViewModel()
-    @StateObject var globalDialogPresentation = GlobalLoadingPresentation()
-    @StateObject var coreDataViewModel = CoreDataViewModel()
-    @StateObject var navigationViewModel = NavigationViewModel()
+    @EnvironmentObject var globalDialogPresentation: GlobalLoadingPresentation
+    @EnvironmentObject var navigationViewModel: NavigationViewModel
     
     let layoutRegistred = [
             GridItem(.flexible(minimum: 40)),
             GridItem(.flexible(minimum: 40)),
             GridItem(.flexible(minimum: 40)),
-            GridItem(.flexible(minimum: 40)),
     ]
     let layoutAnonymous = [
-            GridItem(.flexible(minimum: 40)),
             GridItem(.flexible(minimum: 40)),
             GridItem(.flexible(minimum: 40)),
     ]
@@ -45,11 +40,11 @@ struct MainView: View{
             SplitLineProgressView(isLoading: $globalDialogPresentation.isLoading)
             LazyVGrid(columns: layoutAnonymous, pinnedViews: [.sectionHeaders]){
                 menuItem(tabItem: MainTabItem.HOME_ANONYMOUS, img: "house.fill", label: "Home")
-                menuItem(tabItem: MainTabItem.MODEL, img: "rotate.3d", label: "Model")
+                //menuItem(tabItem: MainTabItem.MODEL, img: "rotate.3d", label: "Model")
                 menuItem(tabItem: MainTabItem.PROFILE_ANONYMOUS, img: "person.fill", label: "Profile")
             }
         }
-        .background(Color.backgroundPrimary)
+        .background(Color.backgroundSecondary)
         .hLeading()
     }
     
@@ -58,12 +53,12 @@ struct MainView: View{
             SplitLineProgressView(isLoading: $globalDialogPresentation.isLoading)
             LazyVGrid(columns: layoutRegistred,pinnedViews: [.sectionHeaders]){
                 menuItem(tabItem: MainTabItem.HOME, img: "house.fill", label: "Home")
-                menuItem(tabItem: MainTabItem.MODEL, img: "rotate.3d", label: "Model")
+                //menuItem(tabItem: MainTabItem.MODEL, img: "rotate.3d", label: "Model")
                 menuItem(tabItem: MainTabItem.CALENDAR, img: "calendar", label: "Calendar")
                 menuItem(tabItem: MainTabItem.PROFILE, img: "person.fill", label: "Profile")
             }
         }
-        .background(Color.backgroundPrimary)
+        .background(Color.backgroundSecondary)
         .hLeading()
     }
     
@@ -93,15 +88,30 @@ struct MainView: View{
         }
         
     }
-    
-    
+        
+    /*var m:some View{
+        ZStack{
+            Color.red
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .topBarLeading) {
+                Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_SETTINGS_TUBE)}, label: {
+                    buttonAsNavigationLink(title: "Default Tube", systemImage: "smallcircle.circle")
+                })
+                Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_SETTINGS_TUBE)}, label: {
+                    buttonAsNavigationLink(title: "Default Tube", systemImage: "smallcircle.circle")
+                })
+                Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_SETTINGS_TUBE)}, label: {
+                    buttonAsNavigationLink(title: "Default Tube", systemImage: "smallcircle.circle")
+                })
+            }
+        }
+        
+    }*/
+        
     var body: some View{
         mainContent
         .ignoresSafeArea(.keyboard)
-        .environmentObject(coreDataViewModel)
-        .environmentObject(tubeViewModel)
-        .environmentObject(navigationViewModel)
-        .environmentObject(globalDialogPresentation)
     }
-    
+     
 }

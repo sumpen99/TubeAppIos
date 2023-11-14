@@ -21,7 +21,7 @@ struct TubeDocFileView:View{
            RoundedRectangle(cornerRadius: 8).fill(Color.white)
         )
         .overlay{
-            RoundedRectangle(cornerRadius: 8).stroke(lineWidth: 2.0).foregroundColor(.systemGray)
+            RoundedRectangle(cornerRadius: 8).stroke(lineWidth: 2.0).foregroundColor(.black)
         }
     }
     
@@ -30,7 +30,7 @@ struct TubeDocFileView:View{
         if let date = tube.date{
             Text(date.shortTime())
             .font(.subheadline)
-            .foregroundColor(.systemGray)
+            .foregroundColor(.black)
         }
     }
     
@@ -41,7 +41,7 @@ struct TubeDocFileView:View{
             .font(.callout)
             .bold()
             .lineLimit(1)
-            .foregroundColor(.white)
+            .foregroundColor(.black)
         }
      }
     
@@ -86,9 +86,9 @@ struct ExtendedTubeDocFileView:View{
         Image(systemName: "checkmark.circle.fill")
         .resizable()
         .background{
-            Circle().fill(Color.white).frame(width: 26, height: 26)
+            Circle().fill(Color.black).frame(width: 26, height: 26)
         }
-        .foregroundColor(Color.backgroundPrimary)
+        .foregroundColor(Color.white)
     }
     
     @ViewBuilder
@@ -113,7 +113,7 @@ struct ExtendedTubeDocFileView:View{
            RoundedRectangle(cornerRadius: 8).fill(Color.white)
         )
         .overlay{
-            RoundedRectangle(cornerRadius: 8).stroke(lineWidth: 2.0).foregroundColor(.systemGray)
+            RoundedRectangle(cornerRadius: 8).stroke(lineWidth: 2.0).foregroundColor(.black)
         }
     }
     
@@ -122,7 +122,7 @@ struct ExtendedTubeDocFileView:View{
         if let date = tube.date{
             Text(date.iosShortMessageFormat())
             .font(.subheadline)
-            .foregroundColor(.systemGray)
+            .foregroundColor(.black)
         }
     }
     

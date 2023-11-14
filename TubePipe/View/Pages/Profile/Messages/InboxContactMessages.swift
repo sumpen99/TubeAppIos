@@ -17,7 +17,7 @@ struct InboxContactMessages:View{
                            showingOptions: $cVar.showingOptions,
                            contactCardOption: .CONTACT_CARD_MESSAGES_ONLY,
                            contactSectionOption: .INBOX_CONTACT_MESSAGES_VIEW_SECTION,
-                           contactAvatarColor: Color.systemGray,
+                           contactAvatarColor: .black,
                            contactInfoColor: .black)
     }
    

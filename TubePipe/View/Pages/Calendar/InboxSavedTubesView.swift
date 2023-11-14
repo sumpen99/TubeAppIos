@@ -203,16 +203,16 @@ extension InboxSavedTubesView{
         if let categorie = iVar.searchCategorie{
             VStack{
                 Text("All items")
-                .largeTitle(color: .systemGray)
+                .largeTitle(color: .black)
                 Text("Filter on: \(categorie.rawValue)")
                 .font(.body)
-                .foregroundColor(.systemGray)
+                .foregroundColor(.black)
                 .hLeading()
             }
        }
         else{
             Text("All items")
-            .largeTitle(color: .systemGray)
+            .largeTitle(color: .black)
         }
         
         

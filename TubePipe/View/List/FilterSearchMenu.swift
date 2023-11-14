@@ -43,7 +43,7 @@ struct FilterSearchMenu:View{
     
     func getCategorieCell(_ categorie:SearchCategorie) -> some View{
         Toggle(isOn:self.$iVar.searchOption[SearchCategorie.indexOf(op: categorie)]){
-            Text(categorie.rawValue).font(.caption).lineLimit(0)
+            Text(categorie.rawValue).font(.body).lineLimit(0).foregroundColor(.black)
         }
         .onChange(of: self.iVar.searchOption[SearchCategorie.indexOf(op: categorie)]){ value in
             withAnimation{
@@ -73,9 +73,9 @@ struct FilterSearchMenu:View{
     var categoriesLabel:some View{
         HStack{
             Text("Filter")
-            .sectionText(font: .subheadline,color: Color.darkGray)
+            .sectionText(font: .subheadline,color: Color.black)
             Spacer()
-            toggleCategoriesButton.foregroundColor(Color.darkGray)
+            toggleCategoriesButton.foregroundColor(Color.black)
         }
         .padding([.leading,.trailing,.top])
         .contentShape(Rectangle())
@@ -102,7 +102,7 @@ struct FilterSearchMenu:View{
             categories
         }
         .background{
-            RoundedRectangle(cornerRadius: 10.0).fill(!iVar.collapseCategories ? .white : Color.tertiaryLabel)
+            RoundedRectangle(cornerRadius: 10.0).fill(!iVar.collapseCategories ? .white : Color.lightText)
         }
     }
 }

@@ -7,7 +7,7 @@
 import SwiftUI
 import Firebase
 import OrderedCollections
-//https://stackoverflow.com/questions/39176196/how-to-provide-a-localized-description-with-an-error-type-in-swift
+
 enum FirebaseError: Error {
     case EMPTY_SNAPSHOT
     case EMPTY_GROUP_MESSAGE_DOCUMENT

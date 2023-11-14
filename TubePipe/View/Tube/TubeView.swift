@@ -280,7 +280,7 @@ struct TubeView: View{
                 Text(label.text)
                     .rotation3DEffect(.degrees(180.0), axis: (x: 1, y: 0, z: 0))
                     .rotationEffect(Angle(degrees: label.rotation))
-                    .foregroundColor(Color.white)
+                    .foregroundColor(Color.black)
                     .position(x:label.pos.x - ox,y:label.pos.y - oy)
                     .padding()
             }
@@ -296,13 +296,13 @@ struct TubeView: View{
                 Text(segment.innerLength)
                     .rotation3DEffect(.degrees(180.0), axis: (x: 1, y: 0, z: 0))
                     .rotationEffect(Angle(degrees: segment.rotation + 90.0))
-                    .foregroundColor(Color.white)
+                    .foregroundColor(Color.black)
                     .position(x:segment.pInner.x - ox,y:segment.pInner.y - oy)
                     .padding(.all,-12.0)
                 Text(segment.outerLength)
                     .rotation3DEffect(.degrees(180.0), axis: (x: 1, y: 0, z: 0))
                     .rotationEffect(Angle(degrees: segment.rotation + 90.0))
-                    .foregroundColor(Color.white)
+                    .foregroundColor(Color.black)
                     .position(x:segment.pOuter.x - ox,y:segment.pOuter.y - oy)
                     .padding(.all,12)
             }
@@ -343,7 +343,7 @@ struct TubeView: View{
                 tubeBase
                 muff
                 ForEach(DrawOption.indexOf(op: .LABELSDEGREES)..<DrawOption.indexOf(op: .FULLCIRCLE) + 1,id: \.self){ index in
-                    if tubeViewModel.userDefaultSettingsVar.drawOptions[index]{
+                    if tubeViewModel.drawable && tubeViewModel.userDefaultSettingsVar.drawOptions[index]{
                         getDrawOption(index:index)
                     }
                 }

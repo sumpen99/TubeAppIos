@@ -24,75 +24,80 @@ struct HomeView: View{
     @State var activeHomeSheet: ActiveHomeSheet?
    
     var body: some View{
-        NavigationStack{
-            AppBackgroundStack(content: {
-                TubeView(tubeInteraction: .IS_MOVEABLE)
-            })
-            .onAppear{
-                tubeViewModel.initFromCache()
-            }
-            .onChange(of: activeHomeSheet){ item in
-                if let item{
-                    activeHomeSheet = nil
-                    switch item{
-                    case ActiveHomeSheet.OPEN_TUBE_SETTINGS:
-                        SheetPresentView(style: .detents([.medium()])){
-                            TubeSettingsView()
-                            .environmentObject(tubeViewModel)
-                            .presentationDragIndicator(.visible)
-                        }
-                        .makeUIView()
-                    case ActiveHomeSheet.OPEN_TUBE_DOCUMENT:
-                        SheetPresentView(style: .sheet){
-                            TubeDocumentView()
-                            .environmentObject(tubeViewModel)
-                        }
-                        .makeUIView()
-                    case ActiveHomeSheet.OPEN_TUBE_SAVE:
-                        SheetPresentView(style: .sheet){
-                            SaveDocumentView()
-                            .environmentObject(tubeViewModel)
-                        }
-                        .makeUIView()
-                    case ActiveHomeSheet.OPEN_TUBE_SHARE:
-                        SheetPresentView(style: .sheet){
-                            ShareDocumentView()
-                            .environmentObject(tubeViewModel)
-                            .environmentObject(firestoreViewModel)
-                        }
-                        .makeUIView()
-                    case ActiveHomeSheet.OPEN_TUBE_INFORMATION:
-                        SheetPresentView(style: .sheet){
-                            TubeHelpView()
-                        }
-                        .makeUIView()
+        AppBackgroundStack(content: {
+            TubeView(tubeInteraction: .IS_MOVEABLE)
+        })
+        .onAppear{
+            tubeViewModel.initFromCache()
+        }
+        .onChange(of: activeHomeSheet){ item in
+            if let item{
+                activeHomeSheet = nil
+                switch item{
+                case ActiveHomeSheet.OPEN_TUBE_SETTINGS:
+                    SheetPresentView(style: .detents([.medium()])){
+                        TubeSettingsView()
+                        .environmentObject(tubeViewModel)
+                        .presentationDragIndicator(.visible)
                     }
+                    .makeUIView()
+                case ActiveHomeSheet.OPEN_TUBE_DOCUMENT:
+                    SheetPresentView(style: .sheet){
+                        TubeDocumentView()
+                        .environmentObject(tubeViewModel)
+                    }
+                    .makeUIView()
+                case ActiveHomeSheet.OPEN_TUBE_SAVE:
+                    SheetPresentView(style: .sheet){
+                        SaveDocumentView()
+                        .environmentObject(tubeViewModel)
+                    }
+                    .makeUIView()
+                case ActiveHomeSheet.OPEN_TUBE_SHARE:
+                    SheetPresentView(style: .sheet){
+                        ShareDocumentView()
+                        .environmentObject(tubeViewModel)
+                        .environmentObject(firestoreViewModel)
+                    }
+                    .makeUIView()
+                case ActiveHomeSheet.OPEN_TUBE_INFORMATION:
+                    SheetPresentView(style: .sheet){
+                        TubeHelpView()
+                    }
+                    .makeUIView()
                 }
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: { activeHomeSheet = .OPEN_TUBE_SETTINGS }) {
-                        Image(systemName: "ruler")
-                    }
-                    .toolbarFontAndPadding()
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { activeHomeSheet = .OPEN_TUBE_SETTINGS }) {
+                    Image(systemName: "gear")
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                     Menu{
-                         navPrintButton.padding()
-                         navShareButton.padding()
-                         navSaveButton.padding()
-                         navInfoButton.padding()
-                     }
-                     label:{
-                         Label("Info",systemImage: "ellipsis.circle").imageScale(.large)
-                         .toolbarFontAndPadding()
-                     }
+                .toolbarFontAndPadding()
+            }
+            ToolbarItem(placement: .principal) {
+                NavigationLink(destination:LazyDestination(destination: {
+                    ModelView()
+                })){
+                    Image(systemName: "arrow.left.arrow.right.circle")
+                    //RotateImageViewDefault(name: "move.3d")
+                }
+                .toolbarFontAndPadding()
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                 Menu{
+                     navPrintButton.padding()
+                     navShareButton.padding()
+                     navSaveButton.padding()
+                     navInfoButton.padding()
                  }
-                
-            }
+                 label:{
+                     Label("Info",systemImage: "ellipsis.circle").imageScale(.large)
+                         .toolbarFontAndPadding()
+                 }
+             }
             
         }
-        
     }
     
     var navPrintButton:some View{

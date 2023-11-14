@@ -14,6 +14,7 @@ struct AppBackgroundStack<Content:View>: View{
             content
         }
         .safeAreaInset(edge: .bottom){ clearSpaceAtBottom }
+        .modifier(NavigationViewModifier(title: ""))
     }
 }
 
@@ -24,5 +25,6 @@ struct AppBackgroundStackWithoutBottomPadding<Content:View>: View{
             appLinearGradient
             content
         }
+        .modifier(NavigationViewModifier(title: ""))
     }
 }

@@ -152,7 +152,7 @@ struct TubeSettingsView:View{
         .background(
              ZStack{
                  if setting == tsVar.settingsHeader{
-                     Color.backgroundPrimary
+                     Color.black
                      .frame(height: 1)
                      .offset(y: 14)
                      .matchedGeometryEffect(id: "CURRENTHEADER", in: animation)
@@ -174,12 +174,13 @@ struct TubeSettingsView:View{
         .background(
              ZStack{
                  if setting == tsVar.settingsOption{
-                     RoundedRectangle(cornerRadius: 8).fill(Color.systemBlue).opacity(0.1)
+                     RoundedRectangle(cornerRadius: 8).stroke(Color.black)
                      .matchedGeometryEffect(id: "CURRENTSETTING", in: animation)
                  }
              }
         )
-        .foregroundStyle(setting == tsVar.settingsOption ? .primary : .tertiary)
+        .bold(setting == tsVar.settingsOption)
+        .foregroundColor(setting == tsVar.settingsOption ? .black : .tertiaryLabel)
         .onTapGesture {
             withAnimation{
                 tsVar.settingsOption = setting

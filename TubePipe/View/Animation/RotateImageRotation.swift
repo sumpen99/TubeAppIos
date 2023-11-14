@@ -36,3 +36,28 @@ struct RotateImageView:View{
     }
    
 }
+
+struct RotateImageViewDefault:View{
+    let name:String
+    @State var isAnimating = false
+    
+    var singleAnimation: Animation {
+        Animation.linear(duration: 0.7)
+    }
+
+    var body: some View {
+        Image(systemName: name)
+        .foregroundColor(Color.accentColor)
+        .rotationEffect(Angle.degrees(isAnimating ? 360 : 0))
+        .onAppear {
+            startAnimation()
+        }
+    }
+    
+    func startAnimation() {
+        withAnimation(singleAnimation) {
+            isAnimating = true
+        }
+    }
+   
+}

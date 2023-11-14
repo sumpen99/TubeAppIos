@@ -42,6 +42,7 @@ struct CustomCalendarView: View {
     @EnvironmentObject var navigationViewModel: NavigationViewModel
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
     @EnvironmentObject var firebaseAuth: FirebaseAuth
+    @EnvironmentObject var coreDataViewModel: CoreDataViewModel
     @State var selected:Selected = Selected()
   
     let columns = [ GridItem(),GridItem(),GridItem(),GridItem()]
@@ -57,16 +58,13 @@ struct CustomCalendarView: View {
         ]
     
     var body: some View {
-        NavigationStack{
-            AppBackgroundStack(content: {
-                mainPage
-            })
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    navigateToSavedTubesButton
-                }
+        AppBackgroundStack(content: {
+            mainPage
+        })
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                navigateToSavedTubesButton
             }
-             .modifier(NavigationViewModifier(title: ""))
         }
         .onChange(of: selected.tubeModel){ tube in
             if let tube = tube{
@@ -92,7 +90,7 @@ struct CustomCalendarView: View {
             calendarWeekdays
             tubesInfo
         }
-        .listStyle(.grouped)
+        .listStyle(.automatic)
     }
     
     var calendarYearMonths: some View{
@@ -173,7 +171,8 @@ extension CustomCalendarView{
                 getBadgeMonth(month)
             }
         }
-        .foregroundColor(month == selected.month ? .black : .white)
+        .bold(month == selected.month)
+        .foregroundColor(.black)
         .onTapGesture {
             withAnimation{
                 selected.month = month
@@ -185,7 +184,7 @@ extension CustomCalendarView{
     var weekdaysName: some View{
         LazyVGrid(columns: layout, spacing: 20.0,pinnedViews: [.sectionHeaders]) {
             ForEach(selected.days, id: \.self) { item in
-                Text("\(item)").foregroundColor(Color.white).font(.subheadline).bold()
+                Text("\(item)").foregroundColor(Color.black).font(.subheadline).bold()
            }
         }
         .padding([.horizontal,.top])
@@ -222,7 +221,8 @@ extension CustomCalendarView{
                          }
                      }
                 )
-                .foregroundColor(newDay == selected.day ? .black : .white)
+                .bold(newDay == selected.day)
+                .foregroundColor(.black)
                 .onTapGesture {
                     withAnimation{
                         selected.day = day - PAD_CALENDAR
@@ -273,21 +273,29 @@ extension CustomCalendarView{
             if selected.year > TP_RELEASE_YEAR{
                 selected.year -= 1
             }
-        },label: {Text("\(Image(systemName: "chevron.left"))").foregroundColor(.calendarButton).toolbarFontAndPadding()})
+        },label: {
+            Text("\(Image(systemName: "chevron.left"))")
+                .foregroundColor(.calendarButton)
+                .toolbarFontAndPadding(.headline)
+        })
     }
     
     var addYearButton:some View{
         Button(action: {
             selected.year += 1
-        },label: {Text("\(Image(systemName: "chevron.right"))").foregroundColor(.calendarButton).toolbarFontAndPadding()})
+        },label: {
+            Text("\(Image(systemName: "chevron.right"))")
+                .foregroundColor(.calendarButton)
+                .toolbarFontAndPadding(.headline)
+        })
     }
     
     var navigateToSavedTubesButton:some View{
         NavigationLink(destination:LazyDestination(destination: {
             InboxSavedTubesView()
         })){
-            Image(systemName: "list.bullet")
-            .toolbarFontAndPadding()
+            Image(systemName: "list.bullet.indent")
+                .toolbarFontAndPadding(.headline)
         }
     }
     

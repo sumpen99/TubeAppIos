@@ -9,7 +9,7 @@ import SwiftUI
 
 extension Text{
     
-    func largeTitle(color:Color = Color.white) -> some View{
+    func largeTitle(color:Color = Color.black) -> some View{
         self.font(.largeTitle)
             .bold()
             .foregroundColor(color)
@@ -60,6 +60,10 @@ extension Text{
     
     func listSectionHeader(color:Color = .darkGray) -> some View{
         self.foregroundColor(color).bold()
+    }
+    
+    func profileSectionHeader() -> some View{
+        self.foregroundColor(.black).bold().font(.headline)
     }
     
     func listSectionFooter(color:Color = .systemGray) -> some View{
@@ -127,7 +131,6 @@ extension TextField{
             .overlay(
                 Rectangle().frame(height: 1.0).vBottom().foregroundColor(Color.tertiaryLabel)
             )
-            .foregroundColor(Color.primary)
             .accentColor(.black)
             
     }

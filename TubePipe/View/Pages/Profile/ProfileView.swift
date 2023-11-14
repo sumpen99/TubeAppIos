@@ -39,6 +39,7 @@ enum ProfileRoute: Identifiable{
 enum ProfileAlertAction: Identifiable{
     case ALERT_LOGOUT
     case ALERT_MISSING_DISPLAYNAME
+    case ALERT_DISPLAYNAME_ALREADY_TAKEN
     case ALERT_MISSING_USERID
     
     var id: Int {
@@ -49,6 +50,7 @@ enum ProfileAlertAction: Identifiable{
         switch self{
         case .ALERT_LOGOUT: return (title:"",message:"",cancel:"")
         case .ALERT_MISSING_DISPLAYNAME: return (title:"Missing username",message:"Please provide a valid username.",cancel:"Ok")
+        case .ALERT_DISPLAYNAME_ALREADY_TAKEN: return (title:"Username already taken!",message:"Please try a different name.",cancel:"Ok")
         case .ALERT_MISSING_USERID: return (title:"Unexpected error!",message:"Please try again.",cancel:"Ok")
         }
     }
@@ -96,7 +98,7 @@ struct ProfileView: View{
     @FocusState var focusField: Field?
     @State var pVar:ProfileVariables = ProfileVariables()
     @State var animateText:Bool = false
-  
+    
     var showPlaceholderText:Bool{
         (pVar.displayName.isEmpty && focusField != .PROFILE_DISPLAY_NAME)
     }
@@ -144,22 +146,38 @@ struct ProfileView: View{
     
     var displayName:some View{
         HStack{
+            Text("Username: ")
+            .lineLimit(1)
+            .italic()
+            .foregroundColor(.darkGray)
             TextField("",text:$pVar.displayName.max(MAX_TEXTFIELD_LEN))
             .preferedProfileSettingsField()
             .focused($focusField,equals: .PROFILE_DISPLAY_NAME)
             .placeholder(when: showPlaceholderText){
                 placeHolderText
             }
+            .foregroundColor(userAllowSharing ? .black : .darkGray)
+            .hLeading()
+            .disabled(!userAllowSharing)
+            .onChange(of: focusField,perform: replaceDisplaynameIfEmpty)
         }
-        .disabled(!userAllowSharing)
-        .onChange(of: focusField,perform: replaceDisplaynameIfEmpty)
+        .profileListRow()
+        
     }
         
     var userEmailtext:some View{
-        Text(firestoreViewModel.currentUser?.email ?? "")
-            .lineLimit(1)
-            .hLeading()
-            .listRowSeparator(.hidden)
+        HStack{
+            Text("Email: ")
+                .lineLimit(1)
+                .italic()
+                .foregroundColor(.darkGray)
+            Text(firestoreViewModel.currentUser?.email ?? "")
+                .lineLimit(1)
+                .hLeading()
+                .italic()
+                .foregroundColor(.darkGray)
+        }
+        .profileListRow()
     }
     
     var signoutButton:some View{
@@ -173,7 +191,7 @@ struct ProfileView: View{
                 .foregroundColor(.tertiaryLabel)
            }
         }
-        .fullListWidthSeperator()
+        .profileListRow()
     }
     
     var deleteAccountButton:some View{
@@ -187,7 +205,7 @@ struct ProfileView: View{
                 .foregroundColor(.tertiaryLabel)
            }
         }
-        .fullListWidthSeperator()
+        .profileListRow()
     }
     
     var togglePublicMode:some View{
@@ -195,7 +213,7 @@ struct ProfileView: View{
             Label("Public mode",systemImage: "globe").foregroundColor(.black)
         }
         .toggleStyle(CapsuleCheckboxStyle(alignLabelLeft: true))
-        .fullListWidthSeperator()
+        .profileListRow()
     }
     
     var accountSection:some View{
@@ -203,7 +221,7 @@ struct ProfileView: View{
             userEmailtext
             displayName
         } header: {
-            Text("Account").foregroundColor(.white).bold()
+            Text("Account").profileSectionHeader()
         }
     }
     
@@ -211,7 +229,7 @@ struct ProfileView: View{
         Section {
             navigateToUserSettings
         } header: {
-            Text("Settings").foregroundColor(.white).bold()
+            Text("Settings").profileSectionHeader()
         }
     }
     
@@ -221,7 +239,7 @@ struct ProfileView: View{
             contactButton
             navigateToMessages
         } header: {
-            Text("Social").foregroundColor(.white).bold()
+            Text("Social").profileSectionHeader()
         }
     }
     
@@ -230,7 +248,7 @@ struct ProfileView: View{
             navigateToHelpCenter
             navigateToFileBug
         } header: {
-            Text("Help & Support").foregroundColor(.white).bold()
+            Text("Help & Support").profileSectionHeader()
         }
    }
     
@@ -239,7 +257,7 @@ struct ProfileView: View{
             signoutButton
             deleteAccountButton
         } header: {
-            Text("Privacy").foregroundColor(.white).bold()
+            Text("Privacy").profileSectionHeader()
         }
    }
     
@@ -255,61 +273,46 @@ struct ProfileView: View{
     }
     
     var body: some View{
-        NavigationStack(path:$navigationViewModel.pathTo){
-            AppBackgroundStack(content: {
-                personalPage
-            })
-            .navigationDestination(for: Contact.self){  contact in
-                ContactMessagesView(contact: contact,backButtonLabel: "Messages")
-            }
-            .navigationDestination(for: ProfileRoute.self){  route in
-                switch route{
-                case .ROUTE_SETTINGS_TUBE:  UserSettingsView()
-                case .ROUTE_MESSAGES:       InboxContactMessages()
-                case .ROUTE_CONTACTS:       ContactView()
-                case .ROUTE_FEATURE:        FeatureView()
-                case .ROUTE_ISSUE:          IssueView()
-                default:                    EmptyView()
+        AppBackgroundStack(content: {
+            personalPage
+        })
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { replaceDisplayName();replacePublicMode();endTextEditing(); }) {
+                    Text("Dismiss").foregroundColor(.systemRed).bold().font(.headline)
                 }
+                .toolbarFontAndPadding()
+                .opacity(userNameHasChanged ? 1.0 : 0.0)
+                .disabled(!userNameHasChanged)
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: { replaceDisplayName();replacePublicMode();endTextEditing(); }) {
-                        Text("Dismiss").foregroundColor(.systemRed).bold()
-                    }
-                    .toolbarFontAndPadding()
-                    .opacity(userNameHasChanged ? 1.0 : 0.0)
-                    .disabled(!userNameHasChanged)
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { saveChanges();endTextEditing(); }) {
+                    Text("Save").foregroundColor(.systemBlue).bold().font(.headline)
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { saveChanges();endTextEditing(); }) {
-                        Text("Save").foregroundColor(.systemBlue).bold()
-                    }
-                    .toolbarFontAndPadding()
-                    .opacity(changesHasHappend ? 1.0 : 0.0)
-                    .disabled(!changesHasHappend)
-                }
+                .toolbarFontAndPadding()
+                .opacity(changesHasHappend ? 1.0 : 0.0)
+                .disabled(!changesHasHappend)
             }
-            .modifier(NavigationViewModifier(title: ""))
         }
         .modifier(DeleteAccountModifier(isPresented: $pVar.isDeleteAccount,email: firestoreViewModel.currentUserEmail, onAction: deleteAccountAndAllData))
         .actionSheet(item: $pVar.profileAlertAction){ alert in
             switch alert{
-            case .ALERT_LOGOUT:                 return actionSheetLogout
-            case .ALERT_MISSING_DISPLAYNAME:    return actionSheetWithCancel(alert.rawValue)
-            case .ALERT_MISSING_USERID:         return actionSheetWithCancel(alert.rawValue)
+            case .ALERT_LOGOUT:                         return actionSheetLogout
+            case .ALERT_MISSING_DISPLAYNAME:            return actionSheetWithCancel(alert.rawValue)
+            case .ALERT_DISPLAYNAME_ALREADY_TAKEN:      return actionSheetWithCancel(alert.rawValue)
+            case .ALERT_MISSING_USERID:                 return actionSheetWithCancel(alert.rawValue)
             }
         }
         .onAppear{
             pVar.updateUserVar(currentUser: firestoreViewModel.currentUser)
             tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ALLOW_SHARING)] = firestoreViewModel.isCurrentUserPublic
-            firestoreViewModel.listenForMessageGroups()
+            //firestoreViewModel.listenForMessageGroups()
             
         }
-        .onDisappear{
+        /*.onDisappear{
             firestoreViewModel.closeListenerMessages()
             firestoreViewModel.releaseData([.DATA_CONTACT_MESSAGE_GROUPS,.DATA_CONTACT_MESSAGES])
-        }
+        }*/
     }
     
     func replaceDisplayName(){
@@ -333,12 +336,14 @@ struct ProfileView: View{
         })
         .opacity(userHasAllowedSharing ? 1.0 : 0.3)
         .disabled(!userHasAllowedSharing)
+        .profileListRow()
     }
     
     var navigateToUserSettings:some View{
         Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_SETTINGS_TUBE)}, label: {
             buttonAsNavigationLink(title: "Default Tube", systemImage: "smallcircle.circle")
         })
+        .profileListRow()
     }
     
     var navigateToMessages:some View{
@@ -347,20 +352,21 @@ struct ProfileView: View{
         })
         .opacity(userHasAllowedSharing ? 1.0 : 0.3)
         .disabled(!userHasAllowedSharing)
+        .profileListRow()
     }
     
     var navigateToFileBug:some View{
         Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_ISSUE)}, label: {
             buttonAsNavigationLink(title: "Report an issue", systemImage: "exclamationmark.triangle")
         })
-        .fullListWidthSeperator()
+        .profileListRow()
     }
     
     var navigateToHelpCenter:some View{
         Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_FEATURE)}, label: {
             buttonAsNavigationLink(title: "Request a new feature", systemImage: "lightbulb")
         })
-        .fullListWidthSeperator()
+        .profileListRow()
     }
     
     //MARK: ACTIONSHEET
@@ -388,6 +394,13 @@ extension ProfileView{
     }
     
     func saveChangesPart2(userId:String){
+        firestoreViewModel.isUsernameAlreadyPresent(userId,userName:pVar.displayName){ exists in
+            if exists{ pVar.profileAlertAction = .ALERT_DISPLAYNAME_ALREADY_TAKEN; return }
+            saveChangesPart3(userId: userId)
+        }
+    }
+    
+    func saveChangesPart3(userId:String){
         let allowSharing = tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ALLOW_SHARING)]
         let newUserModeString = UserMode.boolToUserModeString(allowSharing)
         
@@ -396,14 +409,14 @@ extension ProfileView{
                               displayName:pVar.displayName,
                               tag: tagContainer)
         
-        saveChangesPart3(contact: contact,
+        saveChangesPart4(contact: contact,
                          userId: userId,
                          allowSharing: allowSharing,
                          newUserModeStr: newUserModeString)
         
     }
     
-    func saveChangesPart3(contact:Contact,
+    func saveChangesPart4(contact:Contact,
                           userId:String,
                           allowSharing:Bool,
                           newUserModeStr:String){

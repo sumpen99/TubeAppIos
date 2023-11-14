@@ -22,18 +22,18 @@ struct ContactMessagesView:View{
     var leftAttachment:some View{
         Image(systemName: "paperclip").font(.title3)
         .hLeading()
-        .foregroundColor(Color.lightText)
+        .foregroundColor(Color.black)
     }
     
     var rightAttachment:some View{
         Image(systemName: "paperclip").font(.title3)
         .hTrailing()
-        .foregroundColor(Color.lightText)
+        .foregroundColor(Color.black)
     }
     
     func messageDate(_ date:String) -> some View{
         Text(date)
-        .foregroundColor(.white)
+        .foregroundColor(.black)
         .hCenter()
     }
     

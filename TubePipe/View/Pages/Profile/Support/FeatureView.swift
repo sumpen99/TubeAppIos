@@ -31,7 +31,7 @@ struct FeatureView:View{
         Text("New Feature Request")
         .font(.title)
         .bold()
-        .foregroundColor(Color.GHOSTWHITE)
+        .foregroundColor(Color.black)
         .hLeading()
     }
     

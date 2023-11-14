@@ -14,7 +14,7 @@ struct ButtonStyleList: ButtonStyle {
             .background( Color.clear )
             .opacity(configuration.isPressed ? 0.5 : 1.0)
             .foregroundColor(color)
-            .toolbarFontAndPadding()
+            .toolbarFontAndPadding(.headline)
             .fontWeight(.bold)
     }
 

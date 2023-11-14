@@ -47,7 +47,11 @@ struct SearchContactsView: View{
                 Text("\(Image(systemName: "person.badge.plus"))").font(.title).foregroundColor(.systemBlue)
             })
         default:
-            Text(contact.status?.searchResultLabel() ?? "").font(.caption).lineLimit(1)
+            Text(contact.status?.searchResultLabel() ?? "")
+                .font(.caption)
+                .italic()
+                .lineLimit(1)
+                .foregroundColor(.tertiaryLabel)
         }
     }
     
