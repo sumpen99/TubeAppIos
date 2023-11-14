@@ -47,7 +47,7 @@ struct ContactRequestView:View{
         .font(.headline)
         .bold()
         .frame(height: 33)
-        .foregroundColor(request == requestHeader ? .white : Color.darkGray )
+        .foregroundColor(request == requestHeader ? .black : Color.darkGray )
         .background(
              ZStack{
                  if request == requestHeader{

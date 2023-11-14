@@ -25,7 +25,7 @@ struct ContactView:View{
         Text("Contacts")
         .font(.largeTitle)
         .bold()
-        .foregroundColor(.white)
+        .foregroundColor(.black)
         .hLeading()
     }
     
@@ -42,7 +42,7 @@ struct ContactView:View{
                            contactCardOption: .CONTACT_CARD_ELLIPSE,
                            contactSectionOption: .CONTACT_VIEW_SECTION,
                            contactAvatarColor:.black,
-                           contactInfoColor: Color.GHOSTWHITE)
+                           contactInfoColor: Color.black)
     }
     
     var badgedContactRequestButton:some View{

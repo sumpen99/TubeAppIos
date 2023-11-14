@@ -81,8 +81,8 @@ extension FirestoreViewModel{
     
     func listenForMessageGroups(){
          if let groupIds = groupIds{
-            let col = repo.messageGroupCollection
-            //col.whereField("groupId", in: groupIds) ->  memory leak
+            let ref = repo.messageGroupCollection
+            let col = ref.whereField("groupId", in: groupIds)
             let listenerMessageGroups = col.addSnapshotListener(){ [weak self] (snapshot, err) in
                 guard let documents = snapshot?.documents,
                       let strongSelf = self else { return }
@@ -90,9 +90,10 @@ extension FirestoreViewModel{
                     guard let group = try? document.data(as : MessageGroup.self),
                           let groupId = group.groupId
                     else{ continue }
-                    if groupIds.contains(where: {$0 == groupId}){
+                    strongSelf.getThreadDocumentsFromGroup(groupId)
+                    /*if groupIds.contains(where: {$0 == groupId}){
                         strongSelf.getThreadDocumentsFromGroup(groupId)
-                    }
+                    }*/
                 }
             }
             self.addNewListener(listenerMessageGroups,type:FirestoreListener.LISTENER_MESSAGE_GROUPS)

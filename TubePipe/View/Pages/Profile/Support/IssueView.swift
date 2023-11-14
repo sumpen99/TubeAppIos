@@ -38,19 +38,15 @@ struct IssueView:View{
     }
     
     var toggleFullFooterButton:some View{
-        Button(collapseFooter ? "\(Image(systemName: "chevron.right"))" : "\(Image(systemName: "chevron.down"))", action: {
-            withAnimation{
-                collapseFooter.toggle()
-            }
-        })
-        .buttonStyle(ButtonStyleList(color: Color.systemGray))
+        Image(systemName: collapseFooter ? "chevron.right" : "chevron.down")
+  
     }
     
     var issueHeader:some View{
         Text("Report an issue")
         .font(.title)
         .bold()
-        .foregroundColor(Color.GHOSTWHITE)
+        .foregroundColor(Color.black)
         .hLeading()
     }
     
@@ -68,6 +64,12 @@ struct IssueView:View{
         HStack{
             issueFooterShort.opacity(collapseFooter ? 1.0 : 0.0)
             toggleFullFooterButton
+        }
+        .padding()
+        .onTapGesture {
+            withAnimation{
+                collapseFooter.toggle()
+            }
         }
     }
     
@@ -173,7 +175,7 @@ struct IssueView:View{
             Text("Submit").hCenter()
         })
         .disabled(buttonIsDisabled)
-        .buttonStyle(ButtonStyleDisabledable(lblColor:Color.blue,backgroundColor: Color.GHOSTWHITE))
+        .buttonStyle(ButtonStyleDisabledable(lblColor:Color.black,backgroundColor: Color.white))
         .padding()
     }
     

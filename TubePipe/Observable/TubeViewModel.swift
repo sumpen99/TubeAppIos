@@ -20,15 +20,21 @@ class TubeViewModel: ObservableObject{
     var tubeBase = TubeBase()
     var muffDetails = MuffDetails()
     var muff = Muff()
-   
+    var drawable:Bool{ userDefaultSettingsVar.drawOptions.count > 0}
     var muffDiff: CGFloat { settingsVar.tube.center }
     var useAutoAlign:Bool{
         userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .AUTO_ALIGN)]||settingsVar.forceAutoAlign
     }
     
-    init(){
+    /*init(){
         loadUserDefaultValues()
         calculate()
+    }*/
+    
+    func delayedInit(){
+        if loadUserDefaultValues(){
+            calculate()
+        }
     }
     
     func rebuild(){
@@ -900,19 +906,20 @@ extension TubeViewModel{
 // MARK: - USER DEFAULT
 // TODO: - THIS CRASHES IF USER IS DELETED FROM FIREBASE BUT I DONT THINK THAT IS AN ISSUE, BUT FIX ANYWAYS
 extension TubeViewModel{
-    func loadUserDefaultValues(){
-        guard let userId = FirebaseAuth.userId else { return }
+    func loadUserDefaultValues() -> Bool{
+        guard let userId = FirebaseAuth.userId else { return false }
         guard let userSettings = SharedPreference.loadUserSettingsFromStorage(userId) else{
             let preferredSetting = UserPreferredSetting()
             SharedPreference.writeNewUserSettingsToStorage(userId,userSetting: preferredSetting)
             userDefaultSettingsVar.preferredSetting = preferredSetting
             initViewFromTubeDefaultValues(preferredSetting.tubeDefault)
             userDefaultSettingsVar.showPreferredSettings()
-            return
+            return true
         }
         userDefaultSettingsVar.preferredSetting = userSettings
         initViewFromTubeDefaultValues(userSettings.tubeDefault)
         userDefaultSettingsVar.showPreferredSettings()
+        return true
     }
     
     func loadTubeDefaultValues(compareTubesMode:Bool = false){

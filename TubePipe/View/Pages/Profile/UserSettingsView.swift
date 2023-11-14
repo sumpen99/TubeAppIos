@@ -47,7 +47,7 @@ struct UserSettingsView:View{
             overlayError
         }
         .padding()
-        .border(Color.darkGray,width: 3.0)
+        .border(Color.black,width: 1.0)
         .padding()
         .hCenter()
         .frame(height: 250.0)
@@ -114,10 +114,10 @@ struct UserSettingsView:View{
             LazyVStack{
                 ForEach(settingsOption,id:\.self){ op in
                     settingsSection(op)
-                    Divider().overlay{ Color.white }.padding([.leading,.trailing])
+                    Divider().overlay{ Color.tertiaryLabel }.padding([.leading,.trailing])
                 }
                 overlapSection
-                Divider().overlay{ Color.white }.padding([.leading,.trailing])
+                Divider().overlay{ Color.tertiaryLabel }.padding([.leading,.trailing])
                 clearSpaceAtBottom
             }
         }
@@ -137,7 +137,7 @@ struct UserSettingsView:View{
             Button(action: loadDefaultValues) {
                 Text("Reset").foregroundColor(.systemRed).bold()
             }
-            .toolbarFontAndPadding()
+            .toolbarFontAndPadding(.headline)
         }
         else{
             BackButton(title: "Profile",color: Color.accentColor)
@@ -149,6 +149,7 @@ struct UserSettingsView:View{
         Button(action: saveNewDefaultValues) {
             Text("Save").foregroundColor(.systemBlue).bold()
         }
+        .toolbarFontAndPadding(.headline)
         .opacity(valuesCanBeUpdated ? 1.0 : 0.0)
         .disabled(!valuesCanBeUpdated)
     }

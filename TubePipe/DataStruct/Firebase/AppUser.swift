@@ -86,7 +86,7 @@ extension RequestStatus{
         switch self{
         case .RECIEVED_REQUEST: return "Awaiting your response..."
         case .PENDING_REQUEST: return "Request sent..."
-        case .CONFIRMED_REQUEST: return ""
+        case .CONFIRMED_REQUEST: return "Friends"
         case .NO_REQUEST: return "Add to contacts"
         }
     }

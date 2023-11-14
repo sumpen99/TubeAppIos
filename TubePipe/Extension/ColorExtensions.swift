@@ -37,9 +37,9 @@ extension Color {
     
     static var random: Color { Color(red: .random(in: 0...1),green: .random(in: 0...1),blue: .random(in: 0...1))}
     
-    static var backgroundPrimary:Color          = Color(hex:0x424242)
+    static var backgroundPrimary:Color          = Color(hex:0xffffff)
     static var backgroundSecondary:Color        = Color(hex:0xEEEEEE)
-    static var calendarButton:Color             = Color.systemGray
+    static var calendarButton:Color             = Color.black
     static var sheetCloseButton:Color           = Color.systemBlue
     static var editorieButton:Color             = Color.systemBlue
     static var APP_MID_BACKGROUND_COLOR: Color  = Color(dRed: 62.0, dGreen: 62.0, dBlue: 62.0)

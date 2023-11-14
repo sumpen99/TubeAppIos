@@ -29,17 +29,14 @@ struct AnonymousProfileView:View{
     }
     
     var body: some View{
-        NavigationStack{
-            AppBackgroundStack(content: {
-                personalPage
-            })
-            .toolbar {
-                 ToolbarItem(placement: .navigationBarTrailing) {
-                     navigateToInfoPage
-                     .toolbarFontAndPadding()
-                 }
-            }
-            .modifier(NavigationViewModifier(title: ""))
+        AppBackgroundStack(content: {
+            personalPage
+        })
+        .toolbar {
+             ToolbarItem(placement: .navigationBarTrailing) {
+                 navigateToInfoPage
+                 .toolbarFontAndPadding()
+             }
         }
     }
     

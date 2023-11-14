@@ -36,7 +36,7 @@ struct ContactCard:View{
             Text(contact.displayName ?? "").lineLimit(1).font(.subheadline).hLeading().bold()
             Text(contact.email ?? "").lineLimit(1).font(.subheadline).hLeading()
         }
-        .foregroundColor(Color.GHOSTWHITE)
+        .foregroundColor(Color.black)
     }
     
     func contactConfirmationDialogButton(contact:Contact) ->  some View{

@@ -21,7 +21,7 @@ extension View{
         }
     }
     
-    func sectionText(font:Font = .body,color:Color = Color.GHOSTWHITE) -> some View{
+    func sectionText(font:Font = .body,color:Color = Color.black) -> some View{
         self
         .foregroundColor(color)
         .font(font)
@@ -43,7 +43,7 @@ extension View{
         }
         .overlay(
             RoundedRectangle(cornerRadius: 5)
-            .stroke(lineWidth: 1)
+            .stroke(lineWidth: 2)
             .foregroundColor(border)
         )
     }
@@ -196,14 +196,18 @@ extension View{
             }
     }
     
+    func profileListRow() -> some View{
+        self.fullListWidthSeperator().listRowBackground(Color.backgroundSecondary)
+    }
+    
     func fullListWidthSeperator() -> some View{
         self.alignmentGuide(.listRowSeparatorLeading) { viewDimensions in
             return 0
         }
     }
     
-    func toolbarFontAndPadding() -> some View{
-        self.padding([.top,.bottom]).font(.title3)
+    func toolbarFontAndPadding(_ font:Font = .title2) -> some View{
+        self.padding([.top,.bottom]).font(font)
     }
     
     func hiddenBackButtonWithCustomTitle(_ title:String = "",color:Color = Color.accentColor) -> some View{
@@ -258,7 +262,7 @@ func backButton(title:String = "Back",action:@escaping ()->Void) -> some View{
 
 var splitLine: some View{
     HStack{
-        Rectangle().fill(Color.systemGray).frame(height: 1)
+        Rectangle().fill(Color.black).frame(height: 1)
     }
 }
 

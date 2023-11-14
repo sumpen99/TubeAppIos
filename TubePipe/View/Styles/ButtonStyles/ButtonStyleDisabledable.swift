@@ -33,7 +33,7 @@ struct ButtonStyleDisabledable: ButtonStyle {
                 .overlay(
                     RoundedRectangle(cornerRadius: 24)
                         .stroke(Color.black, lineWidth: 1)
-                        .opacity(isEnabled ? 0.3 : 1.0)
+                        .opacity(isEnabled ? 1.0 : 0.3)
                 )
                 .opacity(isEnabled ? (configuration.isPressed ? 0.3 : 1.0) : 0.3)
                 .fontWeight(.semibold)

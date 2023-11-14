@@ -17,6 +17,7 @@ enum ActiveModelSheet: Identifiable {
 }
 
 struct ModelView: View{
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @StateObject private var tubeSceneViewModel: TubeSceneViewModel
     @State var activeModelSheet: ActiveModelSheet?
@@ -59,59 +60,57 @@ struct ModelView: View{
     }
     
     func toggleWorldAxis(){
-        let newVal = tubeViewModel.getUserdefaultDrawOptionValue(.SHOW_WORLD_AXIS)
+        dismiss()
+        /*let newVal = tubeViewModel.getUserdefaultDrawOptionValue(.SHOW_WORLD_AXIS)
         tubeViewModel.setUserdefaultDrawOption(with: !newVal, op: .SHOW_WORLD_AXIS)
         tubeViewModel.saveUserDefaultDrawingValues()
-        renderNewScene()
+        renderNewScene()*/
     }
     
     var body:some View{
-        NavigationStack{
-            AppBackgroundStack(content: {
-                modelPage
-            })
-            .environmentObject(tubeSceneViewModel)
-            .modifier(NavigationViewModifier(title: ""))
-            .onChange(of: activeModelSheet){ item in
-                if let item{
-                    activeModelSheet = nil
-                    switch item{
-                    case ActiveModelSheet.OPEN_MODEL_SETTINGS:
-                        SheetPresentView(style: .detents([.medium()])){
-                            ModelSettingsView(renderNewState: $renderNewState)
-                            .environmentObject(tubeViewModel)
-                            .presentationDragIndicator(.visible)
-                        }
-                        .makeUIView()
-                   }
-                }
+        AppBackgroundStack(content: {
+            modelPage
+        })
+        .navigationBarBackButtonHidden()
+        .environmentObject(tubeSceneViewModel)
+        .onChange(of: activeModelSheet){ item in
+            if let item{
+                activeModelSheet = nil
+                switch item{
+                case ActiveModelSheet.OPEN_MODEL_SETTINGS:
+                    SheetPresentView(style: .detents([.medium()])){
+                        ModelSettingsView(renderNewState: $renderNewState)
+                        .environmentObject(tubeViewModel)
+                        .presentationDragIndicator(.visible)
+                    }
+                    .makeUIView()
+               }
             }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: { activeModelSheet = .OPEN_MODEL_SETTINGS }) {
-                        Image(systemName: "gear")
-                    }
-                    .toolbarFontAndPadding()
+        }
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { activeModelSheet = .OPEN_MODEL_SETTINGS }) {
+                    Image(systemName: "gear")
                 }
-                ToolbarItem(placement: .principal) {
-                    Button(action: toggleWorldAxis){
-                        RotateImageView(isActive:
-                                            self.$tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .SHOW_WORLD_AXIS)],
-                                        name: "move.3d")
-                    }
-                    .toolbarFontAndPadding()
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    NavigationLink(destination:LazyDestination(destination: {
-                        ModelHelpView()
-                    })){
-                        Image(systemName: "info.circle")
-                    }
-                    .toolbarFontAndPadding()
-                }
+                .toolbarFontAndPadding()
             }
+            ToolbarItem(placement: .principal) {
+                Button(action: toggleWorldAxis){
+                    Image(systemName: "arrow.left.arrow.right.circle")
+                    //RotateImageViewDefault(name: "move.3d")
+                }
+                .toolbarFontAndPadding()
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
+                NavigationLink(destination:LazyDestination(destination: {
+                    ModelHelpView()
+                })){
+                    Image(systemName: "info.circle")
+                }
+                .toolbarFontAndPadding()
+            }
+        }
             
-          }
    }
     
 }

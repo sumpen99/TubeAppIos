@@ -5,7 +5,7 @@
 //  Created by fredrik sundström on 2023-06-10.
 //
 
-import Firebase
+import FirebaseFirestore
 import FirebaseStorage
 
 enum ScreenShotFolder:String{
@@ -13,7 +13,7 @@ enum ScreenShotFolder:String{
     case REPORT_ISSUE = "ISSUE"
 }
 
-//REQUESTS/LXOavAcmoSfHJLd4NAZYWRR6P732/REQUESTS_RECIEVED/*
+
 class FirestoreRepository{
     private let firestoreDB = Firestore.firestore()
     private let firestoreStorage = Storage.storage()
@@ -41,7 +41,6 @@ class FirestoreRepository{
     private let STORAGE_GROUP = "GROUP"
     private let STORAGE_SCREENSHOT = "SCREENSHOT"
     
-    var userCollection: CollectionReference{ firestoreDB.collection(APP_USER_COLLECTION) }
     var messageGroupCollection: CollectionReference{ firestoreDB.collection(MESSAGE_GROUP) }
     var userRequestCollection: CollectionReference{ firestoreDB.collection(APP_REQUEST_COLLECTION) }
     
