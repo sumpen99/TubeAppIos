@@ -15,7 +15,7 @@ struct AnonymousProfileView:View{
         Section {
             navigateToRegisterPage
         } header: {
-            Text("Account").foregroundColor(.white).bold()
+            Text("Account").foregroundColor(.black).bold()
         } footer: {
             Text(footerText).listSectionFooter()
         }
@@ -43,7 +43,7 @@ struct AnonymousProfileView:View{
     //MARK: NAVIGATIONBUTTONS
     var navigateToRegisterPage:some View{
         NavigationLink(destination:LazyDestination(destination: {
-            SignupView(backButtonColor: Color.systemBlue)
+            SignupView()
         })){
             Text("Register").foregroundColor(Color.systemBlue).hCenter()
         }

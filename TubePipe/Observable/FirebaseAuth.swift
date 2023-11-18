@@ -9,7 +9,7 @@ import SwiftUI
 import FirebaseAuth
 class FirebaseAuth:ObservableObject{
     let auth = Auth.auth()
-    @Published private(set) var loggedInAs: UserRole = .UNKNOWNED_USER_ROLE
+    @Published private(set) var loggedInAs: UserRole = .NOT_LOGGED_IN
     private var handleAuthState: AuthStateDidChangeListenerHandle?
     static var currentUserEmail:String?
     static var currentUserId:String?
@@ -87,8 +87,7 @@ class FirebaseAuth:ObservableObject{
                 return
             }
             if role == "admin"{ completion(.REGISTERED_USER) }
-            else if(role == "payroll") { completion(.PAYED_USER) }
-            else{ completion(.UNKNOWNED_USER_ROLE) }
+            else{ completion(.ANONYMOUS_USER) }
         }
     }
     

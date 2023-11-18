@@ -133,7 +133,7 @@ struct ExtendedTubeDocFileView:View{
             .font(.callout)
             .bold()
             .lineLimit(1)
-            .foregroundColor(.white)
+            .foregroundColor(.black)
         }
      }
     

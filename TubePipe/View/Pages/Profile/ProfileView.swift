@@ -273,25 +273,40 @@ struct ProfileView: View{
     }
     
     var body: some View{
-        AppBackgroundStack(content: {
-            personalPage
-        })
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { replaceDisplayName();replacePublicMode();endTextEditing(); }) {
-                    Text("Dismiss").foregroundColor(.systemRed).bold().font(.headline)
-                }
-                .toolbarFontAndPadding()
-                .opacity(userNameHasChanged ? 1.0 : 0.0)
-                .disabled(!userNameHasChanged)
+        NavigationStack(path:$navigationViewModel.pathTo){
+            AppBackgroundStack(content: {
+                personalPage
+            })
+            .navigationDestination(for: Contact.self){  contact in
+                ContactMessagesView(contact: contact,backButtonLabel: "Messages")
             }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { saveChanges();endTextEditing(); }) {
-                    Text("Save").foregroundColor(.systemBlue).bold().font(.headline)
+            .navigationDestination(for: ProfileRoute.self){  route in
+                switch route{
+                case .ROUTE_SETTINGS_TUBE:  UserSettingsView()
+                case .ROUTE_MESSAGES:       InboxContactMessages()
+                case .ROUTE_CONTACTS:       ContactView()
+                case .ROUTE_FEATURE:        FeatureView()
+                case .ROUTE_ISSUE:          IssueView()
+                default:                    EmptyView()
                 }
-                .toolbarFontAndPadding()
-                .opacity(changesHasHappend ? 1.0 : 0.0)
-                .disabled(!changesHasHappend)
+            }
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: { replaceDisplayName();replacePublicMode();endTextEditing(); }) {
+                        Text("Dismiss").foregroundColor(.systemRed).bold().font(.headline)
+                    }
+                    .toolbarFontAndPadding()
+                    .opacity(userNameHasChanged ? 1.0 : 0.0)
+                    .disabled(!userNameHasChanged)
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: { saveChanges();endTextEditing(); }) {
+                        Text("Save").foregroundColor(.systemBlue).bold().font(.headline)
+                    }
+                    .toolbarFontAndPadding()
+                    .opacity(changesHasHappend ? 1.0 : 0.0)
+                    .disabled(!changesHasHappend)
+                }
             }
         }
         .modifier(DeleteAccountModifier(isPresented: $pVar.isDeleteAccount,email: firestoreViewModel.currentUserEmail, onAction: deleteAccountAndAllData))
@@ -306,13 +321,13 @@ struct ProfileView: View{
         .onAppear{
             pVar.updateUserVar(currentUser: firestoreViewModel.currentUser)
             tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ALLOW_SHARING)] = firestoreViewModel.isCurrentUserPublic
-            //firestoreViewModel.listenForMessageGroups()
+            firestoreViewModel.listenForMessageGroups()
             
         }
-        /*.onDisappear{
+        .onDisappear{
             firestoreViewModel.closeListenerMessages()
             firestoreViewModel.releaseData([.DATA_CONTACT_MESSAGE_GROUPS,.DATA_CONTACT_MESSAGES])
-        }*/
+        }
     }
     
     func replaceDisplayName(){

@@ -5,7 +5,7 @@
 //  Created by fredrik sundström on 2023-11-01.
 //
 import SwiftUI
-struct AnonymousHomeView: View{
+struct AnonymousModel2DView: View{
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @State var activeHomeSheet: ActiveHomeSheet?
     var body: some View{
@@ -67,6 +67,17 @@ struct AnonymousHomeView: View{
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: { activeHomeSheet = .OPEN_TUBE_SETTINGS }) {
                         Image(systemName: "ruler")
+                    }
+                    .toolbarFontAndPadding()
+                }
+                ToolbarItem(placement: .principal) {
+                    NavigationLink(destination:LazyDestination(destination: {
+                        Model3DView()
+                    })){
+                        ZStack{
+                            Image(systemName: "arrow.triangle.2.circlepath").imageScale(.large).foregroundColor(.black)
+                            Image(systemName: "view.3d").imageScale(.small).foregroundColor(.systemBlue)
+                        }
                     }
                     .toolbarFontAndPadding()
                 }

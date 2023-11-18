@@ -18,20 +18,6 @@ struct LoginView : View {
     @FocusState var focusField: Field?
     @State var lVar = LoginVariables()
     
-    var loginLabel:some View{
-        VStack{
-            Text("Oh Wow!").font(.largeTitle).bold().hCenter()
-            Text("Happy to see you back, member!").font(.body).hCenter()
-            
-        }
-        .foregroundColor(Color.GHOSTWHITE)
-        .padding()
-    }
-    
-    var accountLabel:some View{
-        Text("Accountinformation").font(.headline).hLeading().foregroundColor(Color.systemGray)
-    }
-    
     var illegalCredentials:some View{
         Text("Username or password is incorrect")
             .font(.callout)
@@ -40,19 +26,35 @@ struct LoginView : View {
             .opacity(lVar.isFailedLoginAttempt ? 1.0 : 0.0)
     }
     
+    var loginLabel:some View{
+        VStack{
+            Text("Oh Wow!").font(.largeTitle).bold().hLeading()
+            Text("Happy to see you back, member!").font(.body).hLeading()
+            
+        }
+        .foregroundColor(.black)
+        .padding()
+    }
+    
+    var accountLabel:some View{
+        Text("Accountinformation").font(.headline).hLeading().foregroundColor(.black)
+    }
+    
     var loginEmailTextfield:some View{
         VStack(spacing:5.0){
             HStack{
                 Image(systemName: "mail")
                 TextField("",text:$lVar.email,onCommit: { })
-                    .preferedEmailField(textColor: Color.black)
-                    .placeholder(when: focusField != .LOGIN_EMAIL && lVar.email.isEmpty){ Text("email").foregroundColor(.darkGray)}
-                    .focused($focusField,equals: .LOGIN_EMAIL)
-                    .hLeading()
+                .preferedEmailField(textColor: Color.black)
+                .placeholder(when: focusField != .LOGIN_EMAIL && lVar.email.isEmpty){ 
+                    Text("email").foregroundColor(.darkGray)
+                }
+                .focused($focusField,equals: .LOGIN_EMAIL)
+                .hLeading()
             }
             .padding([.leading,.trailing])
             .background{
-                Rectangle().fill(Color.white)
+                Rectangle().stroke(lineWidth: 2.0).foregroundColor(Color.black)
             }
             illegalCredentials
         }
@@ -64,14 +66,14 @@ struct LoginView : View {
             HStack{
                 Image(systemName: "lock")
                 SecureField("",text:$lVar.password,onCommit: { })
-                    .preferedSecureField()
-                    .placeholder(when: focusField != .LOGIN_SECURE_PASSWORD && lVar.password.isEmpty){ Text("password").foregroundColor(.darkGray)}
-                    .focused($focusField,equals: .LOGIN_SECURE_PASSWORD)
-                    .hLeading()
+                .preferedSecureField()
+                .placeholder(when: focusField != .LOGIN_SECURE_PASSWORD && lVar.password.isEmpty){ Text("password").foregroundColor(.darkGray)}
+                .focused($focusField,equals: .LOGIN_SECURE_PASSWORD)
+                .hLeading()
             }
             .padding([.leading,.trailing])
             .background{
-                Rectangle().fill(Color.white)
+                Rectangle().stroke(lineWidth: 2.0).foregroundColor(Color.black)
             }
             illegalCredentials
         }
@@ -93,7 +95,7 @@ struct LoginView : View {
             Button(action:logUserIn,label: {
                 Text("Log in").hCenter()
             })
-            .buttonStyle(ButtonStyleLogin())
+            .buttonStyle(ButtonStyleDocument(color: Color.backgroundButton))
         }
         .padding()
     }
@@ -107,21 +109,15 @@ struct LoginView : View {
             }
         }
     }
-    
-    var mainPage: some View{
-        loginFields
-        .vTop()
-    }
-    
+      
     var body: some View {
         AppBackgroundStack(content: {
-            mainPage
+            loginFields
         })
-        .hiddenBackButtonWithCustomTitle(color:Color.white)
+        .hiddenBackButtonWithCustomTitle(color:Color.black)
         .onAppear{
             focusField = .LOGIN_EMAIL
         }
-        .modifier(NavigationViewModifier(title: ""))
    }
     
     func logUserIn(){

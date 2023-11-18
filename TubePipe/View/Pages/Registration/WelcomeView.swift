@@ -17,46 +17,47 @@ struct WelcomeView : View {
     @State var wVar = WelcomVariables()
     
     var appLogoImage:some View{
-        Image("tp5")
+        Image("tp3")
           .resizable()
+          .scaledToFit()
           .padding()
-          .aspectRatio(contentMode: .fit)
     }
     
     var welcomeButton: some View{
-        HStack{
-            Button(action:{ wVar.userPressedNext.toggle() },label: {
-                HStack(){
-                    Text("Enter").font(.largeTitle)
-                }
-                .hCenter()
-                
-            })
-            .buttonStyle(ButtonStyleSheet())
-        }
+        Button(action:{ wVar.userPressedNext.toggle() },label: {
+            HStack(){
+                Text("Enter").font(.largeTitle)
+            }
+            .hCenter()
+            
+        })
+        .buttonStyle(ButtonStyleDocument(color: Color.backgroundButton))
         .padding()
+        .vBottom()
     }
     
     var body: some View {
-        AppBackgroundStackWithoutBottomPadding(content: {
-            appLogoImage
-            welcomeButton.vBottom()
-            dialog
-        })
-        .alert(isPresented: $wVar.isSignupResult, content: {
-            onResultAlert()
-        })
+        NavigationStack{
+            AppBackgroundStackWithoutBottomPadding(content: {
+                appLogoImage
+                welcomeButton
+                dialog
+            })
+            .alert(isPresented: $wVar.isSignupResult, content: {
+                onResultAlert()
+            })
+        }
     }
     
     var dialog: some View {
         ZStack(alignment: .bottom) {
             if (wVar.userPressedNext) {
-                Color.black
-                    .opacity(0.3)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        wVar.userPressedNext.toggle()
-                    }
+                Color.white
+                .opacity(0.1)
+                .ignoresSafeArea()
+                .onTapGesture {
+                    wVar.userPressedNext.toggle()
+                }
                 dialogContent
             }
         }
@@ -74,17 +75,21 @@ struct WelcomeView : View {
        .padding(.bottom, 42)
        .transition(.move(edge: .bottom))
        .background(
-            Color.APP_MID_BACKGROUND_COLOR
-            //appButtonGradient
+            Color.white
+            .overlay(
+                RoundedRectangle(cornerRadius: 16)
+                .stroke(Color.black, lineWidth: 2)
+            )
        )
        .cornerRadius(16, corners: [.topLeft, .topRight])
+       .foregroundColor(.black)
    }
     
     var dialogText: some View{
         VStack{
             HStack {
                 Text("Welcome to tubepipe")
-                    .foregroundColor(.WHITESMOKE)
+                    .foregroundColor(.black)
                     .font(.system(size: 20, weight: .bold))
                 
                 Spacer()
@@ -94,7 +99,7 @@ struct WelcomeView : View {
             
             Text("Enter the world of creating segmented tubes effortless.")
                 .font(.system(size: 16, weight: .bold))
-                .foregroundColor(.GHOSTWHITE)
+                .foregroundColor(.black)
                 .padding(.bottom, 24)
         }
         
@@ -108,21 +113,21 @@ struct WelcomeView : View {
                 Text("I already have an account, log in")
                 .hCenter()
             }
-            .buttonStyle(ButtonStyleSheet())
+            .buttonStyle(ButtonStyleDocument(color: Color.white))
             NavigationLink(destination:LazyDestination(destination: {
                 SignupView()
             })){
                 Text("Create account")
                 .hCenter()
             }
-            .buttonStyle(ButtonStyleSheet())
+            .buttonStyle(ButtonStyleDocument(color: Color.white))
             Button(action: proceedAsAnonymous ,label: {
                 HStack(){
                     Text("Proceed as guest")
                 }
                 .hCenter()
             })
-            .buttonStyle(ButtonStyleSheet())
+            .buttonStyle(ButtonStyleDocument(color: Color.white))
         }
     }
     

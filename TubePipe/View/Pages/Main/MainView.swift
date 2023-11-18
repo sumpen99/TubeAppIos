@@ -9,8 +9,11 @@ import SwiftUI
 
 struct MainView: View{
     @EnvironmentObject var firebaseAuth: FirebaseAuth
-    @EnvironmentObject var globalDialogPresentation: GlobalLoadingPresentation
-    @EnvironmentObject var navigationViewModel: NavigationViewModel
+    @EnvironmentObject var firestoreViewModel: FirestoreViewModel
+    @StateObject var tubeViewModel = TubeViewModel()
+    @StateObject var globalDialogPresentation = GlobalLoadingPresentation()
+    @StateObject var coreDataViewModel = CoreDataViewModel()
+    @StateObject var navigationViewModel = NavigationViewModel()
     
     let layoutRegistred = [
             GridItem(.flexible(minimum: 40)),
@@ -39,8 +42,7 @@ struct MainView: View{
         VStack{
             SplitLineProgressView(isLoading: $globalDialogPresentation.isLoading)
             LazyVGrid(columns: layoutAnonymous, pinnedViews: [.sectionHeaders]){
-                menuItem(tabItem: MainTabItem.HOME_ANONYMOUS, img: "house.fill", label: "Home")
-                //menuItem(tabItem: MainTabItem.MODEL, img: "rotate.3d", label: "Model")
+                menuItem(tabItem: MainTabItem.MODEL_2D_ANONYMOUS, img: "house.fill", label: "Model")
                 menuItem(tabItem: MainTabItem.PROFILE_ANONYMOUS, img: "person.fill", label: "Profile")
             }
         }
@@ -52,8 +54,7 @@ struct MainView: View{
         VStack{
             SplitLineProgressView(isLoading: $globalDialogPresentation.isLoading)
             LazyVGrid(columns: layoutRegistred,pinnedViews: [.sectionHeaders]){
-                menuItem(tabItem: MainTabItem.HOME, img: "house.fill", label: "Home")
-                //menuItem(tabItem: MainTabItem.MODEL, img: "rotate.3d", label: "Model")
+                menuItem(tabItem: MainTabItem.MODEL_2D, img: "house.fill", label: "Model")
                 menuItem(tabItem: MainTabItem.CALENDAR, img: "calendar", label: "Calendar")
                 menuItem(tabItem: MainTabItem.PROFILE, img: "person.fill", label: "Profile")
             }
@@ -66,12 +67,11 @@ struct MainView: View{
     var mainContent:some View{
         ZStack{
             switch navigationViewModel.selectedTab{
-            case .HOME:                 HomeView()
-            case .MODEL:                ModelView()
-            case .CALENDAR:             CustomCalendarView()
-            case .PROFILE:              ProfileView()
-            case .PROFILE_ANONYMOUS:    AnonymousProfileView()
-            case .HOME_ANONYMOUS:       AnonymousHomeView()
+            case .MODEL_2D:                 Model2DView()
+            case .CALENDAR:                 CustomCalendarView()
+            case .PROFILE:                  ProfileView()
+            case .PROFILE_ANONYMOUS:        AnonymousProfileView()
+            case .MODEL_2D_ANONYMOUS:       AnonymousModel2DView()
             }
         }
         .safeAreaInset(edge: .bottom){ bottomMenu }
@@ -88,29 +88,61 @@ struct MainView: View{
         }
         
     }
-        
-    /*var m:some View{
-        ZStack{
-            Color.red
+    
+    @ViewBuilder
+    var mainContentTabView:some View{
+        if firebaseAuth.loggedInAs == .ANONYMOUS_USER{
+            anonymousMenu
         }
-        .toolbar {
-            ToolbarItemGroup(placement: .topBarLeading) {
-                Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_SETTINGS_TUBE)}, label: {
-                    buttonAsNavigationLink(title: "Default Tube", systemImage: "smallcircle.circle")
-                })
-                Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_SETTINGS_TUBE)}, label: {
-                    buttonAsNavigationLink(title: "Default Tube", systemImage: "smallcircle.circle")
-                })
-                Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_SETTINGS_TUBE)}, label: {
-                    buttonAsNavigationLink(title: "Default Tube", systemImage: "smallcircle.circle")
-                })
+        else{
+            tabMenuRegistred
+        }
+    }
+    
+    var tabMenuAnonymous: some View {
+        VStack{
+            TabView {
+                AnonymousModel2DView()
+                .tabItem {
+                    Label("Model", systemImage: "rotate.3d")
+                }
+                CustomCalendarView()
+                .tabItem {
+                    Label("Calendar", systemImage: "calendar")
+                }
+                AnonymousProfileView()
+                .tabItem {
+                    Label("Register", systemImage: "person.fill")
+                }
             }
         }
-        
-    }*/
+        .globalLoadingDialog(presentationManager: globalDialogPresentation)
+    }
+    
+    var tabMenuRegistred: some View {
+        TabView {
+            Model2DView()
+            .tabItem {
+                Label("Model", systemImage: "rotate.3d")
+            }
+            CustomCalendarView()
+            .tabItem {
+                Label("Calendar", systemImage: "calendar")
+            }
+            ProfileView()
+            .tabItem {
+                Label("Profile", systemImage: "person.fill")
+            }
+        }
+        .globalLoadingDialog(presentationManager: globalDialogPresentation)
+    }
         
     var body: some View{
-        mainContent
+        mainContentTabView
+        .environmentObject(coreDataViewModel)
+        .environmentObject(tubeViewModel)
+        .environmentObject(navigationViewModel)
+        .environmentObject(globalDialogPresentation)
         .ignoresSafeArea(.keyboard)
     }
      

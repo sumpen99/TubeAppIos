@@ -8,16 +8,15 @@
 import SwiftUI
 
 enum MainTabItem{
-    case HOME
-    case MODEL
+    case MODEL_2D
     case CALENDAR
     case PROFILE
     case PROFILE_ANONYMOUS
-    case HOME_ANONYMOUS
+    case MODEL_2D_ANONYMOUS
 }
 
 class NavigationViewModel: ObservableObject{
-    @Published var selectedTab:MainTabItem = .HOME
+    @Published var selectedTab:MainTabItem = .MODEL_2D
     @Published var pathTo:NavigationPath = NavigationPath()
     
     var notEmptyPath:Bool{ pathTo.count > 0 }

@@ -60,7 +60,7 @@ struct BackButton:View{
             }){
                 HStack(spacing: 5){
                     Image(systemName: "chevron.left").font(.callout)
-                    Text(title)
+                    //Text(title)
                 }
                 .foregroundColor(color)
             }

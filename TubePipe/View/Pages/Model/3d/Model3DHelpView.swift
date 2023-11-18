@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ModelHelpView: View{
+struct Model3DHelpView: View{
     
     
     var body:some View{
@@ -28,7 +28,7 @@ struct ModelHelpView: View{
                     Text("One-Finger-Pan").listSectionHeader()
                 } footer: {
                     Text("Pan with one finger to rotate the camera around the tube").listSectionFooter()
-                }
+                } .listRowBackground(Color.clear)
                 Section {
                     Image("two-finger-move")
                         .resizable()
@@ -37,7 +37,7 @@ struct ModelHelpView: View{
                     Text("Two-Finger-Pan").listSectionHeader()
                 } footer: {
                     Text("Pan with two fingers to move the tube around in the screen").listSectionFooter()
-                }
+                } .listRowBackground(Color.clear)
                 Section {
                     Image("two-finger-rotate")
                         .resizable()
@@ -46,7 +46,7 @@ struct ModelHelpView: View{
                     Text("Two-Finger-Rotate").listSectionHeader()
                 } footer: {
                     Text("Rotate with two fingers to roll the tube").listSectionFooter()
-                }
+                } .listRowBackground(Color.clear)
                 Section {
                     Image("two-finger-zoom")
                         .resizable()
@@ -55,9 +55,9 @@ struct ModelHelpView: View{
                     Text("Two-Finger-Zoom").listSectionHeader()
                 } footer: {
                     Text("Pinch to zoom in-out on the tube").listSectionFooter()
-                }
+                } .listRowBackground(Color.clear)
             }
-           .scrollContentBackground(.hidden)
+            .scrollContentBackground(.hidden)
         }
     }
     

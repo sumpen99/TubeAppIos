@@ -58,7 +58,7 @@ extension Text{
         .textFieldStyle(RoundedBorderTextFieldStyle())
     }
     
-    func listSectionHeader(color:Color = .darkGray) -> some View{
+    func listSectionHeader(color:Color = .black) -> some View{
         self.foregroundColor(color).bold()
     }
     
@@ -86,32 +86,31 @@ extension Text{
 
 extension TextField{
     
-    func preferedEmailField(textColor:Color = Color.GHOSTWHITE) -> some View{
-        self
-            .font(Font(UIFont.preferredFont(forTextStyle: .body)))
+    func removePredictiveSuggestions(keyBoardType:UIKeyboardType) -> some View {
+        self.keyboardType(keyBoardType)
+            .disableAutocorrection(true)
+            .autocapitalization(.none)
+    }
+    
+    func preferedEmailField(textColor:Color) -> some View{
+        self.removePredictiveSuggestions(keyBoardType: .emailAddress)
+            .font(Font(UIFont.preferredFont(forTextStyle: .headline)))
             .foregroundColor(textColor)
-            .keyboardType(.emailAddress)
             .padding([.bottom,.top],10)
-            .removePredictiveSuggestions()
             .accentColor(.black)
-            .background(RoundedRectangle(cornerRadius: 5).fill(Color.clear))
     }
     
     func preferedSearchField() -> some View{
-        self
+        self.removePredictiveSuggestions(keyBoardType: .asciiCapable)
             .font(Font(UIFont.preferredFont(forTextStyle: .title3)))
-            .keyboardType(UIKeyboardType.asciiCapable)
-            .removePredictiveSuggestions()
             .accentColor(.black)
             .padding(5.0)
     }
     
     func preferedSettingsField() -> some View{
-        self
+        self.removePredictiveSuggestions(keyBoardType: .numberPad)
             .multilineTextAlignment(.center)
             .font(Font(UIFont.preferredFont(forTextStyle: .title1)))
-            .keyboardType(UIKeyboardType.numberPad)
-            .removePredictiveSuggestions()
             .background(RoundedRectangle(cornerRadius: 5).fill(Color.tertiarySystemFill))
             .overlay(
                 RoundedRectangle(cornerRadius: 5)
@@ -122,12 +121,10 @@ extension TextField{
     }
     
     func preferedProfileSettingsField() -> some View{
-        self
-            .padding(5)
+        self.removePredictiveSuggestions(keyBoardType: .asciiCapable)
             .multilineTextAlignment(.leading)
             .lineLimit(1)
-            .keyboardType(UIKeyboardType.asciiCapable)
-            .removePredictiveSuggestions()
+            .padding(5)
             .overlay(
                 Rectangle().frame(height: 1.0).vBottom().foregroundColor(Color.tertiaryLabel)
             )
@@ -136,22 +133,18 @@ extension TextField{
     }
     
     func preferedDocumentField() -> some View{
-        self
+        self.removePredictiveSuggestions(keyBoardType: .asciiCapable)
             .multilineTextAlignment(.leading)
             .font(Font(UIFont.preferredFont(forTextStyle: .body)))
-            .keyboardType(UIKeyboardType.asciiCapable)
-            .removePredictiveSuggestions()
             .foregroundColor(Color.black)
             .accentColor(.black)
             .hLeading()
     }
     
     func preferedTubeSettingsField() -> some View{
-        self
+        self.removePredictiveSuggestions(keyBoardType: .numberPad)
             .multilineTextAlignment(.center)
             .font(Font(UIFont.preferredFont(forTextStyle: .title1)))
-            .keyboardType(UIKeyboardType.numberPad)
-            .removePredictiveSuggestions()
             .background(RoundedRectangle(cornerRadius: 5).fill(Color.GHOSTWHITE))
             .overlay(
                 RoundedRectangle(cornerRadius: 5)
@@ -165,6 +158,13 @@ extension TextField{
 
 extension SecureField{
     func preferedSecureField() -> some View{
-        self.padding([.top,.bottom],10).textContentType(.oneTimeCode).foregroundColor(Color.black).accentColor(.black)
+        self.textContentType(.oneTimeCode)
+            .keyboardType(.asciiCapable)
+            .font(Font(UIFont.preferredFont(forTextStyle: .headline)))
+            .disableAutocorrection(true)
+            .autocapitalization(.none)
+            .foregroundColor(Color.black)
+            .padding([.top,.bottom],10)
+            .accentColor(.black)
     }
 }

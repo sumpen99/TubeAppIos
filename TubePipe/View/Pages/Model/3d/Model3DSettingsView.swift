@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ModelSettingsView:View{
+struct Model3DSettingsView:View{
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @Binding var renderNewState:Bool
      
@@ -118,8 +118,8 @@ struct ModelSettingsView:View{
             ForEach(DrawOption.indexOf(op: .FULL_SIZE_MUFF)..<DrawOption.indexOf(op: .SHOW_WHOLE_MUFF),id: \.self){ index in
                 modelSwitchSectionBase(index: index)
             }},
-                 header: {Text("Size").leadingSectionHeader(color: Color.systemGray)}) {
-        }
+                 header: {Text("Size").leadingSectionHeader()}) {
+        }.listRowBackground(Color.clear)
     }
     
     var showPartOfMuffSection: some View{
@@ -127,8 +127,8 @@ struct ModelSettingsView:View{
             ForEach(DrawOption.indexOf(op: .SHOW_WHOLE_MUFF)..<DrawOption.indexOf(op: .DRAW_FILLED_MUFF),id: \.self){ index in
                 modelSwitchSectionBase(index: index)
             }},
-            header: {Text("Show").leadingSectionHeader(color: Color.systemGray)}) {
-        }
+            header: {Text("Show").leadingSectionHeader()}) {
+        }.listRowBackground(Color.clear)
     }
     
     var drawMuffSection: some View{
@@ -136,8 +136,8 @@ struct ModelSettingsView:View{
             ForEach(DrawOption.indexOf(op: .DRAW_FILLED_MUFF)..<DrawOption.indexOf(op: .SHOW_STEEL),id: \.self){ index in
                 modelSwitchSectionBase(index: index)
             }},
-            header: {Text("Draw").leadingSectionHeader(color: Color.systemGray)}) {
-        }
+            header: {Text("Draw").leadingSectionHeader()}) {
+        }.listRowBackground(Color.clear)
     }
     
     var renderSceneSection: some View{
@@ -145,8 +145,8 @@ struct ModelSettingsView:View{
             ForEach(DrawOption.indexOf(op: .SHOW_STEEL)..<DrawOption.indexOf(op: .ALL_OPTIONS),id: \.self){ index in
                 modelSwitchSectionBase(index: index)
             }},
-            header: {Text("Render").leadingSectionHeader(color: Color.systemGray)}) {
-        }
+            header: {Text("Render").leadingSectionHeader()}) {
+        }.listRowBackground(Color.clear)
     }
     
     var showMuffOptions:Bool{

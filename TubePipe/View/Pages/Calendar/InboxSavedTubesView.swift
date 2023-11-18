@@ -326,7 +326,7 @@ extension InboxSavedTubesView{
     func loadViewModelWithTubeModel(_ tubeModel:TubeModel){
         tubeViewModel.initViewFromModelValues(tubeModel)
         tubeViewModel.rebuild()
-        navigationViewModel.navTo(.HOME)
+        navigationViewModel.navTo(.MODEL_2D)
     }
     
 }

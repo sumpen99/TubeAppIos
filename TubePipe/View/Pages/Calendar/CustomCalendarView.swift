@@ -58,12 +58,14 @@ struct CustomCalendarView: View {
         ]
     
     var body: some View {
-        AppBackgroundStack(content: {
-            mainPage
-        })
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                navigateToSavedTubesButton
+        NavigationStack{
+            AppBackgroundStack(content: {
+                mainPage
+            })
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    navigateToSavedTubesButton
+                }
             }
         }
         .onChange(of: selected.tubeModel){ tube in
@@ -294,7 +296,7 @@ extension CustomCalendarView{
         NavigationLink(destination:LazyDestination(destination: {
             InboxSavedTubesView()
         })){
-            Image(systemName: "list.bullet.indent")
+            Image(systemName: "folder")
                 .toolbarFontAndPadding(.headline)
         }
     }
@@ -414,7 +416,7 @@ extension CustomCalendarView{
     func loadViewModelWithTubeModel(_ tubeModel:TubeModel){
         tubeViewModel.initViewFromModelValues(tubeModel)
         tubeViewModel.rebuild()
-        navigationViewModel.navTo(.HOME)
+        navigationViewModel.navTo(.MODEL_2D)
     }
     
     func deleteTubeModel(_ tube:TubeModel){

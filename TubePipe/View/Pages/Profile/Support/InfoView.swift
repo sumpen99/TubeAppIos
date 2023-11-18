@@ -22,7 +22,7 @@ struct InfoView:View{
     
     var infoLabel:some View{
         Text("USERMODES").font(.title).bold().hLeading()
-        .foregroundColor(Color.GHOSTWHITE)
+            .foregroundColor(.black)
         .padding()
     }
     
@@ -30,7 +30,7 @@ struct InfoView:View{
         Section {
             Text(guestText).foregroundColor(.black)
         } header: {
-            Text("Guest").foregroundColor(.white).bold()
+            Text("Guest").foregroundColor(.black).bold()
         }
     }
     
@@ -38,7 +38,7 @@ struct InfoView:View{
         Section {
             Text(memberText).foregroundColor(.black)
         } header: {
-            Text("Member").foregroundColor(.white).bold()
+            Text("Member").foregroundColor(.black).bold()
         }
     }
     
@@ -46,7 +46,7 @@ struct InfoView:View{
         Section {
             Text(memberText).foregroundColor(.black)
         } header: {
-            Text("Member").foregroundColor(.white).bold()
+            Text("Member").foregroundColor(.black).bold()
         }
     }
     

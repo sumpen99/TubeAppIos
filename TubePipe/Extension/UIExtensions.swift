@@ -12,7 +12,7 @@ extension UITabBar{
         let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.configureWithOpaqueBackground()
         tabBarAppearance.backgroundColor = UIColor(Color.backgroundPrimary)
-        tabBarAppearance.shadowColor = .white
+        tabBarAppearance.shadowColor = .darkGray
         UITabBar.appearance().standardAppearance = tabBarAppearance
         UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
         
@@ -50,7 +50,7 @@ extension UINavigationBar {
         ]
         appearance.titleTextAttributes = attrsSmall
         appearance.largeTitleTextAttributes = attrsLarge
-        appearance.shadowColor = .white
+        appearance.shadowColor = UIColor(Color.backgroundPrimary)
       
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance

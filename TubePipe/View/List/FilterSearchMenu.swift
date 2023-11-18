@@ -102,7 +102,7 @@ struct FilterSearchMenu:View{
             categories
         }
         .background{
-            RoundedRectangle(cornerRadius: 10.0).fill(!iVar.collapseCategories ? .white : Color.lightText)
+            RoundedRectangle(cornerRadius: 10.0).fill(!iVar.collapseCategories ? Color.backgroundPrimary : Color.lightText.opacity(0.3))
         }
     }
 }

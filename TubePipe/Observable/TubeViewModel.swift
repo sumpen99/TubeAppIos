@@ -26,13 +26,8 @@ class TubeViewModel: ObservableObject{
         userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .AUTO_ALIGN)]||settingsVar.forceAutoAlign
     }
     
-    /*init(){
-        loadUserDefaultValues()
-        calculate()
-    }*/
-    
-    func delayedInit(){
-        if loadUserDefaultValues(){
+    init(){
+        if(loadUserDefaultValues()){
             calculate()
         }
     }

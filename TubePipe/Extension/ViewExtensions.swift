@@ -163,12 +163,6 @@ extension View{
         }
     }
     
-    func removePredictiveSuggestions() -> some View {
-        self.keyboardType(.alphabet)
-            .disableAutocorrection(true)
-            .autocapitalization(.none)
-    }
-    
     func endTextEditing() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
                                         to: nil, from: nil, for: nil)

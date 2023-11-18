@@ -40,8 +40,6 @@ enum UserRole{
     case ANONYMOUS_USER
     case REGISTERED_USER
     case ADMIN_USER
-    case PAYED_USER
-    case UNKNOWNED_USER_ROLE
 }
 
 enum RequestStatus: String,Codable{

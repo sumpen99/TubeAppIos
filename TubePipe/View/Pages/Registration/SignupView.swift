@@ -9,7 +9,6 @@ import SwiftUI
 
 struct SignupVariables{
     var isFailedSignupAttempt:Bool = false
-    var orientation = UIDeviceOrientation.unknown
     var passwordHelper = PasswordHelper()
     var errorMessage:String = ""
     
@@ -22,7 +21,6 @@ struct SignupView : View {
     @EnvironmentObject var firebaseAuth: FirebaseAuth
     @FocusState var focusField: Field?
     @State var sVar = SignupVariables()
-    var backButtonColor:Color = Color.white
     
     var illegalCredentials:some View{
         Text(sVar.errorMessage)
@@ -38,12 +36,12 @@ struct SignupView : View {
             Text("It`s free & and always will be!").font(.body).hLeading()
             
         }
-        .foregroundColor(Color.GHOSTWHITE)
+        .foregroundColor(Color.black)
         .padding()
     }
     
     var accountLabel:some View{
-        Text("Accountinformation").font(.headline).hLeading().foregroundColor(Color.systemGray)
+        Text("Accountinformation").font(.headline).hLeading().foregroundColor(Color.black)
     }
     
     var signupEmailTextfield:some View{
@@ -60,7 +58,7 @@ struct SignupView : View {
             }
             .padding([.leading,.trailing])
             .background{
-                Rectangle().fill(Color.white)
+                Rectangle().stroke(lineWidth: 2.0).foregroundColor(Color.black)
             }
             illegalCredentials
         }
@@ -81,7 +79,7 @@ struct SignupView : View {
             }
             .padding([.leading,.trailing])
             .background{
-                Rectangle().fill(Color.white)
+                Rectangle().stroke(lineWidth: 2.0).foregroundColor(Color.black)
             }
          }
         
@@ -101,7 +99,7 @@ struct SignupView : View {
             }
             .padding([.leading,.trailing])
             .background{
-                Rectangle().fill(Color.white)
+                Rectangle().stroke(lineWidth: 2.0).foregroundColor(Color.black)
             }
         }
         
@@ -121,12 +119,10 @@ struct SignupView : View {
         HStack{
             Button(action:signUserUp,label: {
                 Text("Create account")
-                .opacity(sVar.hideButton ? 0.5 : 1.0)
                 .hCenter()
             })
-            .buttonStyle(ButtonStyleDisabledable(lblColor: Color.white,
-                                                 backgroundColor: Color.backgroundPrimary))
-            //.disabled(sVar.hideButton)
+            .buttonStyle(ButtonStyleDocument(color: Color.backgroundButton))
+            
         }
         .padding()
     }
@@ -141,21 +137,14 @@ struct SignupView : View {
         }
     }
     
-    var mainPage: some View{
-        signupFields
-        .vTop()
-    }
-    
-    
     var body: some View {
         AppBackgroundStack(content: {
-            mainPage
+            signupFields
         })
-        .hiddenBackButtonWithCustomTitle(color:backButtonColor)
+        .hiddenBackButtonWithCustomTitle(color:.black)
         .onAppear{
             focusField = .SIGNUP_EMAIL
         }
-        .modifier(NavigationViewModifier(title: ""))
     }
     
     func signUserUp(){

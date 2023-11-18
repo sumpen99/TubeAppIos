@@ -16,7 +16,7 @@ enum ActiveModelSheet: Identifiable {
     }
 }
 
-struct ModelView: View{
+struct Model3DView: View{
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @StateObject private var tubeSceneViewModel: TubeSceneViewModel
@@ -79,7 +79,7 @@ struct ModelView: View{
                 switch item{
                 case ActiveModelSheet.OPEN_MODEL_SETTINGS:
                     SheetPresentView(style: .detents([.medium()])){
-                        ModelSettingsView(renderNewState: $renderNewState)
+                        Model3DSettingsView(renderNewState: $renderNewState)
                         .environmentObject(tubeViewModel)
                         .presentationDragIndicator(.visible)
                     }
@@ -96,14 +96,16 @@ struct ModelView: View{
             }
             ToolbarItem(placement: .principal) {
                 Button(action: toggleWorldAxis){
-                    Image(systemName: "arrow.left.arrow.right.circle")
-                    //RotateImageViewDefault(name: "move.3d")
+                    ZStack{
+                        Image(systemName: "arrow.triangle.2.circlepath").imageScale(.large).foregroundColor(.black)
+                        Image(systemName: "view.2d").imageScale(.small).foregroundColor(.systemBlue)
+                    }
                 }
                 .toolbarFontAndPadding()
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink(destination:LazyDestination(destination: {
-                    ModelHelpView()
+                    Model3DHelpView()
                 })){
                     Image(systemName: "info.circle")
                 }
