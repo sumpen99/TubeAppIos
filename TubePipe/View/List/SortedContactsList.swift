@@ -31,7 +31,7 @@ struct SortedContactsList: View{
     var navigateToContact:((Contact) -> Void)?
    
     var personAvatar: some View{
-        Image(systemName: "person.circle.fill")
+        Image(systemName: "face.smiling.inverse")
             .resizable()
             .frame(width: 40,height: 40)
             .foregroundColor(contactAvatarColor)
@@ -66,7 +66,7 @@ struct SortedContactsList: View{
             Text(firestoreViewModel
                 .getLatestMessageDetail(contact.groupId,
                                         messageDetail: .MESSAGE_MESSAGE) as? String ?? "")
-                .lineLimit(2)
+                .lineLimit(1)
                 .foregroundColor(contactInfoColor)
                 .font(.caption)
                 .hLeading()
@@ -231,7 +231,8 @@ extension SortedContactsList{
             navigationViewModel.appendToPathWithContact(contact)
         }, label: {
             HStack{
-                personAvatar
+                let initial = contact.initial
+                contactAvatar(c: initial)
                 contactRowMessage(contact: contact)
                 navigationChevron(contact: contact)
             }

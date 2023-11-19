@@ -109,6 +109,12 @@ struct Model3DSettingsView:View{
                                index: DrawOption.indexOf(op: .SHOW_MUFF),
                                clearConnectedIndexes:[],
                                allowToggle: true)
+        case DrawOption.indexOf(op: .SHOW_WORLD_AXIS):
+            modelSwitchSection(header: "Show X-Axis",
+                               imageName: "lightbulb",
+                               index: DrawOption.indexOf(op: .SHOW_WORLD_AXIS),
+                               clearConnectedIndexes:[],
+                               allowToggle: true)
         default: EmptyView()
         }
     }
@@ -133,7 +139,7 @@ struct Model3DSettingsView:View{
     
     var drawMuffSection: some View{
         Section(content:{
-            ForEach(DrawOption.indexOf(op: .DRAW_FILLED_MUFF)..<DrawOption.indexOf(op: .SHOW_STEEL),id: \.self){ index in
+            ForEach(DrawOption.indexOf(op: .DRAW_FILLED_MUFF)..<DrawOption.indexOf(op: .SHOW_WORLD_AXIS),id: \.self){ index in
                 modelSwitchSectionBase(index: index)
             }},
             header: {Text("Draw").leadingSectionHeader()}) {
@@ -142,7 +148,7 @@ struct Model3DSettingsView:View{
     
     var renderSceneSection: some View{
         Section(content:{
-            ForEach(DrawOption.indexOf(op: .SHOW_STEEL)..<DrawOption.indexOf(op: .ALL_OPTIONS),id: \.self){ index in
+            ForEach(DrawOption.indexOf(op: .SHOW_WORLD_AXIS)..<DrawOption.indexOf(op: .ALL_OPTIONS),id: \.self){ index in
                 modelSwitchSectionBase(index: index)
             }},
             header: {Text("Render").leadingSectionHeader()}) {

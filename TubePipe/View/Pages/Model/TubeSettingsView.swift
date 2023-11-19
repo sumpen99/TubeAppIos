@@ -423,6 +423,7 @@ struct TubeSettingsView:View{
                     bottomExtraPadding
                 }
             }
+            .scrollDisabled(true)
         }
     }
         

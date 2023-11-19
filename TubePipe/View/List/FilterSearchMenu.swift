@@ -89,8 +89,8 @@ struct FilterSearchMenu:View{
     var categories: some View{
         VStack{
             categoriesLabel
+            searchTextField
             if !iVar.collapseCategories{
-                searchTextField
                 categoriesGridView
             }
         }
@@ -102,7 +102,7 @@ struct FilterSearchMenu:View{
             categories
         }
         .background{
-            RoundedRectangle(cornerRadius: 10.0).fill(!iVar.collapseCategories ? Color.backgroundPrimary : Color.lightText.opacity(0.3))
+            RoundedRectangle(cornerRadius: 10.0).fill(Color.lightText.opacity(0.6))
         }
     }
 }
@@ -127,15 +127,13 @@ extension FilterSearchMenu{
     var textField:some View{
         TextField("",text:$iVar.searchText.max(MAX_TEXTFIELD_LEN))
             .preferedSearchField()
-            .placeholder(when: focusField != .FIND_STORED_TUBE && iVar.searchText.isEmpty){ Text("search").foregroundColor(.darkGray)}
+            .placeholder(when: focusField != .FIND_STORED_TUBE && iVar.searchText.isEmpty){ Text("search").foregroundColor(.black)}
             .focused($focusField,equals: .FIND_STORED_TUBE)
             .hLeading()
             .onSubmit {
-                if iVar.searchText.isEmpty { return }
-                if let categorie = iVar.searchCategorie{
-                    onSearch(categorie,iVar.searchText)
-                }
+                startSearch()
             }
+            .submitLabel(.search)
     }
     
     var searchTextField:some View{
@@ -152,11 +150,21 @@ extension FilterSearchMenu{
         .padding([.leading,.trailing])
     }
     
+    func startSearch(){
+        let txt = iVar.searchText.trimmingCharacters(in: .whitespaces)
+        if txt.isEmpty { return }
+        if let categorie = iVar.searchCategorie{
+            onSearch(categorie,txt)
+        }
+    }
+    
     func resetCurrentSearch(){
         if let categorie = iVar.searchCategorie{
             iVar.searchOption[SearchCategorie.indexOf(op: categorie)] = false
         }
         focusField = nil
+        iVar.searchCategorie = nil
+        iVar.searchResult = 0
         iVar.searchText = ""
         onReset()
     }

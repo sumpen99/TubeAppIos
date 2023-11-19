@@ -57,7 +57,7 @@ struct ContactMessagesView:View{
     
     func messageRecieved(_ message:String) -> some View{
         messageBody(message,.left)
-        .background(Color.lightText)
+            .background(Color.tertiaryLabel.opacity(0.6))
     }
     
     func messageSent(_ message:String) -> some View{
@@ -72,8 +72,8 @@ struct ContactMessagesView:View{
                 messageDate(date.iosLongMessageFormat())
                 ChatBubble(direction: direction) {
                     switch direction{
-                    case .left: messageRecieved(messageBody)
-                    case .right: messageSent(messageBody)
+                    case .left: messageRecieved(messageBody.isEmpty ? "[ No message ]" : messageBody)
+                    case .right: messageSent(messageBody.isEmpty ? "[ No message ]" : messageBody)
                     }
                 }
                 messsageAttachment(direction)
@@ -126,13 +126,12 @@ struct ContactMessagesView:View{
     var body: some View{
         AppBackgroundStack(content: {
             mainPage
-        })
+        },title: contact.displayName ?? "")
         .onChange(of: cmVar.currentMessage){ message in
-            // THIS FIXES ALOT OF LEAKS ON IOS_17
             if let message = message{
                 cmVar.currentMessage = nil
                 SheetPresentView(style: .sheet){
-                    AttachmentView(message: message,userName:contact.displayName ?? "Back")
+                    AttachmentView(message: message,userName:message.date?.iosLongMessageFormat() ?? "")
                     .presentationDragIndicator(.visible)
                     .environmentObject(firestoreViewModel)
                     .environmentObject(navigationViewModel)
@@ -149,7 +148,8 @@ struct ContactMessagesView:View{
             firestoreViewModel.closeListener(.LISTENER_MESSAGES)
             firestoreViewModel.releaseData([.DATA_CONTACT_MESSAGES])
         }
-       .hiddenBackButtonWithCustomTitle(backButtonLabel)
+        .hiddenBackButtonWithCustomTitle(backButtonLabel)
+        
     }
     
 }

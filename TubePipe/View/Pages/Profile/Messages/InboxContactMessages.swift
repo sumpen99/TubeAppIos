@@ -11,7 +11,15 @@ struct InboxContactMessages:View{
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
     @EnvironmentObject var navigationViewModel: NavigationViewModel
     @State var cVar = ContactVar()
-        
+    
+    var messageLabel:some View{
+        Text("Messages")
+        .font(.largeTitle)
+        .bold()
+        .foregroundColor(.black)
+        .hLeading()
+    }
+    
     var contactList:some View{
         SortedContactsList(currentContact:$cVar.currentContact,
                            showingOptions: $cVar.showingOptions,
@@ -20,13 +28,21 @@ struct InboxContactMessages:View{
                            contactAvatarColor: .black,
                            contactInfoColor: .black)
     }
+    
+    
+    var messagesBody:some View{
+        VStack(spacing:V_SPACING_REG){
+            messageLabel
+            contactList
+        }
+        .padding()
+    }
    
     var body: some View{
         AppBackgroundStack(content: {
-            contactList
+            messagesBody
         })
         .hiddenBackButtonWithCustomTitle("Profile")
-        .modifier(NavigationViewModifier(title: ""))
     }
     
 }

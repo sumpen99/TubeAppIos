@@ -44,6 +44,7 @@ struct InboxVar{
     var searchCategorie:SearchCategorie?
     var deleteTubesId:[String] = []
     var tubeModel:TubeModel?
+    var searchResult:Int = 0
     var searchText:String = ""
     var searchOption:[Bool] = Array.init(repeating: false,
                                          count: SearchCategorie.indexOf(op: .ALL))
@@ -138,7 +139,7 @@ struct InboxSavedTubesView:View{
             topMenuList
             savedTubesList
         }
-        .padding()
+        .padding([.leading,.trailing,.top])
     }
     
     var mainpage:some View{
@@ -186,7 +187,6 @@ struct InboxSavedTubesView:View{
             }
         }
         .navigationBarBackButtonHidden(true)
-        .modifier(NavigationViewModifier(title: ""))
     }
     
 }
@@ -200,12 +200,15 @@ extension InboxSavedTubesView{
     
     @ViewBuilder
     var labelItems:some View{
-        if let categorie = iVar.searchCategorie{
+       if let categorie = iVar.searchCategorie{
+           let txt = iVar.searchResult == 0 ? "\(categorie.rawValue)" :
+                                              "\(categorie.rawValue):\(iVar.searchResult)"
             VStack{
                 Text("All items")
                 .largeTitle(color: .black)
-                Text("Filter on: \(categorie.rawValue)")
+                Text(txt)
                 .font(.body)
+                .bold()
                 .foregroundColor(.black)
                 .hLeading()
             }
@@ -278,7 +281,10 @@ extension InboxSavedTubesView{
     
     //MARK: - SEARCH FUNCTIONS
     func onSearch(_ searchCategorie:SearchCategorie,searchText:String){
-        coreDataViewModel.requestBySearchCategorie(searchCategorie, searchText: searchText)
+        iVar.searchResult = 0
+        coreDataViewModel.requestBySearchCategorie(searchCategorie, searchText: searchText){ itemsCount in
+            iVar.searchResult = itemsCount
+        }
     }
     func onReset(){
         coreDataViewModel.requestInitialSetOfItems()
@@ -326,7 +332,6 @@ extension InboxSavedTubesView{
     func loadViewModelWithTubeModel(_ tubeModel:TubeModel){
         tubeViewModel.initViewFromModelValues(tubeModel)
         tubeViewModel.rebuild()
-        navigationViewModel.navTo(.MODEL_2D)
     }
     
 }

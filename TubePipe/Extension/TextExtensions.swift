@@ -93,7 +93,7 @@ extension TextField{
     }
     
     func preferedEmailField(textColor:Color) -> some View{
-        self.removePredictiveSuggestions(keyBoardType: .emailAddress)
+        self.removePredictiveSuggestions(keyBoardType: .asciiCapable)
             .font(Font(UIFont.preferredFont(forTextStyle: .headline)))
             .foregroundColor(textColor)
             .padding([.bottom,.top],10)

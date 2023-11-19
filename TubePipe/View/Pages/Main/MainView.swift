@@ -12,7 +12,7 @@ struct MainView: View{
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
     @StateObject var tubeViewModel = TubeViewModel()
     @StateObject var globalDialogPresentation = GlobalLoadingPresentation()
-    @StateObject var coreDataViewModel = CoreDataViewModel()
+    
     @StateObject var navigationViewModel = NavigationViewModel()
     
     let layoutRegistred = [
@@ -81,7 +81,7 @@ struct MainView: View{
     @ViewBuilder
     var bottomMenu: some View{
         if firebaseAuth.loggedInAs == .ANONYMOUS_USER{
-            anonymousMenu
+            tabMenuAnonymous
         }
         else{
             registredMenu
@@ -92,7 +92,7 @@ struct MainView: View{
     @ViewBuilder
     var mainContentTabView:some View{
         if firebaseAuth.loggedInAs == .ANONYMOUS_USER{
-            anonymousMenu
+            tabMenuAnonymous
         }
         else{
             tabMenuRegistred
@@ -100,23 +100,16 @@ struct MainView: View{
     }
     
     var tabMenuAnonymous: some View {
-        VStack{
-            TabView {
-                AnonymousModel2DView()
-                .tabItem {
-                    Label("Model", systemImage: "rotate.3d")
-                }
-                CustomCalendarView()
-                .tabItem {
-                    Label("Calendar", systemImage: "calendar")
-                }
-                AnonymousProfileView()
-                .tabItem {
-                    Label("Register", systemImage: "person.fill")
-                }
+        TabView {
+            AnonymousModel2DView()
+            .tabItem {
+                Label("Model", systemImage: "rotate.3d")
+            }
+            AnonymousProfileView()
+            .tabItem {
+                Label("Register", systemImage: "person.fill")
             }
         }
-        .globalLoadingDialog(presentationManager: globalDialogPresentation)
     }
     
     var tabMenuRegistred: some View {
@@ -134,16 +127,41 @@ struct MainView: View{
                 Label("Profile", systemImage: "person.fill")
             }
         }
-        .globalLoadingDialog(presentationManager: globalDialogPresentation)
     }
         
     var body: some View{
         mainContentTabView
-        .environmentObject(coreDataViewModel)
+        .onAppear{ setUserDataIfNeededData() }
+        .onDisappear{ releaseData() }
+        .globalLoadingDialog(presentationManager: globalDialogPresentation)
         .environmentObject(tubeViewModel)
         .environmentObject(navigationViewModel)
         .environmentObject(globalDialogPresentation)
         .ignoresSafeArea(.keyboard)
+    }
+    
+    func releaseData(){
+        firestoreViewModel.releaseData(FirestoreData.all())
+        firestoreViewModel.closeListeners(FirestoreListener.all())
+    }
+    
+    func setUserDataIfNeededData(){
+        firestoreViewModel.checkIfUserDocumentExists(){ error,documentExists in
+            if documentExists{ setupListenerForUserChanges() }
+            else { setUpNewUser()}
+        }
+    }
+    
+    func setUpNewUser(){
+        firestoreViewModel.createAppUserDocument(){ error in
+            if error == nil { setupListenerForUserChanges() }
+        }
+        
+    }
+    
+    func setupListenerForUserChanges(){
+        firestoreViewModel.listenForCurrentUser()
+        firestoreViewModel.listenForMessageGroups()
     }
      
 }

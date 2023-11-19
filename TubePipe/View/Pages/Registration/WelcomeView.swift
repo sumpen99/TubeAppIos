@@ -16,11 +16,19 @@ struct WelcomeView : View {
     @EnvironmentObject var firebaseAuth: FirebaseAuth
     @State var wVar = WelcomVariables()
     
+    
     var appLogoImage:some View{
-        Image("tp3")
-          .resizable()
-          .scaledToFit()
-          .padding()
+        GeometryReader{ reader in
+            Image("tp3")
+                .resizable()
+                .scaledToFill()
+                .frame(width: reader.size.width/2.0, height:reader.size.height/4.0)
+                .clipShape(Circle())
+              .hCenter()
+              .vCenter()
+              .padding()
+        }
+        
     }
     
     var welcomeButton: some View{

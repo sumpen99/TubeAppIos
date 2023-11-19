@@ -17,6 +17,7 @@ enum ActiveImagePickerActionSheet: Identifiable {
 }
 
 struct DocumentContent:Codable{
+    var isSaving:Bool = false
     var message:String = ""
     var title:String = ""
     var email:String = ""
@@ -59,14 +60,14 @@ struct TubeDocumentView: View{
   
     var document:some View{
         List{
-            muffSection
-            summarySection
+            muffSection.listRowBackground(Color.lightText)
+            summarySection.listRowBackground(Color.lightText)
             ForEach(segTypes,id:\.self){ segType in
                 getSegmentSection(segment: tubeViewModel.muffDetails.getSegmenIfItExists(segType: segType))
+                .listRowBackground(Color.lightText)
             }
-            .listStyle(.sidebar)
-            .scrollContentBackground(.hidden)
         }
+        .listStyle(.automatic)
         .scrollContentBackground(.hidden)
     }
     
@@ -103,7 +104,7 @@ extension TubeDocumentView{
                     SubHeaderSubHeaderView(subMain: Text("Outer length:"), subSecond: Text(segment.outerLength))
                  }
             } header: {
-                Text(segment.seg_type.rawValue).foregroundColor(.darkGray)
+                Text(segment.seg_type.rawValue).listSectionHeader()
             } footer: {
                 Text("")
             }
@@ -111,7 +112,7 @@ extension TubeDocumentView{
     }
     
     var muffSection: some View{
-        return Section { muff } header: { Text("Muff").foregroundColor(.darkGray) } footer: { Text("") }
+        return Section { muff } header: { Text("Muff").listSectionHeader() } footer: { Text("") }
     }
     
     var muff: some View{
@@ -157,9 +158,8 @@ extension TubeDocumentView{
                 SubHeaderSubHeaderView(subMain: Text("LenA:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.tube.lena)) mm"))
                 SubHeaderSubHeaderView(subMain: Text("LenB:"), subSecond: Text("\(Int(tubeViewModel.settingsVar.tube.lenb)) mm"))
              }
-            
-        } header:{
-            Text("Summary").foregroundColor(.darkGray)
+       } header:{
+            Text("Summary").listSectionHeader()
         } footer:{
             Text("")
         }

@@ -9,54 +9,10 @@ import SwiftUI
 
 struct TubeHelpView: View{
     @Environment(\.dismiss) private var dismiss
-    @GestureState private var pinchMagnification: CGFloat = 1.0
-    @GestureState private var twistAngle: Angle = Angle.zero
-    @GestureState private var fingerLocation: CGPoint? = nil
-    @GestureState private var startLocation: CGPoint? = nil
     @State var currentMagnification = 1.0
     @State var currentRotation = Angle.zero
     @State var location = CGPoint()
     
-    // MARK: - GESTRURES
-    var simpleDragGesture: some Gesture {
-        DragGesture()
-        .onChanged { value in
-            var newLocation = startLocation ?? location
-            newLocation.x += value.translation.width
-            newLocation.y += value.translation.height
-            location = newLocation
-        }.updating($startLocation) { (value, startLocation, transaction) in
-            startLocation = startLocation ?? location
-        }
-    }
-        
-    var fingerDragGesture: some Gesture {
-        DragGesture()
-        .updating($fingerLocation) { (value, fingerLocation, transaction) in
-            fingerLocation = value.location
-        }
-    }
-    
-    var rotationGesture: some Gesture{
-        RotationGesture()
-        .updating($twistAngle){ (value, twistAngle, transaction) in
-            twistAngle = value
-        }
-        .onEnded { angle in
-            currentRotation += angle
-        }
-    }
-    
-    var magnificationGesture: some Gesture{
-        MagnificationGesture()
-        .updating($pinchMagnification){ (value, pinchMagnification, transaction) in
-            pinchMagnification = value
-        }
-        .onEnded{ scale in
-            currentMagnification *= scale
-            
-        }
-    }
     
     var body:some View{
         VStack(spacing:0){
@@ -72,24 +28,14 @@ struct TubeHelpView: View{
                 Section {
                     Image("tubeskiss_3")
                         .resizable()
-                        .scaledToFit()
-                        .scaleEffect(currentMagnification * pinchMagnification)
-                        .rotationEffect(currentRotation + twistAngle)
-                        .simultaneousGesture(rotationGesture.simultaneously(with: magnificationGesture))
+                        .scaledToFill()
                 } header: {
-                    Text("Measurement").foregroundColor(.darkGray)
+                    Text("Measurement").listSectionHeader()
                 } footer: {
-                    Text("")
-                }
-                Section {
-                    HeaderSubHeaderView(header: "Unit", subHeader: "Millimeter")
-                    HeaderSubHeaderView(header: "Radius", subHeader: "Measure from center of tube")
-                } header: {
-                    Text("Information").foregroundColor(.darkGray)
-                } footer: {
-                    Text("")
-                }
+                    Text("Measure radius from center of tube. To optimize user experience choosen unit in TubePipe ( for all settingsvalues ) is set to millimeters. In reality though any will do. ")
+                }.listRowBackground(Color.lightText)
            }
+           .scrollDisabled(true)
            .scrollContentBackground(.hidden)
         }
     }

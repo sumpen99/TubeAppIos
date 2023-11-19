@@ -29,7 +29,7 @@ struct TubeDocFileView:View{
     var tubeDate: some View{
         if let date = tube.date{
             Text(date.shortTime())
-            .font(.subheadline)
+            .font(.footnote)
             .foregroundColor(.black)
         }
     }
@@ -38,7 +38,7 @@ struct TubeDocFileView:View{
     var tubeMessage: some View{
         if let message = tube.message{
             Text(message)
-            .font(.callout)
+            .font(.subheadline)
             .bold()
             .lineLimit(1)
             .foregroundColor(.black)
@@ -121,7 +121,7 @@ struct ExtendedTubeDocFileView:View{
     var tubeDate: some View{
         if let date = tube.date{
             Text(date.iosShortMessageFormat())
-            .font(.subheadline)
+            .font(.footnote)
             .foregroundColor(.black)
         }
     }
@@ -130,7 +130,7 @@ struct ExtendedTubeDocFileView:View{
     var tubeMessage: some View{
         if let message = tube.message{
             Text(message)
-            .font(.callout)
+            .font(.subheadline)
             .bold()
             .lineLimit(1)
             .foregroundColor(.black)

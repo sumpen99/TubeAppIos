@@ -9,10 +9,30 @@ struct AnonymousModel2DView: View{
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @State var activeHomeSheet: ActiveHomeSheet?
     var body: some View{
-        NavigationView{
+        NavigationStack{
             AppBackgroundStack(content: {
                 TubeView(tubeInteraction: .IS_MOVEABLE)
             })
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    navOpenTubeSettingsButton
+                }
+                ToolbarItem(placement: .principal) {
+                    navModel3DButton
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu{
+                        navPrintButton
+                        navInfoButton
+                    }
+                    label:{
+                        Label("Info",systemImage: "ellipsis")
+                        .toolbarFontAndPadding()
+                    }
+                    
+                    
+                }
+            }
             .onAppear{
                 tubeViewModel.initFromCache()
             }
@@ -24,7 +44,6 @@ struct AnonymousModel2DView: View{
                         SheetPresentView(style: .detents([.medium(),.large()])){
                             TubeSettingsView()
                             .environmentObject(tubeViewModel)
-                            .presentationDragIndicator(.visible)
                         }
                         .makeUIView()
                     case ActiveHomeSheet.OPEN_TUBE_DOCUMENT:
@@ -48,66 +67,32 @@ struct AnonymousModel2DView: View{
                     }
                 }
             }
-            /*.sheet(item: $activeHomeSheet){ item in
-                switch item{
-                case ActiveHomeSheet.OPEN_TUBE_SETTINGS:
-                    TubeSettingsView()
-                    .presentationDragIndicator(.visible)
-                    .presentationDetents([.medium])
-                case ActiveHomeSheet.OPEN_TUBE_DOCUMENT:
-                    TubeDocumentView()
-                case ActiveHomeSheet.OPEN_TUBE_SAVE:
-                    SaveDocumentView()
-                case ActiveHomeSheet.OPEN_TUBE_INFORMATION:
-                    TubeHelpView()
-                default:EmptyView()
-                }
-            }*/
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: { activeHomeSheet = .OPEN_TUBE_SETTINGS }) {
-                        Image(systemName: "ruler")
-                    }
-                    .toolbarFontAndPadding()
-                }
-                ToolbarItem(placement: .principal) {
-                    NavigationLink(destination:LazyDestination(destination: {
-                        Model3DView()
-                    })){
-                        ZStack{
-                            Image(systemName: "arrow.triangle.2.circlepath").imageScale(.large).foregroundColor(.black)
-                            Image(systemName: "view.3d").imageScale(.small).foregroundColor(.systemBlue)
-                        }
-                    }
-                    .toolbarFontAndPadding()
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Menu{
-                        navPrintButton
-                        navSaveButton
-                        navInfoButton
-                    }
-                    label:{
-                        Label("Info",systemImage: "ellipsis")
-                        .toolbarFontAndPadding()
-                    }
-                    
-                    
-                }
-            }
         }
         
+    }
+    
+    var navModel3DButton:some View{
+        NavigationLink(destination:LazyDestination(destination: {
+            Model3DView()
+        })){
+            ZStack{
+                Image(systemName: "arrow.triangle.2.circlepath").font(.title).foregroundColor(.systemBlue)
+                Image(systemName: "view.3d").imageScale(.small).foregroundColor(.systemBlue)
+            }
+        }
+        .toolbarFontAndPadding()
+    }
+    
+    var navOpenTubeSettingsButton:some View{
+        Button(action: { activeHomeSheet = .OPEN_TUBE_SETTINGS }) {
+            Image(systemName: "gear")
+        }
+        .toolbarFontAndPadding()
     }
     
     var navPrintButton:some View{
         Button(action: { activeHomeSheet = .OPEN_TUBE_DOCUMENT } ){
             Label("Document", systemImage: "doc")
-        }
-    }
-    
-    var navSaveButton:some View{
-        Button(action: { activeHomeSheet = .OPEN_TUBE_SAVE } ){
-            Label("Save", systemImage: "arrow.down.doc")
         }
     }
    

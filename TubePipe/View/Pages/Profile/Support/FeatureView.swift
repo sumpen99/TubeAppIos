@@ -24,7 +24,7 @@ struct FeatureView:View{
     
     
     var buttonIsDisabled:Bool{
-        docContent.isNotAValidDocument
+        docContent.isNotAValidDocument||globalLoadingPresentation.isLoading
     }
     
     var featureHeader:some View{
@@ -121,23 +121,25 @@ struct FeatureView:View{
     
     var shareButton: some View{
         Button(action: submitFeatureRequest ,label: {
-            Text("Submit").hCenter()
+            Text("Submit")
         })
         .disabled(buttonIsDisabled)
-        .buttonStyle(ButtonStyleDisabledable(lblColor:Color.black,backgroundColor: Color.white))
-        .padding()
+        .opacity(buttonIsDisabled ? 0.2 : 1.0)
+        .foregroundColor(buttonIsDisabled ? .black :.systemBlue)
+        .toolbarFontAndPadding()
+        .bold()
     }
            
     var infoBody:some View{
         VStack(spacing:0){
             featureTopHeader
             List{
-                inputTitle
-                inputDescription
-                inputEmail
-                inputScreenshot
-                shareButton
+                inputTitle.listRowBackground(Color.lightText)
+                inputDescription.listRowBackground(Color.lightText)
+                inputEmail.listRowBackground(Color.lightText)
+                //inputScreenshot
             }
+            .scrollContentBackground(.hidden)
             .listStyle(.insetGrouped)
         }
         
@@ -146,7 +148,12 @@ struct FeatureView:View{
     var body:some View{
         AppBackgroundStack(content: {
             infoBody
+            .onSubmit { submitFeatureRequest() }
+            .submitLabel(.send)
         })
+        .onTapGesture {
+            endTextEditing()
+        }
         .modifier(NavigationViewModifier(title: ""))
         .hiddenBackButtonWithCustomTitle("Profile")
         .alert("Feature request sent",
@@ -161,6 +168,7 @@ struct FeatureView:View{
     }
     
     func submitFeatureRequest(){
+        if buttonIsDisabled{ return }
         docContent.trim()
         let featureId = docContent.documentId
         let storageId = docContent.storageId

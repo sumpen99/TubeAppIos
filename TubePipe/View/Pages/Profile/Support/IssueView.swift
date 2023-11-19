@@ -34,12 +34,7 @@ struct IssueView:View{
     """
     
     var buttonIsDisabled:Bool{
-        docContent.isNotAValidDocument
-    }
-    
-    var toggleFullFooterButton:some View{
-        Image(systemName: collapseFooter ? "chevron.right" : "chevron.down")
-  
+        docContent.isNotAValidDocument||globalLoadingPresentation.isLoading
     }
     
     var issueHeader:some View{
@@ -50,20 +45,15 @@ struct IssueView:View{
         .hLeading()
     }
     
-    var sectionFooter: some View{
-        Section(content: {
-            if !collapseFooter{
-                LazyVStack {
-                    issueFooterLong
-                }
-            }
-       }, header: { footerLabelToggle })
-    }
     
     var footerLabelToggle:some View{
         HStack{
-            issueFooterShort.opacity(collapseFooter ? 1.0 : 0.0)
-            toggleFullFooterButton
+            if collapseFooter{
+                issueFooterShort
+            }
+            else{
+                issueFooterLong
+            }
         }
         .padding()
         .onTapGesture {
@@ -94,7 +84,7 @@ struct IssueView:View{
     var issueTopHeader:some View{
         VStack{
             issueHeader
-            sectionFooter
+            footerLabelToggle
         }
         .padding()
     }
@@ -171,24 +161,26 @@ struct IssueView:View{
     
     
     var shareButton: some View{
-        Button(action: submitIssueReport,label: {
-            Text("Submit").hCenter()
+        Button(action: submitIssueReport ,label: {
+            Text("Submit")
         })
         .disabled(buttonIsDisabled)
-        .buttonStyle(ButtonStyleDisabledable(lblColor:Color.black,backgroundColor: Color.white))
-        .padding()
+        .opacity(buttonIsDisabled ? 0.2 : 1.0)
+        .foregroundColor(buttonIsDisabled ? .black :.systemBlue)
+        .toolbarFontAndPadding()
+        .bold()
     }
     
     var infoBody:some View{
         VStack(spacing:0){
             issueTopHeader
             List{
-                inputTitle
-                inputDescription
-                inputEmail
-                inputScreenshot
-                shareButton
+                inputTitle.listRowBackground(Color.lightText)
+                inputDescription.listRowBackground(Color.lightText)
+                inputEmail.listRowBackground(Color.lightText)
+                //inputScreenshot
             }
+            .scrollContentBackground(.hidden)
             .listStyle(.insetGrouped)
         }
         
@@ -197,7 +189,12 @@ struct IssueView:View{
     var body:some View{
         AppBackgroundStack(content: {
             infoBody
+            .onSubmit { submitIssueReport() }
+            .submitLabel(.send)
         })
+        .onTapGesture {
+            endTextEditing()
+        }
         .modifier(NavigationViewModifier(title: ""))
         .hiddenBackButtonWithCustomTitle("Profile")
         .alert("Report submitted",
@@ -213,6 +210,7 @@ struct IssueView:View{
     }
     
     func submitIssueReport(){
+        if buttonIsDisabled{ return }
         docContent.trim()
         let issueId = docContent.documentId
         let storageId = docContent.storageId

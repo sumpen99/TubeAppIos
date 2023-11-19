@@ -23,23 +23,27 @@ struct ShareDocumentView:View{
     @State private var toast: Toast? = nil
   
     var buttonIsDisabled:Bool{
-        sclVar.currentContact == nil
+        docContent.isSaving||(sclVar.currentContact == nil || docContent.message.isEmpty)
     }
     
     @ViewBuilder
     var toogleContactsButton:some View{
-        Image(systemName: sclVar.isSuggestionShowing ? "chevron.up" : "chevron.down")
+        Image(systemName: sclVar.isSuggestionShowing ? "chevron.down" : "chevron.right")
         .hTrailing()
     }
     
     var shareButton: some View{
-        Button(action: startSendingMessageProcess,label: {
-            Text("Send").hCenter()
+        Button(action:startSendingMessageProcess,label: {
+            Text("Send")
         })
         .disabled(buttonIsDisabled)
-        .buttonStyle(ButtonStyleDisabledable(lblColor:Color.black,backgroundColor: Color.backgroundSecondary))
-        .padding()
+        .opacity(buttonIsDisabled ? 0.2 : 1.0)
+        .foregroundColor(buttonIsDisabled ? .black : .systemBlue)
+        .font(.title2)
+        .bold()
+        .hTrailing()
     }
+    
     
     var suggestionsList: some View{
         SortedContactsList(currentContact:$sclVar.currentContact,
@@ -108,12 +112,10 @@ struct ShareDocumentView:View{
             ScrollView{
                 VStack(spacing:20){
                     reciever
-                    BaseTubeTextField(docContent: $docContent)
-                    ImagePickerSwiftUi(docContent: $docContent,
-                                       label:Label("Attach photo",systemImage: "photo.on.rectangle.angled"))
+                    BaseTubeTextField(docContent: $docContent,placeHolder:"Add a message or subject to share with friend")
                 }
             }
-            shareButton
+            .scrollDisabled(true)
         }
         .padding([.leading,.trailing])
     }
@@ -127,6 +129,8 @@ struct ShareDocumentView:View{
                 Text(Date().formattedString()).sectionTextSecondary(color:.darkGray).padding(.leading)
             }
         }
+        .onSubmit { startSendingMessageProcess() }
+        .submitLabel(.send)
         .toastView(toast: $toast)
         .onChange(of: sclVar.showingOptions){ value in
            withAnimation{ sclVar.isSuggestionShowing.toggle() }
@@ -141,6 +145,8 @@ struct ShareDocumentView:View{
     }
     
     func startSendingMessageProcess(){
+        if buttonIsDisabled{ return }
+        docContent.isSaving = true
         guard let contact = sclVar.currentContact,
               let senderId = firestoreViewModel.currentUserID,
               let groupId = firestoreViewModel.getGroupIdFromOtherUserId(contact.userId)
@@ -154,6 +160,7 @@ struct ShareDocumentView:View{
                     messageId: messageId,
                     storageId: storageId){ result in
             closeAfterToast(isSuccess: result.isSuccess,msg: "Message sent!",toast: &toast,action: closeView)
+            docContent.isSaving = false
         }
     }
     

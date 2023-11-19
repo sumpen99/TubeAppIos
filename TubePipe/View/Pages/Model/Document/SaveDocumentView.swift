@@ -12,36 +12,40 @@ struct SaveDocumentView:View{
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @State var docContent:DocumentContent = DocumentContent()
     @State private var toast: Toast? = nil
-      
+    
+    var buttonIsDisabled:Bool{
+        docContent.isSaving||docContent.message.isEmpty
+    }
+  
     var saveButton: some View{
         Button(action:saveNewTube,label: {
-            Text("Save").hCenter()
+            Text("Save")
         })
-        .buttonStyle(ButtonStyleDocument())
-        .padding()
-    }
-    
-    var mainContent:some View{
-        VStack(spacing:10){
-            ScrollView{
-                BaseTubeTextField(docContent: $docContent).padding(.top)
-                ImagePickerSwiftUi(docContent: $docContent,
-                                   label:Label("Attach photo",systemImage: "photo.on.rectangle.angled"))
-            }
-            saveButton
-        }
-        .padding([.leading,.trailing])
+        .disabled(buttonIsDisabled)
+        .opacity(buttonIsDisabled ? 0.2 : 1.0)
+        .foregroundColor(buttonIsDisabled ? .black : .systemBlue)
+        .font(.title2)
+        .bold()
+        .hTrailing()
+        .vTop()
+        .padding([.trailing])
     }
     
     var body: some View{
         VStack(spacing:0){
             TopMenu(title: "Save document", actionCloseButton: closeView)
             Section {
-                mainContent
+                BaseTubeTextField(docContent: $docContent,placeHolder: "Add a comment or title to save file on device")
+                .padding()
+                .vTop()
             } header: {
-                Text(Date().formattedString()).sectionTextSecondary(color:.darkGray).padding(.leading)
+                Text(Date().formattedString()).sectionTextSecondary(color:.black).padding(.leading)
+            } footer:{
+                
             }
         }
+        .onSubmit { saveNewTube() }
+        .submitLabel(.send)
         .toastView(toast: $toast)
         .halfSheetBackgroundStyle()
     }
@@ -52,6 +56,8 @@ struct SaveDocumentView:View{
     }
     
     func saveNewTube(){
+        if buttonIsDisabled { return }
+        docContent.isSaving = true
         let managedObjectContext = PersistenceController.shared.container.viewContext
         let model = TubeModel(context:managedObjectContext)
         tubeViewModel.buildModelFromCurrentValues(model)

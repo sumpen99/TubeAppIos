@@ -59,12 +59,8 @@ struct Model3DView: View{
         }
     }
     
-    func toggleWorldAxis(){
+    func closeView(){
         dismiss()
-        /*let newVal = tubeViewModel.getUserdefaultDrawOptionValue(.SHOW_WORLD_AXIS)
-        tubeViewModel.setUserdefaultDrawOption(with: !newVal, op: .SHOW_WORLD_AXIS)
-        tubeViewModel.saveUserDefaultDrawingValues()
-        renderNewScene()*/
     }
     
     var body:some View{
@@ -78,10 +74,9 @@ struct Model3DView: View{
                 activeModelSheet = nil
                 switch item{
                 case ActiveModelSheet.OPEN_MODEL_SETTINGS:
-                    SheetPresentView(style: .detents([.medium()])){
+                    SheetPresentView(style: .detents([.medium(),.large()])){
                         Model3DSettingsView(renderNewState: $renderNewState)
                         .environmentObject(tubeViewModel)
-                        .presentationDragIndicator(.visible)
                     }
                     .makeUIView()
                }
@@ -95,9 +90,9 @@ struct Model3DView: View{
                 .toolbarFontAndPadding()
             }
             ToolbarItem(placement: .principal) {
-                Button(action: toggleWorldAxis){
+                Button(action: closeView){
                     ZStack{
-                        Image(systemName: "arrow.triangle.2.circlepath").imageScale(.large).foregroundColor(.black)
+                        Image(systemName: "arrow.triangle.2.circlepath").font(.title).foregroundColor(.systemBlue)
                         Image(systemName: "view.2d").imageScale(.small).foregroundColor(.systemBlue)
                     }
                 }

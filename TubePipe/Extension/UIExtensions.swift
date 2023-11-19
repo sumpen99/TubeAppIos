@@ -41,11 +41,11 @@ extension UINavigationBar {
         appearance.backgroundColor = UIColor(Color.backgroundPrimary)
 
         let attrsLarge: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.white,
+            .foregroundColor: UIColor.black,
             //.font: UIFont.monospacedDigitSystemFont(ofSize: 20, weight: .black)
         ]
         let attrsSmall: [NSAttributedString.Key: Any] = [
-            .foregroundColor: UIColor.white,
+            .foregroundColor: UIColor.black,
             //.font: UIFont.monospacedSystemFont(ofSize: 20, weight: .black)
         ]
         appearance.titleTextAttributes = attrsSmall

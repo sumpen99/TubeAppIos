@@ -47,11 +47,11 @@ struct ContactRequestView:View{
         .font(.headline)
         .bold()
         .frame(height: 33)
-        .foregroundColor(request == requestHeader ? .black : Color.darkGray )
+        .foregroundColor(request == requestHeader ? .black : Color.tertiaryLabel )
         .background(
              ZStack{
                  if request == requestHeader{
-                     Color.systemBlue
+                     Color.black
                      .frame(height: 1)
                      .offset(y: 14)
                      .matchedGeometryEffect(id: "CURRENTREQUESTHEADER", in: animation)

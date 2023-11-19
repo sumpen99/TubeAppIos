@@ -14,6 +14,47 @@ import SwiftUI
 //maxAttempts        = 10
 extension UIImage{
     
+    static func downsample(imageAt imageURL: URL,
+                    to pointSize: CGSize,
+                    scale: CGFloat = UIScreen.main.scale) -> UIImage? {
+        
+        /*GeometryReader{ reader in
+            if let url = URL.localURLForXCAsset(name: "tp3"),
+               let img = downsample(imageAt: url, to: CGSize(width: reader.size.width/2.0,
+                                                             height: reader.size.height/2.0)){
+                Image(uiImage: img)
+                  .resizable()
+                  .frame(width: reader.size.width/2.0,height: reader.size.height/2.0)
+                  .hCenter()
+                  .vCenter()
+                  .padding()
+            }
+        }*/
+        
+        // Create an CGImageSource that represent an image
+        let imageSourceOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let imageSource = CGImageSourceCreateWithURL(imageURL as CFURL, imageSourceOptions) else {
+            return nil
+        }
+        
+        // Calculate the desired dimension
+        let maxDimensionInPixels = max(pointSize.width, pointSize.height) * scale
+        
+        // Perform downsampling
+        let downsampleOptions = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceShouldCacheImmediately: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,
+            kCGImageSourceThumbnailMaxPixelSize: maxDimensionInPixels
+        ] as CFDictionary
+        guard let downsampledImage = CGImageSourceCreateThumbnailAtIndex(imageSource, 0, downsampleOptions) else {
+            return nil
+        }
+        
+        // Return the downsampled image as UIImage
+        return UIImage(cgImage: downsampledImage)
+    }
+    
     func resizeImageIfNeeded(compressionQuality:CGFloat,maxSize:Int,minSize:Int,maxAttempts:Int,data:inout Data?){
         if let dataRaw = self.jpegData(compressionQuality: compressionQuality){
             if dataRaw.count < maxSize{ data = dataRaw; return }

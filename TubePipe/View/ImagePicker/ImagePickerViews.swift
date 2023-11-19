@@ -31,11 +31,7 @@ struct ImagePickerSwiftUi<LabelText:View>: View {
     var imageLabel:some View{
         ZStack{
             if image != nil{
-                Button("\(Image(systemName: "xmark"))", action: {
-                    withAnimation{
-                        image = nil
-                    }
-                })
+                Button("\(Image(systemName: "xmark"))", action: clearData )
                 .font(.headline)
                 .foregroundColor(.red)
             }
@@ -44,6 +40,13 @@ struct ImagePickerSwiftUi<LabelText:View>: View {
             }
         }
         .hLeading()
+    }
+    
+    func clearData(){
+        docContent.data = nil
+        withAnimation{
+            image = nil
+        }
     }
     
     var fetchedImage:some View{

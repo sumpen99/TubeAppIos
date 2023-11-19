@@ -39,7 +39,7 @@ struct ScrollViewCoreData<Content: View>: View {
                             }
                         }
                         .padding(.top)
-                     }
+                    }
                     .overlay {
                         if coreDataViewModel.dataIsLoading {
                             //LoadingView()

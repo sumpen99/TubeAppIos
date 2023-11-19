@@ -99,6 +99,10 @@ struct ProfileView: View{
     @State var pVar:ProfileVariables = ProfileVariables()
     @State var animateText:Bool = false
     
+    var buttonDisabled:Bool{
+        !changesHasHappend||globalLoadingPresentation.isLoading
+    }
+    
     var showPlaceholderText:Bool{
         (pVar.displayName.isEmpty && focusField != .PROFILE_DISPLAY_NAME)
     }
@@ -296,8 +300,8 @@ struct ProfileView: View{
                         Text("Dismiss").foregroundColor(.systemRed).bold().font(.headline)
                     }
                     .toolbarFontAndPadding()
-                    .opacity(userNameHasChanged ? 1.0 : 0.0)
-                    .disabled(!userNameHasChanged)
+                    .opacity(changesHasHappend ? 1.0 : 0.0)
+                    .disabled(!changesHasHappend)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: { saveChanges();endTextEditing(); }) {
@@ -372,14 +376,14 @@ struct ProfileView: View{
     
     var navigateToFileBug:some View{
         Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_ISSUE)}, label: {
-            buttonAsNavigationLink(title: "Report an issue", systemImage: "exclamationmark.triangle")
+            buttonAsNavigationLink(title: "Issue report", systemImage: "exclamationmark.triangle")
         })
         .profileListRow()
     }
     
     var navigateToHelpCenter:some View{
         Button(action: { navigationViewModel.switchPathToRoute(ProfileRoute.ROUTE_FEATURE)}, label: {
-            buttonAsNavigationLink(title: "Request a new feature", systemImage: "lightbulb")
+            buttonAsNavigationLink(title: "Feature request", systemImage: "lightbulb")
         })
         .profileListRow()
     }
@@ -398,6 +402,7 @@ struct ProfileView: View{
 extension ProfileView{
     
     func saveChanges(){
+        if buttonDisabled{ return }
         guard let userId = firestoreViewModel.currentUser?.userId
         else { pVar.profileAlertAction = .ALERT_MISSING_USERID; return }
         saveChangesPart1(userId: userId)

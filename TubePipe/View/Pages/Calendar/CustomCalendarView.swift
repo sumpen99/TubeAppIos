@@ -42,7 +42,7 @@ struct CustomCalendarView: View {
     @EnvironmentObject var navigationViewModel: NavigationViewModel
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
     @EnvironmentObject var firebaseAuth: FirebaseAuth
-    @EnvironmentObject var coreDataViewModel: CoreDataViewModel
+    @StateObject var coreDataViewModel: CoreDataViewModel
     @State var selected:Selected = Selected()
   
     let columns = [ GridItem(),GridItem(),GridItem(),GridItem()]
@@ -56,6 +56,10 @@ struct CustomCalendarView: View {
             GridItem(.flexible(minimum: 40)),
             GridItem(.flexible(minimum: 40))
         ]
+    
+    init() {
+        self._coreDataViewModel = StateObject(wrappedValue: CoreDataViewModel())
+    }
     
     var body: some View {
         NavigationStack{
@@ -295,6 +299,7 @@ extension CustomCalendarView{
     var navigateToSavedTubesButton:some View{
         NavigationLink(destination:LazyDestination(destination: {
             InboxSavedTubesView()
+            .environmentObject(coreDataViewModel)
         })){
             Image(systemName: "folder")
                 .toolbarFontAndPadding(.headline)
@@ -416,7 +421,6 @@ extension CustomCalendarView{
     func loadViewModelWithTubeModel(_ tubeModel:TubeModel){
         tubeViewModel.initViewFromModelValues(tubeModel)
         tubeViewModel.rebuild()
-        navigationViewModel.navTo(.MODEL_2D)
     }
     
     func deleteTubeModel(_ tube:TubeModel){

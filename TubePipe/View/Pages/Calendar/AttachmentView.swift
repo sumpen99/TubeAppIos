@@ -80,8 +80,10 @@ struct AttachmentView:View{
     
     var topMenu:  some View{
         VStack{
-            BackButton(title: userName).hLeading()
-            Divider().overlay{ Color.white}.hLeading()
+            HStack{
+                BackButton(title: userName)
+                Text(userName).bold().hCenter()
+            }
         }
         .frame(height:MENU_HEIGHT)
         .padding()
@@ -117,7 +119,6 @@ struct AttachmentView:View{
         } message: {
             Text(confStr)
         }
-        .modifier(NavigationViewModifier(title: ""))
     }
     
     var buttonsConfirmation:some View{
@@ -145,7 +146,6 @@ struct AttachmentView:View{
         if let sharedTube = message.sharedTube{
             if tubeViewModel.initViewFromSharedValues(sharedTube){
                 tubeViewModel.rebuild()
-                navigationViewModel.navTo(.MODEL_2D)
                 closeView()
             }
             else{

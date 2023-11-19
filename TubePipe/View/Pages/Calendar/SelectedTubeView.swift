@@ -72,10 +72,10 @@ struct SelectedTubeView: View{
         List{
             if let data = tubeModel.image?.data,
                let uiImage = UIImage(data: data){
-               attachedPhoto(uiImage)
+               attachedPhoto(uiImage).listRowBackground(Color.lightText)
             }
-            messageSummary
-            muffSummary
+            messageSummary.listRowBackground(Color.lightText)
+            muffSummary.listRowBackground(Color.lightText)
             buttons
         }
         .listStyle(.automatic)

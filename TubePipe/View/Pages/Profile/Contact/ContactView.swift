@@ -29,13 +29,6 @@ struct ContactView:View{
         .hLeading()
     }
     
-    var noContactsLabel:some View{
-        Text("Add contacts by searching for other TubePipe users, either by username or email")
-        .noDataBackgroundNoPadding()
-        .hCenter()
-        .vTop()
-    }
-    
     var confirmedContactRequestSection:some View{
         SortedContactsList(currentContact:$cVar.currentContact,
                            showingOptions: $cVar.showingOptions,
@@ -72,21 +65,15 @@ struct ContactView:View{
         .padding()
     }
     
-    var noContactsSection:some View{
-        Text("Add contacts by searching for other TubePipe users, either by username or email")
-        .noDataBackgroundNoPadding()
-        .hCenter()
-        .vTop()
-    }
+    
     
     @ViewBuilder
     var mainpage:some View{
-        if showNoContactsLabel{
-            noContactsLabel
+        VStack(spacing:V_SPACING_REG){
+            contactsLabel
+            confirmedContactRequestSection
         }
-        else{
-            hasContacts
-        }
+        .padding()
     }
     
     var body: some View{

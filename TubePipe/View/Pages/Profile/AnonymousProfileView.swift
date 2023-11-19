@@ -9,13 +9,17 @@ import SwiftUI
 
 struct AnonymousProfileView:View{
     
-    var footerText:String = "Navigate to information page and have a look at the benefits of joining the TubePipe community."
+    var footerText:String = """
+                                As a memebr you will be able to::
+                                \(pointTab)Save and store tubes on device.
+                                \(pointTab)Share tubes with other TubePipe users.
+                            """
     
     var accountSection:some View{
         Section {
-            navigateToRegisterPage
+             navigateToRegisterPage
         } header: {
-            Text("Account").foregroundColor(.black).bold()
+            Text("Account").listSectionHeader()
         } footer: {
             Text(footerText).listSectionFooter()
         }
@@ -25,18 +29,15 @@ struct AnonymousProfileView:View{
         List{
             accountSection
         }
+        .scrollDisabled(true)
         .listStyle(.insetGrouped)
     }
     
     var body: some View{
-        AppBackgroundStack(content: {
-            personalPage
-        })
-        .toolbar {
-             ToolbarItem(placement: .navigationBarTrailing) {
-                 navigateToInfoPage
-                 .toolbarFontAndPadding()
-             }
+        NavigationStack{
+            AppBackgroundStack(content: {
+                personalPage
+            })
         }
     }
     
@@ -53,7 +54,7 @@ struct AnonymousProfileView:View{
         NavigationLink(destination:LazyDestination(destination: {
             InfoView()
         })){
-            Image(systemName: "info.circle")
+            Image(systemName: "info.circle").toolbarFontAndPadding()
         }
     }
     

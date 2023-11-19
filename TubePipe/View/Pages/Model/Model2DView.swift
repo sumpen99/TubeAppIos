@@ -28,18 +28,14 @@ struct Model2DView: View{
             AppBackgroundStack(content: {
                 TubeView(tubeInteraction: .IS_MOVEABLE)
             })
-            .onAppear{
-                tubeViewModel.initFromCache()
-            }
-            .onChange(of: activeHomeSheet){ item in
+           .onChange(of: activeHomeSheet){ item in
                 if let item{
                     activeHomeSheet = nil
                     switch item{
                     case ActiveHomeSheet.OPEN_TUBE_SETTINGS:
-                        SheetPresentView(style: .detents([.medium()])){
+                        SheetPresentView(style: .detents([.medium(),.large()])){
                             TubeSettingsView()
                                 .environmentObject(tubeViewModel)
-                                .presentationDragIndicator(.visible)
                         }
                         .makeUIView()
                     case ActiveHomeSheet.OPEN_TUBE_DOCUMENT:
@@ -71,21 +67,10 @@ struct Model2DView: View{
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: { activeHomeSheet = .OPEN_TUBE_SETTINGS }) {
-                        Image(systemName: "gear")
-                    }
-                    .toolbarFontAndPadding()
+                    navOpenTubeSettingsButton
                 }
                 ToolbarItem(placement: .principal) {
-                    NavigationLink(destination:LazyDestination(destination: {
-                        Model3DView()
-                    })){
-                        ZStack{
-                            Image(systemName: "arrow.triangle.2.circlepath").imageScale(.large).foregroundColor(.black)
-                            Image(systemName: "view.3d").imageScale(.small).foregroundColor(.systemBlue)
-                        }
-                    }
-                    .toolbarFontAndPadding()
+                    navModel3DButton
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu{
@@ -101,6 +86,25 @@ struct Model2DView: View{
                 
             }
         }
+    }
+    
+    var navModel3DButton:some View{
+        NavigationLink(destination:LazyDestination(destination: {
+            Model3DView()
+        })){
+            ZStack{
+                Image(systemName: "arrow.triangle.2.circlepath").font(.title).foregroundColor(.systemBlue)
+                Image(systemName: "view.3d").imageScale(.small).foregroundColor(.systemBlue)
+            }
+        }
+        .toolbarFontAndPadding()
+    }
+    
+    var navOpenTubeSettingsButton:some View{
+        Button(action: { activeHomeSheet = .OPEN_TUBE_SETTINGS }) {
+            Image(systemName: "gear")
+        }
+        .toolbarFontAndPadding()
     }
     
     var navPrintButton:some View{

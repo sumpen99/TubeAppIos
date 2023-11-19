@@ -13,7 +13,7 @@ struct ButtonStyleNavigationLink: ButtonStyle {
             .background( .white )
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
-                    .stroke(Color.black, lineWidth: 1)
+                    .stroke(Color.tertiaryLabel, lineWidth: 1)
             )
             .opacity(configuration.isPressed ? 0.5 : 1.0)
             .foregroundColor(Color.white)

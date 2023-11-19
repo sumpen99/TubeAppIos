@@ -11,6 +11,7 @@ struct LoginVariables{
     var isFailedLoginAttempt:Bool = false
     var email:String = ""
     var password:String = ""
+    var isLoginAttempt:Bool = false
 }
 
 struct LoginView : View {
@@ -36,6 +37,10 @@ struct LoginView : View {
         .padding()
     }
     
+    var buttonIsDisabled:Bool{
+        (lVar.email.isEmpty||lVar.password.isEmpty)||lVar.isLoginAttempt
+    }
+    
     var accountLabel:some View{
         Text("Accountinformation").font(.headline).hLeading().foregroundColor(.black)
     }
@@ -44,10 +49,10 @@ struct LoginView : View {
         VStack(spacing:5.0){
             HStack{
                 Image(systemName: "mail")
-                TextField("",text:$lVar.email,onCommit: { })
+                TextField("",text:$lVar.email)
                 .preferedEmailField(textColor: Color.black)
                 .placeholder(when: focusField != .LOGIN_EMAIL && lVar.email.isEmpty){ 
-                    Text("email").foregroundColor(.darkGray)
+                    Text("email").foregroundColor(.black)
                 }
                 .focused($focusField,equals: .LOGIN_EMAIL)
                 .hLeading()
@@ -65,9 +70,9 @@ struct LoginView : View {
         VStack(spacing:5.0){
             HStack{
                 Image(systemName: "lock")
-                SecureField("",text:$lVar.password,onCommit: { })
+                SecureField("",text:$lVar.password)
                 .preferedSecureField()
-                .placeholder(when: focusField != .LOGIN_SECURE_PASSWORD && lVar.password.isEmpty){ Text("password").foregroundColor(.darkGray)}
+                .placeholder(when: focusField != .LOGIN_SECURE_PASSWORD && lVar.password.isEmpty){ Text("password").foregroundColor(.black)}
                 .focused($focusField,equals: .LOGIN_SECURE_PASSWORD)
                 .hLeading()
             }
@@ -105,14 +110,16 @@ struct LoginView : View {
             VStack{
                 loginLabel
                 loginTextfields
-                loginButton
             }
         }
+        .scrollDisabled(true)
     }
       
     var body: some View {
         AppBackgroundStack(content: {
             loginFields
+            .onSubmit { logUserIn() }
+            .submitLabel(.next)
         })
         .hiddenBackButtonWithCustomTitle(color:Color.black)
         .onAppear{
@@ -121,6 +128,8 @@ struct LoginView : View {
    }
     
     func logUserIn(){
+        if buttonIsDisabled { return }
+        lVar.isLoginAttempt = true
         toggleFailedLoginAttemptWithValue(false)
         firebaseAuth.loginWithEmail(lVar.email,password: lVar.password){ (result,error) in
             guard let _ = error else { return }
@@ -131,6 +140,8 @@ struct LoginView : View {
     func toggleFailedLoginAttemptWithValue(_ value:Bool){
         withAnimation{
             lVar.isFailedLoginAttempt = value
+            lVar.isLoginAttempt = false
+            
         }
     }
     

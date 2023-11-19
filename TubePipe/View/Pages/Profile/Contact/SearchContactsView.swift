@@ -78,10 +78,8 @@ struct SearchContactsView: View{
                 .placeholder("find user",
                              when: (focusField != .FIND_USER) && (sVar.searchText.isEmpty))
                 .hLeading()
-                .onSubmit {
-                    firestoreViewModel.releaseData([.DATA_CONTACT_SUGGESTION])
-                    firestoreViewModel.queryUsers(sVar.searchText)
-                }
+                .onSubmit { startSearch() }
+                .submitLabel(.search)
             Spacer()
             Button("Cancel",action:closeView)
             .padding(.trailing)
@@ -141,6 +139,13 @@ struct SearchContactsView: View{
     //MARK: HELPER METHODS
     func closeView(){
         dismiss()
+    }
+    
+    func startSearch(){
+        let txt = sVar.searchText.trimmingCharacters(in: .whitespaces)
+        if txt.isEmpty{ return }
+        firestoreViewModel.releaseData([.DATA_CONTACT_SUGGESTION])
+        firestoreViewModel.queryUsers(txt)
     }
     
     func sendContactRequest(){

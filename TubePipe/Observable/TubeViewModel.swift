@@ -888,8 +888,8 @@ extension TubeViewModel{
                 case DrawOption.indexOf(op: .FULL_SIZE_MUFF):           state += RenderOption.indexOf(op: .FULL_SIZE_MUFF)
                 case DrawOption.indexOf(op: .SCALED_SIZE_MUFF):         state += RenderOption.indexOf(op: .SCALED_SIZE_MUFF)
                 case DrawOption.indexOf(op: .SHOW_WORLD_AXIS):          state += RenderOption.indexOf(op: .WORLD_AXIS)
-                case DrawOption.indexOf(op: .SHOW_STEEL):             state += RenderOption.indexOf(op: .SHOW_STEEL)
-                case DrawOption.indexOf(op: .SHOW_MUFF):              state += RenderOption.indexOf(op: .SHOW_MUFF)
+                case DrawOption.indexOf(op: .SHOW_STEEL):               state += RenderOption.indexOf(op: .SHOW_STEEL)
+                case DrawOption.indexOf(op: .SHOW_MUFF):                state += RenderOption.indexOf(op: .SHOW_MUFF)
                 default: break
                 }
             }

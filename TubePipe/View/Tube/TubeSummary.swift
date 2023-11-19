@@ -41,7 +41,7 @@ struct SharedTubeSummary:View{
                 BoldSubHeaderSubHeaderView(subMain: Text("LenB:"), subSecond: Text("\(Int(sharedTube.lenb ?? 0.0)) mm"))
             }
             },
-                header: {Text("Attached Tube:").listSectionHeader(color: Color.white)}) {
+                header: {Text("Attached Tube:").listSectionHeader(color: Color.black)}) {
             }
     }
 }

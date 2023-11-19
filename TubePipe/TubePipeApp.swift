@@ -26,10 +26,16 @@ struct TubePipeApp: App {
             .onChange(of: phase) { newPhase in
                 try? persistenceController.saveContext()
                 /*switch newPhase {
-                case .active: debugLog(object:phase)
-                case .inactive: debugLog(object:phase)
-                case .background: debugLog(object:phase)
-                @unknown default: debugLog(object:"Unknown Future Options")
+                case .active:
+                    debugLog(object:phase)
+                case .inactive:
+                    debugLog(object:phase)
+                    //firestoreViewModel.closeListeners(FirestoreListener.all())
+                    //firestoreViewModel.releaseData(FirestoreData.all())
+                case .background: 
+                    debugLog(object:phase)
+                @unknown default: 
+                    debugLog(object:"Unknown Future Options")
               }*/
             }
         }

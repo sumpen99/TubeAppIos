@@ -165,7 +165,7 @@ class CoreDataViewModel:ObservableObject{
         }
     }
     
-    func requestBySearchCategorie(_ categorie:SearchCategorie,searchText:String){
+    func requestBySearchCategorie(_ categorie:SearchCategorie,searchText:String,onResult:((Int) ->Void)? = nil){
         dataIsLoading = true
         Task {
             self.coreDataFetcher.requestItemsBySearchCategorie(categorie,searchText: searchText){ response in
@@ -175,6 +175,7 @@ class CoreDataViewModel:ObservableObject{
                     self.items?.append(contentsOf: response.items)
                     self.itemsLoadedCount = self.items?.count
                     self.dataIsLoading = false
+                    onResult?(self.itemsLoadedCount ?? 0)
                 }
             }
 

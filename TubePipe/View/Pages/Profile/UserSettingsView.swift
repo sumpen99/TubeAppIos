@@ -18,10 +18,11 @@ struct UserSettingsView:View{
         changesHasHappend && !tubeViewModel.muff.emptyL1OrL2
     }
     var settingsFooter:some View{
-        Text("Specify default values for tube on start up.")
-        .listSectionFooter()
-        .hCenter()
-        .padding(.top)
+        Text("Values for on start up.")
+        .font(.title)
+        .bold()
+        .foregroundColor(Color.black)
+        .hLeading()
     }
     
     var tube:some View{ TubeView(tubeInteraction: .IS_STATIC) }
@@ -47,7 +48,6 @@ struct UserSettingsView:View{
             overlayError
         }
         .padding()
-        .border(Color.black,width: 1.0)
         .padding()
         .hCenter()
         .frame(height: 250.0)
@@ -125,7 +125,7 @@ struct UserSettingsView:View{
     
     var content:some View{
         VStack{
-            settingsFooter
+            //settingsFooter
             tubeWindow
             sections
         }
@@ -164,6 +164,7 @@ struct UserSettingsView:View{
             ToolbarItem(placement: .navigationBarLeading) { leadingButton }
             ToolbarItem(placement: .navigationBarTrailing) { trailingButton }
         }
+        .onDisappear{ tubeViewModel.initFromCache() }
         .onTapGesture{ endTextEditing() }
         .modifier(NavigationViewModifier(title: ""))
         .navigationBarBackButtonHidden()
