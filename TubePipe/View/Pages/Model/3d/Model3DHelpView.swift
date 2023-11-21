@@ -23,39 +23,43 @@ struct Model3DHelpView: View{
                 Section {
                     Image("one-finger-rotate")
                     .resizable()
-                    .scaledToFit()
+                    .frame(width:100,height:100)
+                    .hCenter()
                 } header: {
                     Text("One-Finger-Pan").listSectionHeader()
                 } footer: {
                     Text("Pan with one finger to rotate the camera around the tube").listSectionFooter()
-                } .listRowBackground(Color.clear)
+                } .listRowBackground(Color.lightText)
                 Section {
                     Image("two-finger-move")
-                        .resizable()
-                        .scaledToFit()
+                    .resizable()
+                    .frame(width:100,height:100)
+                    .hCenter()
                 } header: {
                     Text("Two-Finger-Pan").listSectionHeader()
                 } footer: {
                     Text("Pan with two fingers to move the tube around in the screen").listSectionFooter()
-                } .listRowBackground(Color.clear)
+                } .listRowBackground(Color.lightText)
                 Section {
                     Image("two-finger-rotate")
-                        .resizable()
-                        .scaledToFit()
+                    .resizable()
+                    .frame(width:100,height:100)
+                    .hCenter()
                 } header: {
                     Text("Two-Finger-Rotate").listSectionHeader()
                 } footer: {
                     Text("Rotate with two fingers to roll the tube").listSectionFooter()
-                } .listRowBackground(Color.clear)
+                } .listRowBackground(Color.lightText)
                 Section {
                     Image("two-finger-zoom")
-                        .resizable()
-                        .scaledToFit()
+                    .resizable()
+                    .frame(width:100,height:100)
+                    .hCenter()
                 } header: {
                     Text("Two-Finger-Zoom").listSectionHeader()
                 } footer: {
                     Text("Pinch to zoom in-out on the tube").listSectionFooter()
-                } .listRowBackground(Color.clear)
+                } .listRowBackground(Color.lightText)
             }
             .scrollContentBackground(.hidden)
         }

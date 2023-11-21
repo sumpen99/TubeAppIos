@@ -9,8 +9,8 @@ import SwiftUI
 
 struct LoginVariables{
     var isFailedLoginAttempt:Bool = false
-    var email:String = ""
-    var password:String = ""
+    var email:String = "fredrik@heatia.se"
+    var password:String = "st3lv1oo"
     var isLoginAttempt:Bool = false
 }
 

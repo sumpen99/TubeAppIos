@@ -12,7 +12,6 @@ struct TubePipeApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @Environment(\.scenePhase) private var phase
     @StateObject var firebaseAuth = FirebaseAuth()
-    @StateObject var firestoreViewModel = FirestoreViewModel()
     let persistenceController = PersistenceController.shared
     
     
@@ -20,7 +19,6 @@ struct TubePipeApp: App {
         StyledWindowGroup {
             ContentView()
             .environmentObject(firebaseAuth)
-            .environmentObject(firestoreViewModel)
             .environment(\.managedObjectContext,persistenceController.container.viewContext)
             .preferredWindowColor(Color.backgroundPrimary)
             .onChange(of: phase) { newPhase in

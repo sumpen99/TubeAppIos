@@ -12,13 +12,12 @@ struct InputDocumentField<LabelText: View,Content: View>: View {
     let content: Content
 
     var body : some View {
-        HStack{
+        VStack{
             ZStack{
-                Text("Description").hidden()
-                label.foregroundColor(Color.black)
+                Text("Description").hidden().hLeading()
+                label.bold().foregroundColor(Color.black).hLeading()
             }
-            Divider().overlay{ Color.tertiaryLabel }
-            content.hLeading()
+            content
         }
     }
 }

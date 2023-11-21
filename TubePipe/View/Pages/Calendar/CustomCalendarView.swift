@@ -39,8 +39,8 @@ struct Selected{
 struct CustomCalendarView: View {
     @Namespace var animation
     @EnvironmentObject var tubeViewModel: TubeViewModel
-    @EnvironmentObject var navigationViewModel: NavigationViewModel
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
+    @EnvironmentObject var navigationViewModel: NavigationViewModel
     @EnvironmentObject var firebaseAuth: FirebaseAuth
     @StateObject var coreDataViewModel: CoreDataViewModel
     @State var selected:Selected = Selected()
@@ -88,6 +88,9 @@ struct CustomCalendarView: View {
         .onAppear{
             searchAndSet(year: true, month: true, day: true)
         }
+        .onDisappear{
+            coreDataViewModel.clearAllData()
+        }
     }
     
     var mainPage:some View{
@@ -107,7 +110,7 @@ struct CustomCalendarView: View {
                 }
           }
         }, header: { yearGridButtons })
-        .listRowBackground(Color.clear)
+        .listRowBackground(Color.lightText)
         
     }
     
@@ -120,7 +123,7 @@ struct CustomCalendarView: View {
                 }
             }
        }, header: { monthGridButtons })
-        .listRowBackground(Color.clear)
+        .listRowBackground(Color.lightText)
         
     }
     
@@ -136,7 +139,7 @@ struct CustomCalendarView: View {
                 }
             }
         }, header: { dayGridButton })
-        .listRowBackground(Color.clear)
+        .listRowBackground(Color.lightText)
         
     }
     
@@ -421,6 +424,7 @@ extension CustomCalendarView{
     func loadViewModelWithTubeModel(_ tubeModel:TubeModel){
         tubeViewModel.initViewFromModelValues(tubeModel)
         tubeViewModel.rebuild()
+        navigationViewModel.navTo(.MODEL_2D)
     }
     
     func deleteTubeModel(_ tube:TubeModel){

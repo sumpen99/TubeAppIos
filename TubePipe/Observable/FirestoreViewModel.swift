@@ -70,4 +70,20 @@ class FirestoreViewModel: ObservableObject{
     @Published var currentUser:AppUser?
     var listenerContainer:[LISTENER_ID:ListenerRegistration?] = [:]
     
+    func closeThisInstanceOfFirebase(){
+        recievedContacts.removeAll()
+        pendingContacts.removeAll()
+        confirmedContacts.removeAll()
+        messageGroups.removeAll()
+        contactSuggestions.removeAll()
+        contactMessages.removeAll()
+        listenerContainer.removeAll()
+        currentUser = nil
+    }
+    
+    // this will never happen because of environmentobject i think
+    deinit{
+        debugLog(object: "close firestore")
+    }
+    
 }

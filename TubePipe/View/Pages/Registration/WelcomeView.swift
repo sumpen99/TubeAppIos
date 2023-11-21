@@ -21,9 +21,7 @@ struct WelcomeView : View {
         GeometryReader{ reader in
             Image("tp3")
                 .resizable()
-                .scaledToFill()
-                .frame(width: reader.size.width/2.0, height:reader.size.height/4.0)
-                .clipShape(Circle())
+                .frame(width: reader.size.width/2.0, height:reader.size.width/2.0)
               .hCenter()
               .vCenter()
               .padding()

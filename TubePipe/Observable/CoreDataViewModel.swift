@@ -19,10 +19,14 @@ class CoreDataService{
     var nextOffset:Int{ currentPage * CORE_DATA_FETCH_LIMIT }
     var hasDataToFetch:Bool{ currentPage < totalPages && totalItems > 0 }
     
-    func resetPageCounter(){
+    func reset(){
         totalItems = 0
         totalPages = 0
         currentPage = 0
+    }
+    
+    func resetPageCounter(){
+        reset()
         rebuildPageIndex()
     }
     
@@ -243,5 +247,10 @@ extension CoreDataViewModel{
         coreDataFetcher.resetPageCounter()
     }
     
+    func clearAllData(){
+        page = 0
+        items?.removeAll()
+        coreDataFetcher.reset()
+    }
     
 }

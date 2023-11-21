@@ -46,7 +46,7 @@ struct FeatureView:View{
             featureHeader
             featureFooter
         }
-        .padding()
+        .padding([.leading,.trailing])
     }
     
     var optionalText:some View{
@@ -64,7 +64,7 @@ struct FeatureView:View{
     }
     
     var inputTitle:some View{
-        InputDocumentField(label: Text("Title"),content:
+        InputDocumentField(label: Text("Title:"),content:
                             TextField("",text:$docContent.title.max(MAX_TEXTFIELD_LEN),onCommit: {})
                                 .preferedDocumentField()
                                 .focused($focusField,equals: .DOCUMENT_TITLE)
@@ -73,37 +73,37 @@ struct FeatureView:View{
                                 .lineLimit(1)
                                 
         )
-        .hLeading()
-        
     }
     
     var inputDescription:some View{
-        InputDocumentField(label: Text("Description").vTop(),content:
-                            ZStack{
-            TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN*4),axis:.vertical)
-                                .preferedDocumentField()
-                                .focused($focusField,equals: .DOCUMENT_MESSAGE)
-                                .placeholder("message",
-                                             when: (focusField != .DOCUMENT_MESSAGE) && (docContent.message.isEmpty))
-                                .vTop()
-                            Text("\(MAX_TEXTFIELD_LEN*4-docContent.message.count)")
-                            .font(.caption)
-                            .foregroundColor(Color.systemGray)
-                            .frame(width:33.0)
-                            .vBottom()
-                            .hTrailing()
-                        }
+        InputDocumentField(label: Text("Message:"),content:
+            ZStack{
+                TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN*4),axis:.vertical)
+                .preferedDocumentField()
+                .lineLimit(nil)
+                .focused($focusField,equals: .DOCUMENT_MESSAGE)
+                .placeholder("description of feature",
+                             when: (focusField != .DOCUMENT_MESSAGE) && (docContent.message.isEmpty))
+                .vTop()
+                .hLeading()
+                Text("\(MAX_TEXTFIELD_LEN*4-docContent.message.count)")
+                .font(.caption)
+                .foregroundColor(Color.systemGray)
+                .frame(width:33.0)
+                .vBottom()
+                .hTrailing()
+            }
+            .frame(height: 250.0)
         )
-        .frame(height: 250.0)
     }
     
     var inputEmail:some View{
-        InputDocumentField(label: Text("Email"),content:
+        InputDocumentField(label: Text("Email:"),content:
                             TextField("",text:$docContent.email.max(MAX_TEXTFIELD_LEN),onCommit: {})
                                 .preferedDocumentField()
                                 .focused($focusField,equals: .DOCUMENT_EMAIL)
                                 .placeholder(when: (focusField != .DOCUMENT_EMAIL && docContent.email.isEmpty)){
-                                    optionalText.padding(.leading)
+                                    optionalText
                                 }
                                 .lineLimit(1)
         )
@@ -148,9 +148,14 @@ struct FeatureView:View{
     var body:some View{
         AppBackgroundStack(content: {
             infoBody
-            .onSubmit { submitFeatureRequest() }
-            .submitLabel(.send)
+            //.onSubmit { submitFeatureRequest() }
+            //.submitLabel(.send)
         })
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                shareButton
+            }
+        }
         .onTapGesture {
             endTextEditing()
         }
@@ -168,8 +173,8 @@ struct FeatureView:View{
     }
     
     func submitFeatureRequest(){
-        if buttonIsDisabled{ return }
         docContent.trim()
+        if buttonIsDisabled{ return }
         let featureId = docContent.documentId
         let storageId = docContent.storageId
         let email = docContent.enteredEmail

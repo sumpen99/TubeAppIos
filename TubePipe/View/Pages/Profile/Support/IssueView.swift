@@ -47,7 +47,7 @@ struct IssueView:View{
     
     
     var footerLabelToggle:some View{
-        HStack{
+        ZStack{
             if collapseFooter{
                 issueFooterShort
             }
@@ -55,7 +55,6 @@ struct IssueView:View{
                 issueFooterLong
             }
         }
-        .padding()
         .onTapGesture {
             withAnimation{
                 collapseFooter.toggle()
@@ -65,19 +64,17 @@ struct IssueView:View{
     
     var issueFooterLong:some View{
         ScrollView{
-            VStack{
-                Text("\(issueString)")
-                .listSectionFooter()
-                .hLeading()
-            
-            }
+            Text("\(issueString)")
+            .listSectionFooter()
+            .hLeading()
         }
         
     }
     
     var issueFooterShort:some View{
-        Text(issueStringShort)
+        Text(issueString)
         .listSectionFooter()
+        .lineLimit(/*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
         .hLeading()
     }
     
@@ -86,7 +83,7 @@ struct IssueView:View{
             issueHeader
             footerLabelToggle
         }
-        .padding()
+        .padding([.leading,.trailing])
     }
     
     var optionalText:some View{
@@ -104,7 +101,7 @@ struct IssueView:View{
     }
     
     var inputTitle:some View{
-        InputDocumentField(label: Text("Title"),content:
+        InputDocumentField(label: Text("Title:"),content:
                             TextField("",text:$docContent.title.max(MAX_TEXTFIELD_LEN),onCommit: {})
                                 .preferedDocumentField()
                                 .focused($focusField,equals: .DOCUMENT_TITLE)
@@ -113,37 +110,37 @@ struct IssueView:View{
                                 .lineLimit(1)
                                 
         )
-        .hLeading()
-        
     }
     
     var inputDescription:some View{
-        InputDocumentField(label: Text("Description").vTop(),content:
-                            ZStack{
-                            TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN*4),onCommit: {})
-                                .preferedDocumentField()
-                                .focused($focusField,equals: .DOCUMENT_MESSAGE)
-                                .placeholder("message",
-                                             when: (focusField != .DOCUMENT_MESSAGE) && (docContent.message.isEmpty))
-                                .vTop()
-                            Text("\(MAX_TEXTFIELD_LEN*4-docContent.message.count)")
-                            .font(.caption)
-                            .foregroundColor(Color.systemGray)
-                            .frame(width:33.0)
-                            .hTrailing()
-                            .vBottom()
+        InputDocumentField(label: Text("Message:"),content:
+            ZStack{
+                TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN*4),axis: .vertical)
+                .preferedDocumentField()
+                .lineLimit(nil)
+                .focused($focusField,equals: .DOCUMENT_MESSAGE)
+                .placeholder("description of issue",
+                             when: (focusField != .DOCUMENT_MESSAGE) && (docContent.message.isEmpty))
+                .vTop()
+                .hLeading()
+                Text("\(MAX_TEXTFIELD_LEN*4-docContent.message.count)")
+                .font(.caption)
+                .foregroundColor(Color.systemGray)
+                .frame(width:33.0)
+                .hTrailing()
+                .vBottom()
             }
+            .frame(height: 250.0)
         )
-        .frame(height: 250.0)
     }
     
     var inputEmail:some View{
-        InputDocumentField(label: Text("Email"),content:
+        InputDocumentField(label: Text("Email:"),content:
                             TextField("",text:$docContent.email.max(MAX_TEXTFIELD_LEN),onCommit: {})
                                 .preferedDocumentField()
                                 .focused($focusField,equals: .DOCUMENT_EMAIL)
                                 .placeholder(when: (focusField != .DOCUMENT_EMAIL && docContent.email.isEmpty)){
-                                    optionalText.padding(.leading)
+                                    optionalText
                                 }
                                 .lineLimit(1)
         )
@@ -183,15 +180,19 @@ struct IssueView:View{
             .scrollContentBackground(.hidden)
             .listStyle(.insetGrouped)
         }
-        
     }
     
     var body:some View{
         AppBackgroundStack(content: {
             infoBody
-            .onSubmit { submitIssueReport() }
-            .submitLabel(.send)
+            //.onSubmit { submitIssueReport() }
+            //.submitLabel(.send)
         })
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                shareButton
+            }
+        }
         .onTapGesture {
             endTextEditing()
         }
@@ -210,8 +211,8 @@ struct IssueView:View{
     }
     
     func submitIssueReport(){
-        if buttonIsDisabled{ return }
         docContent.trim()
+        if buttonIsDisabled{ return }
         let issueId = docContent.documentId
         let storageId = docContent.storageId
         let email = docContent.enteredEmail

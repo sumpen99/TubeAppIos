@@ -322,16 +322,19 @@ struct ProfileView: View{
             case .ALERT_MISSING_USERID:                 return actionSheetWithCancel(alert.rawValue)
             }
         }
-        .onAppear{
-            pVar.updateUserVar(currentUser: firestoreViewModel.currentUser)
-            tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ALLOW_SHARING)] = firestoreViewModel.isCurrentUserPublic
-            firestoreViewModel.listenForMessageGroups()
-            
-        }
-        .onDisappear{
-            firestoreViewModel.closeListenerMessages()
-            firestoreViewModel.releaseData([.DATA_CONTACT_MESSAGE_GROUPS,.DATA_CONTACT_MESSAGES])
-        }
+        .onAppear{ setupCurrentUser() }
+        .onDisappear{ releaseMessageDataAndListener() }
+    }
+    
+    //MARK: HELPER FUNCTIONS
+    func setupCurrentUser(){
+        updateLocalUserFromFirebase()
+        setIfCurrentUserIsInPublicMode()
+        startListeningForMessages()
+    }
+    
+    func updateLocalUserFromFirebase(){
+        pVar.updateUserVar(currentUser: firestoreViewModel.currentUser)
     }
     
     func replaceDisplayName(){
@@ -391,8 +394,8 @@ struct ProfileView: View{
     //MARK: ACTIONSHEET
     var actionSheetLogout:ActionSheet{
         ActionSheet(title: Text("Sign out"), message: Text("Do you want to sign out from your device or did the wrong button accidentally get pressed?"), buttons: [
-            .default(Text("Yepp, sign me out!").foregroundColor(.blue)) { signOut() },
-            .cancel(Text("Cancel please").foregroundColor(.red))
+            .default(Text("Yepp, sign me out!")) { signOut() },
+            .destructive(Text("Cancel please"))
         ])
     }
     
@@ -459,6 +462,25 @@ extension ProfileView{
     
 }
 
+//MARK: TUBEVIEWMODEL FUNCTIONS
+extension ProfileView{
+    func setIfCurrentUserIsInPublicMode(){
+        tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ALLOW_SHARING)] = firestoreViewModel.isCurrentUserPublic
+    }
+}
+
+//MARK: FIRESTORE LISTENER FUNCTIONS
+extension ProfileView{
+    func releaseMessageDataAndListener(){
+        firestoreViewModel.closeListenerMessages()
+        firestoreViewModel.releaseData([.DATA_CONTACT_MESSAGE_GROUPS,.DATA_CONTACT_MESSAGES])
+    }
+    
+    func startListeningForMessages(){
+        firestoreViewModel.listenForMessageGroups()
+    }
+}
+
 //MARK: REMOVE ACCOUNT
 extension ProfileView{
     
@@ -469,16 +491,21 @@ extension ProfileView{
     }
     
     func deleteAccountAndAllDataPart2(){
-        firestoreViewModel.closeListeners(FirestoreListener.all())
         PersistenceController.deleteAllData()
         firestoreViewModel.deleteAccount(){ result in
-            firestoreViewModel.releaseData(FirestoreData.all())
             signOut()
         }
         
     }
     
+    func releaseData(){
+        firestoreViewModel.releaseData(FirestoreData.all())
+        firestoreViewModel.closeListeners(FirestoreListener.all())
+    }
+    
     func signOut(){
+        releaseData()
+        firestoreViewModel.closeThisInstanceOfFirebase()
         firebaseAuth.signOut()
     }
 }

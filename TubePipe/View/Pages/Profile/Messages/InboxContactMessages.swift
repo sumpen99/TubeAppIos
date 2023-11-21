@@ -28,14 +28,13 @@ struct InboxContactMessages:View{
                            contactAvatarColor: .black,
                            contactInfoColor: .black)
     }
-    
-    
+        
     var messagesBody:some View{
         VStack(spacing:V_SPACING_REG){
             messageLabel
             contactList
         }
-        .padding()
+        .padding([.leading,.trailing])
     }
    
     var body: some View{

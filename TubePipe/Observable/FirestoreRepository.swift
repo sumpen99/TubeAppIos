@@ -45,6 +45,10 @@ class FirestoreRepository{
     var userRequestCollection: CollectionReference{ firestoreDB.collection(APP_REQUEST_COLLECTION) }
     
     
+    func shutDown(){
+        firestoreDB.terminate()
+    }
+    
     //MARK: - TOP LEVEL USER
     func userDocument(_ userId:String) -> DocumentReference{
         return firestoreDB

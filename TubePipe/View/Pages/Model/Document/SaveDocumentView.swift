@@ -10,6 +10,7 @@ import SwiftUI
 struct SaveDocumentView:View{
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var tubeViewModel: TubeViewModel
+    @FocusState var focusField: Field?
     @State var docContent:DocumentContent = DocumentContent()
     @State private var toast: Toast? = nil
     
@@ -17,37 +18,57 @@ struct SaveDocumentView:View{
         docContent.isSaving||docContent.message.isEmpty
     }
   
+    var clearButton: some View{
+        Button(action:{ docContent.message = ""},label: {
+            Image(systemName: "xmark.square.fill")
+        })
+        .disabled(buttonIsDisabled)
+        .opacity(buttonIsDisabled ? 0.2 : 1.0)
+        .foregroundColor(buttonIsDisabled ? .black : .red)
+        .font(.title2)
+        .bold()
+    }
+    
     var saveButton: some View{
         Button(action:saveNewTube,label: {
-            Text("Save")
+            Image(systemName: "arrow.down.doc.fill")
         })
         .disabled(buttonIsDisabled)
         .opacity(buttonIsDisabled ? 0.2 : 1.0)
         .foregroundColor(buttonIsDisabled ? .black : .systemBlue)
         .font(.title2)
         .bold()
-        .hTrailing()
-        .vTop()
-        .padding([.trailing])
     }
     
     var body: some View{
         VStack(spacing:0){
             TopMenu(title: "Save document", actionCloseButton: closeView)
             Section {
-                BaseTubeTextField(docContent: $docContent,placeHolder: "Add a comment or title to save file on device")
+                BaseTubeTextField(docContent: $docContent,
+                                  focusField: _focusField,
+                                  placeHolder: "Add a comment or title to save file on device")
                 .padding()
                 .vTop()
             } header: {
-                Text(Date().formattedString()).sectionTextSecondary(color:.black).padding(.leading)
+                HStack{
+                    Text(Date().formattedString()).sectionTextSecondary(color:.black).hLeading().padding(.leading)
+                    clearButton.padding(.trailing)
+                    saveButton.padding(.trailing)
+                }
             } footer:{
                 
             }
         }
-        .onSubmit { saveNewTube() }
-        .submitLabel(.send)
+        .onAppear() {
+            focusField = .DOCUMENT_MESSAGE
+        }
+        //.onSubmit { saveNewTube() }
+        //.submitLabel(.send)
         .toastView(toast: $toast)
         .halfSheetBackgroundStyle()
+        .onTapGesture {
+            endTextEditing()
+        }
     }
     
     //MARK: - BUTTON FUNCTIONS
@@ -56,12 +77,12 @@ struct SaveDocumentView:View{
     }
     
     func saveNewTube(){
+        docContent.trim()
         if buttonIsDisabled { return }
         docContent.isSaving = true
         let managedObjectContext = PersistenceController.shared.container.viewContext
         let model = TubeModel(context:managedObjectContext)
         tubeViewModel.buildModelFromCurrentValues(model)
-        docContent.trim()
         model.message = docContent.message
         if docContent.data != nil{
             let image = TubeImage(context:managedObjectContext)

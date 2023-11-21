@@ -14,14 +14,22 @@ struct UserSettingsView:View{
     let settingsOption:[SettingsOption] = SettingsOption.allCases
     
     var changesHasHappend:Bool{ tubeViewModel.settingsVar.hasChanges }
+  
     var valuesCanBeUpdated:Bool{
         changesHasHappend && !tubeViewModel.muff.emptyL1OrL2
     }
-    var settingsFooter:some View{
-        Text("Values for on start up.")
+        
+    var settingsLabel:some View{
+        Text("Settingsparameters")
         .font(.title)
         .bold()
-        .foregroundColor(Color.black)
+        .hLeading()
+    }
+    
+    var settingsFooter:some View{
+        Text("Specify value for each settings parameter you would like the tube to have on startup.")
+        .listSectionFooter()
+        .font(.footnote)
         .hLeading()
     }
     
@@ -31,7 +39,6 @@ struct UserSettingsView:View{
     var overlayError:some View{
         if tubeViewModel.muff.emptyL1OrL2{
             ZStack{
-                Color.lightText.opacity(0.2)
                 Text("Invalid tubevalues!")
                 .font(.title)
                 .bold()
@@ -51,6 +58,9 @@ struct UserSettingsView:View{
         .padding()
         .hCenter()
         .frame(height: 250.0)
+        .background{
+            tubeViewModel.muff.emptyL1OrL2 ? Color.black.opacity(0.2) : Color.lightText
+        }
     }
     
     var overlapSection:some View{
@@ -60,7 +70,7 @@ struct UserSettingsView:View{
                           maxValue: SLIDER_MAX_OVERLAP,
                           textEnding: "mm")
         } header: {
-            Text("Overlap length").foregroundColor(Color.systemGray)
+            Text("Overlap length").foregroundColor(Color.black)
         }
         
     }
@@ -105,7 +115,7 @@ struct UserSettingsView:View{
                               textEnding: "mm")
             }
         } header: {
-            Text(item.rawValue).foregroundColor(Color.systemGray)
+            Text(item.rawValue).foregroundColor(Color.black)
         }
     }
     
@@ -120,14 +130,15 @@ struct UserSettingsView:View{
                 Divider().overlay{ Color.tertiaryLabel }.padding([.leading,.trailing])
                 clearSpaceAtBottom
             }
-        }
+        }.background(Color.lightText)
     }
     
     var content:some View{
-        VStack{
-            //settingsFooter
-            tubeWindow
-            sections
+        VStack(spacing:0){
+            settingsLabel.padding()
+            tubeWindow.padding([.leading,.trailing])
+            settingsFooter.padding([.leading,.trailing,.bottom])
+            sections.padding([.leading,.trailing])
         }
     }
     

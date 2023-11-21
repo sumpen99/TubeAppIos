@@ -146,6 +146,7 @@ struct AttachmentView:View{
         if let sharedTube = message.sharedTube{
             if tubeViewModel.initViewFromSharedValues(sharedTube){
                 tubeViewModel.rebuild()
+                navigationViewModel.navTo(.MODEL_2D)
                 closeView()
             }
             else{

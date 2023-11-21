@@ -125,7 +125,7 @@ struct Model3DSettingsView:View{
                 modelSwitchSectionBase(index: index)
             }},
                  header: {Text("Size").leadingSectionHeader()}) {
-        }.listRowBackground(Color.clear)
+        }.listRowBackground(Color.lightText).hLeading()
     }
     
     var showPartOfMuffSection: some View{
@@ -134,7 +134,7 @@ struct Model3DSettingsView:View{
                 modelSwitchSectionBase(index: index)
             }},
             header: {Text("Show").leadingSectionHeader()}) {
-        }.listRowBackground(Color.clear)
+        }.listRowBackground(Color.lightText)
     }
     
     var drawMuffSection: some View{
@@ -143,7 +143,7 @@ struct Model3DSettingsView:View{
                 modelSwitchSectionBase(index: index)
             }},
             header: {Text("Draw").leadingSectionHeader()}) {
-        }.listRowBackground(Color.clear)
+        }.listRowBackground(Color.lightText)
     }
     
     var renderSceneSection: some View{
@@ -152,7 +152,7 @@ struct Model3DSettingsView:View{
                 modelSwitchSectionBase(index: index)
             }},
             header: {Text("Render").leadingSectionHeader()}) {
-        }.listRowBackground(Color.clear)
+        }.listRowBackground(Color.lightText)
     }
     
     var showMuffOptions:Bool{

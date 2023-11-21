@@ -16,8 +16,8 @@ struct SortedContactListVar{
 struct ShareDocumentView:View{
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
-    @EnvironmentObject var globalLoadingPresentation: GlobalLoadingPresentation
     @EnvironmentObject var tubeViewModel: TubeViewModel
+    @FocusState var focusField: Field?
     @State var docContent:DocumentContent = DocumentContent()
     @State var sclVar: SortedContactListVar = SortedContactListVar()
     @State private var toast: Toast? = nil
@@ -26,22 +26,36 @@ struct ShareDocumentView:View{
         docContent.isSaving||(sclVar.currentContact == nil || docContent.message.isEmpty)
     }
     
+    var buttonClearIsDisabled:Bool{
+        docContent.isSaving||docContent.message.isEmpty
+    }
+    
     @ViewBuilder
     var toogleContactsButton:some View{
         Image(systemName: sclVar.isSuggestionShowing ? "chevron.down" : "chevron.right")
         .hTrailing()
     }
     
+    var clearButton: some View{
+        Button(action:{ docContent.message = ""},label: {
+            Image(systemName: "xmark.square.fill")
+        })
+        .disabled(buttonClearIsDisabled)
+        .opacity(buttonClearIsDisabled ? 0.2 : 1.0)
+        .foregroundColor(buttonClearIsDisabled ? .black : .red)
+        .font(.title2)
+        .bold()
+    }
+    
     var shareButton: some View{
         Button(action:startSendingMessageProcess,label: {
-            Text("Send")
+            Image(systemName: "paperplane.fill")
         })
         .disabled(buttonIsDisabled)
         .opacity(buttonIsDisabled ? 0.2 : 1.0)
         .foregroundColor(buttonIsDisabled ? .black : .systemBlue)
         .font(.title2)
         .bold()
-        .hTrailing()
     }
     
     
@@ -67,6 +81,7 @@ struct ShareDocumentView:View{
         .hLeading()
         .contentShape(Rectangle())
         .onTapGesture {
+            endTextEditing()
             withAnimation{
                 sclVar.isSuggestionShowing.toggle()
             }
@@ -104,39 +119,47 @@ struct ShareDocumentView:View{
             clearContactField
         }
         .halfSheetWhitePadding()
-        .padding(.top)
     }
     
     var mainContent:some View{
-        VStack(spacing:10){
-            ScrollView{
-                VStack(spacing:20){
-                    reciever
-                    BaseTubeTextField(docContent: $docContent,placeHolder:"Add a message or subject to share with friend")
-                }
-            }
-            .scrollDisabled(true)
+        VStack(spacing:20){
+            reciever.padding([.leading,.trailing,.top])
+            BaseTubeTextField(docContent: $docContent,
+                              focusField: _focusField,
+                              placeHolder:"Add a message or subject to share with friend")
+            .padding(.horizontal)
         }
-        .padding([.leading,.trailing])
     }
     
     var body: some View{
         VStack(spacing:0){
             TopMenu(title: "Share document", actionCloseButton: closeView)
             Section {
-                mainContent
+                mainContent.vTop()
+                
             } header:{
-                Text(Date().formattedString()).sectionTextSecondary(color:.darkGray).padding(.leading)
+                HStack{
+                    Text(Date().formattedString()).sectionTextSecondary(color:.black).hLeading().padding(.leading)
+                    clearButton.padding(.trailing)
+                    shareButton.padding(.trailing)
+                }
             }
+            
         }
-        .onSubmit { startSendingMessageProcess() }
-        .submitLabel(.send)
+        .onAppear() {
+            focusField = .DOCUMENT_MESSAGE
+        }
+        //.onSubmit { startSendingMessageProcess() }
+        //.submitLabel(.send)
         .toastView(toast: $toast)
         .onChange(of: sclVar.showingOptions){ value in
            withAnimation{ sclVar.isSuggestionShowing.toggle() }
             
         }
         .halfSheetBackgroundStyle()
+        .onTapGesture {
+            focusField = nil
+        }
     }
     
     //MARK: - BUTTON FUNCTIONS
@@ -145,6 +168,7 @@ struct ShareDocumentView:View{
     }
     
     func startSendingMessageProcess(){
+        docContent.trim()
         if buttonIsDisabled{ return }
         docContent.isSaving = true
         guard let contact = sclVar.currentContact,
@@ -169,7 +193,6 @@ struct ShareDocumentView:View{
                      messageId:String,
                      storageId:String?,
                      onResult:((ResultOfOperation) ->Void)? = nil){
-       docContent.trim()
        let message = Message(messageId: messageId,
                               groupId: groupId,
                               senderId: senderId,

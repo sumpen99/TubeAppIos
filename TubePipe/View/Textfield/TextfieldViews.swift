@@ -15,8 +15,9 @@ struct BaseTubeTextField:View {
     var message:some View{
         HStack{
             Image(systemName: "doc.text.image").vTop()
-            TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN),onCommit: {})
+            TextField("",text:$docContent.message.max(MAX_TEXTFIELD_LEN),axis: .vertical)
                 .preferedDocumentField()
+                .lineLimit(nil)
                 .focused($focusField,equals: .DOCUMENT_MESSAGE)
                 .placeholder(when: focusField != .DOCUMENT_MESSAGE && docContent.message.isEmpty){ Text(placeHolder).font(.caption).listSectionFooter()}
                 .vTop()

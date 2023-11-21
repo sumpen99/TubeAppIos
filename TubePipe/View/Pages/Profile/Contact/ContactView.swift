@@ -57,15 +57,6 @@ struct ContactView:View{
         }
     }
     
-    var hasContacts:some View{
-        VStack(spacing:V_SPACING_REG){
-            contactsLabel
-            confirmedContactRequestSection
-        }
-        .padding()
-    }
-    
-    
     
     @ViewBuilder
     var mainpage:some View{
@@ -73,8 +64,8 @@ struct ContactView:View{
             contactsLabel
             confirmedContactRequestSection
         }
-        .padding()
-    }
+        .padding([.leading,.trailing])
+   }
     
     var body: some View{
         AppBackgroundStack(content: {
@@ -102,7 +93,6 @@ struct ContactView:View{
             SheetPresentView(style: .sheet){
                 SearchContactsView()
                 .environmentObject(firestoreViewModel)
-                .presentationDragIndicator(.visible)
             }
             .makeUIView()
         }
