@@ -18,7 +18,7 @@ struct InboxContactMessages:View{
         .bold()
         .foregroundColor(.black)
         .hLeading()
-        .padding([.leading,.trailing])
+        .padding([.leading,.top])
     }
     
     var contactList:some View{

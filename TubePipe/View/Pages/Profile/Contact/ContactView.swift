@@ -27,6 +27,7 @@ struct ContactView:View{
         .bold()
         .foregroundColor(.black)
         .hLeading()
+        .padding([.leading,.top])
     }
     
     var confirmedContactRequestSection:some View{

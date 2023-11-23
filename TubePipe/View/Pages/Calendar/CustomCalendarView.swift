@@ -42,7 +42,6 @@ struct CustomCalendarView: View {
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
     @EnvironmentObject var navigationViewModel: NavigationViewModel
     @EnvironmentObject var firebaseAuth: FirebaseAuth
-    @StateObject var coreDataViewModel: CoreDataViewModel
     @State var selected:Selected = Selected()
   
     let columns = [ GridItem(),GridItem(),GridItem(),GridItem()]
@@ -57,9 +56,7 @@ struct CustomCalendarView: View {
             GridItem(.flexible(minimum: 40))
         ]
     
-    init() {
-        self._coreDataViewModel = StateObject(wrappedValue: CoreDataViewModel())
-    }
+    
     
     var body: some View {
         NavigationStack{
@@ -88,10 +85,7 @@ struct CustomCalendarView: View {
         .onAppear{
             searchAndSet(year: true, month: true, day: true)
         }
-        .onDisappear{
-            coreDataViewModel.clearAllData()
-        }
-    }
+   }
     
     var mainPage:some View{
         List{
@@ -301,9 +295,8 @@ extension CustomCalendarView{
     
     var navigateToSavedTubesButton:some View{
         NavigationLink(destination:LazyDestination(destination: {
-            InboxSavedTubesView()
-            .environmentObject(coreDataViewModel)
-        })){
+           InboxSavedTubesView()
+         })){
             Image(systemName: "folder")
                 .toolbarFontAndPadding(.headline)
         }
@@ -395,7 +388,7 @@ extension CustomCalendarView{
     }
     
     func queryTubesSavedByYear() -> Int{
-        guard let startDate = Date.from(selected.year, 1, 1) as NSDate?,
+         guard let startDate = Date.from(selected.year, 1, 1) as NSDate?,
               let endDate = Date.from(selected.year+1,1,1) as NSDate? else { return 0}
         return PersistenceController.fetchCountByPredicate(
             NSPredicate(format: "date >= %@ AND date < %@",startDate,endDate))

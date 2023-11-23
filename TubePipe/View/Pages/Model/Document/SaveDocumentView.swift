@@ -59,11 +59,6 @@ struct SaveDocumentView:View{
                 
             }
         }
-        .onAppear() {
-            focusField = .DOCUMENT_MESSAGE
-        }
-        //.onSubmit { saveNewTube() }
-        //.submitLabel(.send)
         .toastView(toast: $toast)
         .halfSheetBackgroundStyle()
         .onTapGesture {

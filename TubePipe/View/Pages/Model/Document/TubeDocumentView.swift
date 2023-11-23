@@ -60,25 +60,25 @@ struct TubeDocumentView: View{
   
     var document:some View{
         List{
-            muffSection.listRowBackground(Color.lightText)
-            summarySection.listRowBackground(Color.lightText)
+            muffSection
+            summarySection
             ForEach(segTypes,id:\.self){ segType in
                 getSegmentSection(segment: tubeViewModel.muffDetails.getSegmenIfItExists(segType: segType))
-                .listRowBackground(Color.lightText)
             }
         }
         .listStyle(.automatic)
-        .scrollContentBackground(.hidden)
     }
     
     //MARK: - MAIN BODY
     var body: some View{
-        VStack(spacing:0){
-            TopMenu(title: "Document", actionCloseButton: closeView)
-            document
-        }
-        .modifier(HalfSheetModifier())
-    }
+        AppBackgroundSheetStack(content: {
+            VStack(spacing:0){
+                TopMenu(title: "Document", actionCloseButton: closeView)
+                document.vTop()
+            }
+        })
+        
+     }
     
     //MARK: - BUTTON FUNCTIONS
     func closeView(){

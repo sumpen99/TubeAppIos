@@ -11,8 +11,7 @@ extension UITabBar{
     static func changeAppearance(){
         let tabBarAppearance = UITabBarAppearance()
         tabBarAppearance.configureWithOpaqueBackground()
-        tabBarAppearance.backgroundColor = UIColor(Color.backgroundPrimary)
-        tabBarAppearance.shadowColor = .darkGray
+        tabBarAppearance.backgroundColor = UIColor(Color(hex: 0xf0f4f5).opacity(0.9))
         UITabBar.appearance().standardAppearance = tabBarAppearance
         UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
         
@@ -38,7 +37,7 @@ extension UINavigationBar {
     static func changeAppearance(){
         let appearance = UINavigationBarAppearance()
         
-        appearance.backgroundColor = UIColor(Color.backgroundPrimary)
+        appearance.backgroundColor = UIColor(Color(hex: 0xf0f4f5).opacity(0.3))
 
         let attrsLarge: [NSAttributedString.Key: Any] = [
             .foregroundColor: UIColor.black,

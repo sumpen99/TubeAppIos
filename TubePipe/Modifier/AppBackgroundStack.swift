@@ -11,8 +11,9 @@ struct AppBackgroundStack<Content:View>: View{
     var title:String = ""
     var body: some View {
         ZStack{
-            appLinearGradient
-            content
+            content.background{
+                appLinearGradient
+            }
         }
         .safeAreaInset(edge: .bottom){ clearSpaceAtBottom }
         .modifier(NavigationViewModifier(title: title))

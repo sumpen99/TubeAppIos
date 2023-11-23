@@ -18,7 +18,7 @@ struct TubeDocFileView:View{
         .frame(width: 35.0,height: 50.0)
         .padding()
         .background(
-            RoundedRectangle(cornerRadius: 8).fill(Color.systemYellow.opacity(0.7))
+            RoundedRectangle(cornerRadius: 8).fill(Color.systemYellow)
         )
         .overlay{
             RoundedRectangle(cornerRadius: 8).stroke(lineWidth: 2.0).foregroundColor(.black)
@@ -110,7 +110,7 @@ struct ExtendedTubeDocFileView:View{
         .frame(width: 35.0,height: childViewHeight)
         .padding()
         .background(
-            RoundedRectangle(cornerRadius: 8).fill(Color.systemYellow.opacity(0.7))
+            RoundedRectangle(cornerRadius: 8).fill(Color.systemYellow)
         )
         .overlay{
             RoundedRectangle(cornerRadius: 8).stroke(lineWidth: 2.0).foregroundColor(.black)

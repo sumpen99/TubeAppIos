@@ -90,12 +90,16 @@ struct InboxVar{
 }
 
 struct InboxSavedTubesView:View{
-    @EnvironmentObject var tubeViewModel: TubeViewModel
-    @EnvironmentObject var coreDataViewModel:CoreDataViewModel
-    @EnvironmentObject var navigationViewModel: NavigationViewModel
     @Namespace var animation
+    @EnvironmentObject var navigationViewModel: NavigationViewModel
+    @EnvironmentObject var tubeViewModel: TubeViewModel
+    @StateObject var coreDataViewModel:CoreDataViewModel
     @State var iVar:InboxVar = InboxVar()
     let childViewHeight:CGFloat = 50.0
+    
+    init() {
+        self._coreDataViewModel = StateObject(wrappedValue: CoreDataViewModel())
+    }
     
     @ViewBuilder
     var topMenuList:  some View{
@@ -119,7 +123,7 @@ struct InboxSavedTubesView:View{
     }
     
     var savedTubesList:some View{
-        ScrollViewCoreData{ tube in
+        ScrollViewCoreData(coreDataViewModel:coreDataViewModel){ tube in
             ExtendedTubeDocFileView(userWillEditTubes: $iVar.userWillEditTubes,
                                tube: tube,
                                onSelected: onSelected,

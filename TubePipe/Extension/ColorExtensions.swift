@@ -40,6 +40,7 @@ extension Color {
     static var backgroundPrimary:Color          = Color(hex:0xededed)
     static var backgroundSecondary:Color        = Color(hex:0xEEEEEE)
     static var backgroundButton:Color           = Color(hex:0xededed)
+    static var backgroundSheetField:Color       = Color.gray.opacity(0.01)
     static var calendarButton:Color             = Color.black
     static var sheetCloseButton:Color           = Color.systemBlue
     static var editorieButton:Color             = Color.systemBlue

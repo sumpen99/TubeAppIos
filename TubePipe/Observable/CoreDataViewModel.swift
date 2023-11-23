@@ -40,14 +40,17 @@ class CoreDataService{
             let nextOffset = nextOffset
             let fetchLimit = CORE_DATA_FETCH_LIMIT
             incremeantPageIndex()
-            DispatchQueue.global().async{
-                let items = self.fetchedRequest(fetchOffset: nextOffset, fetchLimit: fetchLimit)
-                onResult((totalItems:self.totalItems,items:items))
+            DispatchQueue.global().async{ [weak self] in
+                if let strongSelf = self{
+                    let items = strongSelf.fetchedRequest(fetchOffset: nextOffset, fetchLimit: fetchLimit)
+                    onResult((totalItems:strongSelf.totalItems,items:items))
+                }
             }
         }
         onResult((totalItems:totalItems,items:[]))
     }
     
+    //https://stackoverflow.com/questions/60026783/coredata-in-swiftui-how-to-fetch-a-property-distinctly
     func fetchedRequest(fetchOffset:Int,fetchLimit:Int) -> [TubeModel]{
         let fetchRequest: NSFetchRequest<TubeModel> = TubeModel.fetchRequest()
         let sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
@@ -67,9 +70,12 @@ class CoreDataService{
     func requestItemsBySearchCategorie(_ categorie:SearchCategorie,
                                        searchText:String,
                                        onResult: @escaping ((totalItems:Int,items:[TubeModel])) -> Void) {
-        DispatchQueue.global().async{
-            let items = self.fetchedRequestBySearchCategorie(categorie,searchText:searchText)
-            onResult((totalItems:items.count,items:items))
+        DispatchQueue.global().async{ [weak self] in
+            if let strongSelf = self{
+                let items = strongSelf.fetchedRequestBySearchCategorie(categorie,searchText:searchText)
+                onResult((totalItems:items.count,items:items))
+            }
+            
         }
     }
     
@@ -156,13 +162,15 @@ class CoreDataViewModel:ObservableObject{
     
     private func requestItems(page: Int) {
         dataIsLoading = true
-        Task {
-            self.coreDataFetcher.requestItems(page: page){ response in
-                DispatchQueue.main.async{
-                    self.totalItemsAvailable = response.totalItems
-                    self.items?.append(contentsOf: response.items)
-                    self.itemsLoadedCount = self.items?.count
-                    self.dataIsLoading = false
+        Task { [weak self] in
+            if let strongSelf = self{
+                strongSelf.coreDataFetcher.requestItems(page: page){ response in
+                    DispatchQueue.main.async{
+                        strongSelf.totalItemsAvailable = response.totalItems
+                        strongSelf.items?.append(contentsOf: response.items)
+                        strongSelf.itemsLoadedCount = strongSelf.items?.count
+                        strongSelf.dataIsLoading = false
+                    }
                 }
             }
 
@@ -171,17 +179,20 @@ class CoreDataViewModel:ObservableObject{
     
     func requestBySearchCategorie(_ categorie:SearchCategorie,searchText:String,onResult:((Int) ->Void)? = nil){
         dataIsLoading = true
-        Task {
-            self.coreDataFetcher.requestItemsBySearchCategorie(categorie,searchText: searchText){ response in
-                DispatchQueue.main.async{
-                    self.resetPageCounter()
-                    self.totalItemsAvailable = response.totalItems
-                    self.items?.append(contentsOf: response.items)
-                    self.itemsLoadedCount = self.items?.count
-                    self.dataIsLoading = false
-                    onResult?(self.itemsLoadedCount ?? 0)
+        Task { [weak self] in
+            if let strongSelf = self{
+                strongSelf.coreDataFetcher.requestItemsBySearchCategorie(categorie,searchText: searchText){ response in
+                    DispatchQueue.main.async{
+                        strongSelf.resetPageCounter()
+                        strongSelf.totalItemsAvailable = response.totalItems
+                        strongSelf.items?.append(contentsOf: response.items)
+                        strongSelf.itemsLoadedCount = strongSelf.items?.count
+                        strongSelf.dataIsLoading = false
+                        onResult?(strongSelf.itemsLoadedCount ?? 0)
+                    }
                 }
             }
+            
 
         }
     }

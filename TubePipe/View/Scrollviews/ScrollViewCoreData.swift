@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ScrollViewCoreData<Content: View>: View {
-    @EnvironmentObject var coreDataViewModel:CoreDataViewModel
+    @ObservedObject var coreDataViewModel:CoreDataViewModel
     @State var currentScrollOffset:CGPoint?
     let layout = [
             GridItem(.flexible(minimum: 40)),

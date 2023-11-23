@@ -146,11 +146,6 @@ struct ShareDocumentView:View{
             }
             
         }
-        .onAppear() {
-            focusField = .DOCUMENT_MESSAGE
-        }
-        //.onSubmit { startSendingMessageProcess() }
-        //.submitLabel(.send)
         .toastView(toast: $toast)
         .onChange(of: sclVar.showingOptions){ value in
            withAnimation{ sclVar.isSuggestionShowing.toggle() }

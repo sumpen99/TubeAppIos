@@ -187,11 +187,11 @@ extension View{
         self.padding()
             .background{
                 RoundedRectangle(cornerRadius: 5).stroke(Color.black)
-            }
+            }  
     }
     
     func profileListRow() -> some View{
-        self.fullListWidthSeperator()
+        self.fullListWidthSeperator().listRowBackground(Color.lightText)
     }
     
     func fullListWidthSeperator() -> some View{
