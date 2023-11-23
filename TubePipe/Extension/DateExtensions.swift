@@ -206,7 +206,8 @@ extension Date {
         return gregorianCalendar.date(from: dateComponents)
     }
     
-    static func fromISO8601StringToDate(_ dateToProcess:String) -> Date?{
+    static func fromISO8601StringToDate(_ dateToProcess:String?) -> Date?{
+        guard let dateToProcess = dateToProcess else { return nil }
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withFullDate]
         return formatter.date(from: dateToProcess)
@@ -222,6 +223,13 @@ extension Date {
     func getFirstWeekdayInMonth() -> Int{
         let calendar = Calendar.current
          return calendar.component(.weekday, from: calendar.startOfMonth(self))
+    }
+    
+    func getYearMonthDayFromISO8601Date() -> (year:Int,month:Int,day:Int){
+        let year = self.year()
+        let month = self.month()
+        let day = self.day()
+        return (year:year,month:month,day:day)
     }
      
     

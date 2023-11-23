@@ -24,6 +24,7 @@ let MAX_TEXTFIELD_LEN               = 255
 let LINE_WIDTH:CGFloat              = 6.0
 let LINE_WIDTH_ANIMATED:CGFloat     = 2.0
 let HALF_LINE_WIDTH:CGFloat         = 3.0
+let USER_IDENTIFIER_COREDATA        = "_Self_"
 let USER_PROFILE_PIC_PATH           = "profilepic"
 let APP_LOGO_NAME                   = "tubesround"
 let ALERT_LABEL_OK                  = "OK"

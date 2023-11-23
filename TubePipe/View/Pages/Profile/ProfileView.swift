@@ -222,8 +222,8 @@ struct ProfileView: View{
     
     var accountSection:some View{
         Section {
-            userEmailtext
             displayName
+            userEmailtext
         } header: {
             Text("Account").profileSectionHeader()
         }

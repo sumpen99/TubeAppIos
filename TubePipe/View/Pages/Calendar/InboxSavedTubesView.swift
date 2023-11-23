@@ -131,6 +131,9 @@ struct InboxSavedTubesView:View{
                                onListContainsId: onListContainsId,
                                childViewHeight: childViewHeight)
         }
+        .background{
+            Color.lightText.edgesIgnoringSafeArea(.all)
+        }
     }
     
     var noItemsToShowPage:some View{
@@ -208,7 +211,7 @@ extension InboxSavedTubesView{
            let txt = iVar.searchResult == 0 ? "\(categorie.rawValue)" :
                                               "\(categorie.rawValue):\(iVar.searchResult)"
             VStack{
-                Text("All items")
+                Text("All files")
                 .largeTitle(color: .black)
                 Text(txt)
                 .font(.body)
@@ -218,7 +221,7 @@ extension InboxSavedTubesView{
             }
        }
         else{
-            Text("All items")
+            Text("All files")
             .largeTitle(color: .black)
         }
         

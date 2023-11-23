@@ -13,6 +13,7 @@ struct SaveDocumentView:View{
     @FocusState var focusField: Field?
     @State var docContent:DocumentContent = DocumentContent()
     @State private var toast: Toast? = nil
+    @State var invalidTube:Bool = false
     
     var buttonIsDisabled:Bool{
         docContent.isSaving||docContent.message.isEmpty
@@ -59,6 +60,14 @@ struct SaveDocumentView:View{
                 
             }
         }
+        .alert("Tube error!", isPresented: $invalidTube){
+            Button("OK", role: .cancel,action: { closeView() })
+        } message: {
+            Text("Current Tubevalues are invalid. Their`s no point in storing those. Sorry for any inconvenience. We`re closing this view now.")
+        }
+        .onAppear{
+            closeIfInvalidTube()
+        }
         .toastView(toast: $toast)
         .halfSheetBackgroundStyle()
         .onTapGesture {
@@ -69,6 +78,12 @@ struct SaveDocumentView:View{
     //MARK: - BUTTON FUNCTIONS
     func closeView(){
         dismiss()
+    }
+    
+    func closeIfInvalidTube(){
+        if tubeViewModel.muff.emptyL1OrL2{
+            invalidTube.toggle()
+        }
     }
     
     func saveNewTube(){

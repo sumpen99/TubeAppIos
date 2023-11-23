@@ -89,7 +89,7 @@ struct Model3DView: View{
                 activeModelSheet = nil
                 switch item{
                 case ActiveModelSheet.OPEN_MODEL_SETTINGS:
-                    SheetPresentView(style: .detents([.medium(),.large()])){
+                    SheetPresentView(style: .detents([.medium()])){
                         Model3DSettingsView(renderNewState: $renderNewState)
                         .environmentObject(tubeViewModel)
                     }

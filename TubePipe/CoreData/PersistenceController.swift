@@ -66,6 +66,53 @@ final class PersistenceController {
         saveChanges()
     }
     
+    static func fetchAndSortYearOfTubes(startDate:NSDate,endDate:NSDate) -> [String:[String:[String:Int]]]{
+        let fetchedTubeIds = fetchAllDatesDuringCurrentYear(NSPredicate(format: "date >= %@ AND date < %@",
+                                                                        startDate,
+                                                                        endDate))
+        var fetchResult: [String:[String:[String:Int]]] = [:]
+        for obj in fetchedTubeIds {
+            
+            guard let date = obj["date"] as? Date else { continue }
+            let o = date.getYearMonthDayFromISO8601Date()
+      
+            // If we have year else set
+            guard let keyYear = fetchResult["\(o.year)"] else{
+                fetchResult["\(o.year)"] = ["\(o.month)":["\(o.day)":1]]
+                continue
+            }
+            // If we have year and month else set
+            guard let keyMonth = keyYear["\(o.month)"] else{
+                fetchResult["\(o.year)"]?["\(o.month)"] = ["\(o.day)":1]
+                continue
+            }
+            // If we have year and month and day else set
+            guard let _ = keyMonth["\(o.day)"] else{
+                fetchResult["\(o.year)"]?["\(o.month)"]?["\(o.day)"] = 1
+                continue
+            }
+            // Append to year/month/day
+            fetchResult["\(o.year)"]?["\(o.month)"]?["\(o.day)"]? += 1
+        }
+        return fetchResult
+    }
+    
+    static func fetchAllDatesDuringCurrentYear(_ predicate:NSPredicate) -> [NSDictionary]{
+        let fetchRequest = NSFetchRequest<NSDictionary>(entityName: "TubeModel")
+        let sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
+        fetchRequest.sortDescriptors = sortDescriptors
+        fetchRequest.predicate = predicate
+        fetchRequest.resultType = NSFetchRequestResultType.dictionaryResultType
+        fetchRequest.propertiesToFetch = ["date"]
+        fetchRequest.returnsDistinctResults = true
+        
+        do {
+            return try PersistenceController.shared.container.viewContext.fetch(fetchRequest)
+        } catch {
+            return []
+        }
+    }
+    
     static func fetchCountByPredicate(_ predicate:NSPredicate) -> Int {
         var count: Int = 0
         shared.container.viewContext.performAndWait {

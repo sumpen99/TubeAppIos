@@ -24,6 +24,7 @@ extension TubeModel {
     @NSManaged public var lena: Float
     @NSManaged public var lenb: Float
     @NSManaged public var message: String?
+    @NSManaged public var from: String?
     @NSManaged public var radie: Float
     @NSManaged public var segment: Float
     @NSManaged public var steel: Float

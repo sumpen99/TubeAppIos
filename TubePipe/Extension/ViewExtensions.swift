@@ -214,6 +214,14 @@ extension View{
         }
     }
     
+    func calendarSectionEdgeInsets() -> some View{
+        self.listRowInsets(EdgeInsets(
+            top: 5,
+            leading: 0,
+            bottom: 5,
+            trailing: 0))
+    }
+    
     func persistent() -> some View {
         PersistentContentView { self }
     }

@@ -847,6 +847,7 @@ extension TubeViewModel{
         model.center = Float(settingsVar.tube.center)
         model.alreadyCalculated = settingsVar.tube.alreadyCalculated
         model.date = Date()
+        model.from = "_Self_"
         
     }
     

@@ -217,6 +217,7 @@ struct AttachmentView:View{
         let model = TubeModel(context:managedObjectContext)
         tubeViewModel.buildModelFromSharedTube(model,sharedTube: tube,date:message.date)
         model.message = message.message
+        model.from = userName
         do{
             try PersistenceController.saveContext()
             return true

@@ -33,6 +33,7 @@ struct FeatureView:View{
         .bold()
         .foregroundColor(Color.black)
         .hLeading()
+        .padding(.top)
     }
     
     var featureFooter:some View{

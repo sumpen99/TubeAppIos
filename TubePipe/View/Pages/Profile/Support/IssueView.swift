@@ -43,6 +43,7 @@ struct IssueView:View{
         .bold()
         .foregroundColor(Color.black)
         .hLeading()
+        .padding(.top)
     }
     
     

@@ -21,6 +21,7 @@ struct ShareDocumentView:View{
     @State var docContent:DocumentContent = DocumentContent()
     @State var sclVar: SortedContactListVar = SortedContactListVar()
     @State private var toast: Toast? = nil
+    @State var invalidTube:Bool = false
   
     var buttonIsDisabled:Bool{
         docContent.isSaving||(sclVar.currentContact == nil || docContent.message.isEmpty)
@@ -146,6 +147,14 @@ struct ShareDocumentView:View{
             }
             
         }
+        .alert("Tube error!", isPresented: $invalidTube){
+            Button("OK", role: .cancel,action: { closeView() })
+        } message: {
+            Text("Current Tubevalues are invalid. We dont think there`s a friend who would like to recieve them. Sorry for any inconvenience. We`re closing this view now.")
+        }
+        .onAppear{
+            closeIfInvalidTube()
+        }
         .toastView(toast: $toast)
         .onChange(of: sclVar.showingOptions){ value in
            withAnimation{ sclVar.isSuggestionShowing.toggle() }
@@ -160,6 +169,12 @@ struct ShareDocumentView:View{
     //MARK: - BUTTON FUNCTIONS
      func closeView(){
         dismiss()
+    }
+    
+    func closeIfInvalidTube(){
+        if tubeViewModel.muff.emptyL1OrL2{
+            invalidTube.toggle()
+        }
     }
     
     func startSendingMessageProcess(){

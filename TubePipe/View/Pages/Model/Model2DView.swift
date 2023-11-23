@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+ 
 enum ActiveHomeSheet: Identifiable {
     case OPEN_TUBE_SETTINGS
     case OPEN_TUBE_DOCUMENT
@@ -33,7 +34,7 @@ struct Model2DView: View{
                     activeHomeSheet = nil
                     switch item{
                     case ActiveHomeSheet.OPEN_TUBE_SETTINGS:
-                        SheetPresentView(style: .detents([.medium(),.large()])){
+                        SheetPresentView(style: .detents([.medium()])){
                             TubeSettingsView()
                                 .environmentObject(tubeViewModel)
                         }

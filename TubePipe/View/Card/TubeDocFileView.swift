@@ -22,7 +22,15 @@ struct TubeDocFileView:View{
         )
         .overlay{
             RoundedRectangle(cornerRadius: 8).stroke(lineWidth: 2.0).foregroundColor(.black)
-        }
+            if (tube.from ?? USER_IDENTIFIER_COREDATA) != USER_IDENTIFIER_COREDATA{
+                Image(systemName: "staroflife.fill")
+                .resizable()
+                .frame(width: 15,height:15)
+                .hTrailing()
+                .vTop()
+                .padding([.trailing,.top],2)
+             }
+         }
     }
     
     @ViewBuilder
@@ -114,6 +122,14 @@ struct ExtendedTubeDocFileView:View{
         )
         .overlay{
             RoundedRectangle(cornerRadius: 8).stroke(lineWidth: 2.0).foregroundColor(.black)
+            if (tube.from ?? USER_IDENTIFIER_COREDATA) != USER_IDENTIFIER_COREDATA{
+                Image(systemName: "staroflife.fill")
+                .resizable()
+                .frame(width: 15,height:15)
+                .hTrailing()
+                .vTop()
+                .padding([.trailing,.top],2)
+             }
         }
     }
     

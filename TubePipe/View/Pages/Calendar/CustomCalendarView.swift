@@ -36,13 +36,27 @@ struct Selected{
     var activeCalendarSheet:CalendarSheet?
 }
 
+/*
+ typealias YEAR = String
+ typealias MONTH = String
+ typealias DAY = String
+ @Published var customers = [Customer]()
+ @Published var ordersInProcess = [Order]()
+ @Published var ordersSigned = [Order]()
+ @Published var ordersSignedQuery: [YEAR:[MONTH:[DAY:[Order]]]] = [:]
+ 
+ */
 struct CustomCalendarView: View {
     @Namespace var animation
+    typealias YEAR = String
+    typealias MONTH = String
+    typealias DAY = String
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
     @EnvironmentObject var navigationViewModel: NavigationViewModel
     @EnvironmentObject var firebaseAuth: FirebaseAuth
     @State var selected:Selected = Selected()
+    @State var yearOfTubes: [YEAR:[MONTH:[DAY:Int]]] = [:]
   
     let columns = [ GridItem(),GridItem(),GridItem(),GridItem()]
 
@@ -56,7 +70,14 @@ struct CustomCalendarView: View {
             GridItem(.flexible(minimum: 40))
         ]
     
-    
+    var calendarLabel:some View{
+        Text("Stored")
+        .font(.largeTitle)
+        .bold()
+        .foregroundColor(.black)
+        .hLeading()
+        .padding([.leading,.top])
+    }
     
     var body: some View {
         NavigationStack{
@@ -88,12 +109,16 @@ struct CustomCalendarView: View {
    }
     
     var mainPage:some View{
-        List{
-            calendarYearMonths
-            calendarWeekdays
-            tubesInfo
+        VStack(spacing:0){
+            calendarLabel
+            List{
+                calendarYearMonths
+                calendarWeekdays
+                tubesInfo
+            }
+            .listStyle(.insetGrouped)
         }
-        .listStyle(.automatic)
+        
     }
     
     var calendarYearMonths: some View{
@@ -104,8 +129,7 @@ struct CustomCalendarView: View {
                 }
           }
         }, header: { yearGridButtons })
-        .listRowBackground(Color.lightText)
-        
+        .calendarSectionEdgeInsets()
     }
     
     var calendarWeekdays: some View{
@@ -117,7 +141,7 @@ struct CustomCalendarView: View {
                 }
             }
        }, header: { monthGridButtons })
-        .listRowBackground(Color.lightText)
+        .calendarSectionEdgeInsets()
         
     }
     
@@ -133,8 +157,7 @@ struct CustomCalendarView: View {
                 }
             }
         }, header: { dayGridButton })
-        .listRowBackground(Color.lightText)
-        
+        .calendarSectionEdgeInsets()
     }
     
 }
@@ -149,9 +172,9 @@ extension CustomCalendarView{
                }
            }
         }
-        .onChange(of: selected.month, perform: { month in
-            searchAndSet(year:true,month:true,day:true)
-        })
+        /*.onChange(of: selected.month, perform: { month in
+            searchAndSet(year:false,month:true,day:true)
+        })*/
     }
     
     func getMonthCell(_ month:String,haveSavedTubes:Bool) -> some View{
@@ -205,9 +228,9 @@ extension CustomCalendarView{
                 }
            }
         }
-        .onChange(of: selected.day, perform: { day in
+        /*.onChange(of: selected.day, perform: { day in
             searchAndSet(year:false,month:false,day:true)
-        })
+        })*/
         .padding([.horizontal,.top])
     }
     
@@ -241,7 +264,7 @@ extension CustomCalendarView{
             addYearButton
         }
         .onChange(of: selected.year, perform: { year in
-            searchAndSet(year:true,month:true,day:true)
+            searchAndSet(year:true,month:false,day:false)
         })
     }
     
@@ -250,6 +273,10 @@ extension CustomCalendarView{
             topButtonRow.hLeading()
             .sectionText(font: .headline)
             toggleYearButton.hTrailing()
+        }
+        .padding(.horizontal)
+        .background{
+            Rectangle().fill(Color.lightText.opacity(0.5))
         }
     }
     
@@ -260,6 +287,10 @@ extension CustomCalendarView{
             Spacer()
             toggleMonthButton
         }
+        .padding(.horizontal)
+        .background{
+            RoundedRectangle(cornerRadius: 10).fill(Color.lightText.opacity(0.5))
+        }
     }
     
     var dayGridButton: some View{
@@ -268,6 +299,10 @@ extension CustomCalendarView{
             .sectionText(font: .footnote)
             Spacer()
             toggleDayButton
+        }
+        .padding(.horizontal)
+        .background{
+            Rectangle().fill(Color.lightText.opacity(0.5))
         }
     }
     
@@ -366,6 +401,7 @@ extension CustomCalendarView{
                     selected.tubeModel = tube
                 }
              }
+            .padding(.vertical)
             .matchedGeometryEffect(id: "CURRENT_SAVED_TUBES", in: animation)
         }
     }
@@ -390,27 +426,37 @@ extension CustomCalendarView{
     func queryTubesSavedByYear() -> Int{
          guard let startDate = Date.from(selected.year, 1, 1) as NSDate?,
               let endDate = Date.from(selected.year+1,1,1) as NSDate? else { return 0}
-        return PersistenceController.fetchCountByPredicate(
-            NSPredicate(format: "date >= %@ AND date < %@",startDate,endDate))
+        fetchAndSortYearOfTubes(startDate: startDate, endDate: endDate)
+        return yearOfTubesYearHaveData(selected.year)
+        /*return PersistenceController.fetchCountByPredicate(
+            NSPredicate(format: "date >= %@ AND date < %@",startDate,endDate))*/
     }
     
     func queryTubesSavedByMonth(_ month:String) -> Int{
         if !selected.yearHasSavedTubes { return 0}
         let month = getSelectedMonthIndex(month)
-        guard let startDate = Date.from(selected.year, month, 1) as NSDate?,
-              let endDate = Date.from(selected.year,month+1,1) as NSDate? else { return 0}
-        return PersistenceController.fetchCountByPredicate(
-            NSPredicate(format: "date >= %@ AND date < %@",startDate,endDate))
+        //guard let startDate = Date.from(selected.year, month, 1) as NSDate?,
+              //let endDate = Date.from(selected.year,month+1,1) as NSDate? else { return 0}
+        return yearOfTubesMonthHaveData(month, year: selected.year)
+        /*return PersistenceController.fetchCountByPredicate(
+            NSPredicate(format: "date >= %@ AND date < %@",startDate,endDate))*/
     }
     
     func queryTubesSavedByDay(_ day:Int,addPad:Bool) -> Int?{
         if !selected.monthHasSavedTubes { return nil}
         let month = getSelectedMonthIndex()
         let d = addPad ? (day - PAD_CALENDAR) : day
-        guard let startDate = Date.from(selected.year, month, d)  as NSDate?,
-              let endDate = Date.from(selected.year,month,d+1)  as NSDate? else { return nil }
-        return PersistenceController.fetchCountByPredicate(
-            NSPredicate(format: "date >= %@ AND date < %@",startDate,endDate))
+        //guard let startDate = Date.from(selected.year, month, d)  as NSDate?,
+              //let endDate = Date.from(selected.year,month,d+1)  as NSDate? else { return nil }
+        return yearOfTubesDayHaveData(d, month: month, year: selected.year)
+        //return PersistenceController.fetchCountByPredicate(
+            //NSPredicate(format: "date >= %@ AND date < %@",startDate,endDate))
+   
+    }
+    
+    // MARK: - SORT YEAR OF TUBES DICTIONARY
+    func fetchAndSortYearOfTubes(startDate:NSDate,endDate:NSDate){
+        yearOfTubes = PersistenceController.fetchAndSortYearOfTubes(startDate: startDate, endDate: endDate)
     }
     
     //MARK: - LOAD/DELETE TUBEMODEL
@@ -483,5 +529,19 @@ extension CustomCalendarView{
         }
         return startDate.fullMonthName()
     }
+    
+    func yearOfTubesYearHaveData(_ year:Int) -> Int {
+        //["2023": ["11": ["19": 9, "11": 1]]]
+        return yearOfTubes["\(year)"] != nil ? 1 : 0
+    }
+    
+    func yearOfTubesMonthHaveData(_ month:Int,year:Int) -> Int {
+        return yearOfTubes["\(year)"]?["\(month)"]?.count ?? 0
+    }
+    
+    func yearOfTubesDayHaveData(_ day:Int,month:Int,year:Int) -> Int {
+        return yearOfTubes["\(year)"]?["\(month)"]?["\(day)"] ?? 0
+    }
+    
 }
 

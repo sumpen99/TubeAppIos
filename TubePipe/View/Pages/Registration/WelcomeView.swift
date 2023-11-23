@@ -79,7 +79,7 @@ struct WelcomeView : View {
        }
        .padding(.horizontal, 16)
        .padding(.bottom, 42)
-       .transition(.move(edge: .bottom))
+       .transition(.move(edge: .leading))
        .background(
             Color.white
             .overlay(
