@@ -65,7 +65,7 @@ struct CustomCalendarView: View {
         NavigationStack{
             AppBackgroundStack(content: {
                 mainPage
-            })
+            },title: dateAsText)
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     navigateToSavedTubesButton

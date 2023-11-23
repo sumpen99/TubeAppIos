@@ -13,11 +13,12 @@ struct InboxContactMessages:View{
     @State var cVar = ContactVar()
     
     var messageLabel:some View{
-        Text("Messages")
+        Text("Inbox")
         .font(.largeTitle)
         .bold()
         .foregroundColor(.black)
         .hLeading()
+        .padding([.leading,.trailing])
     }
     
     var contactList:some View{
@@ -34,13 +35,12 @@ struct InboxContactMessages:View{
             messageLabel
             contactList
         }
-        .padding([.leading,.trailing])
     }
    
     var body: some View{
         AppBackgroundStack(content: {
             messagesBody
-        })
+        },title: "Messages")
         .hiddenBackButtonWithCustomTitle("Profile")
     }
     

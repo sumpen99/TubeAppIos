@@ -50,7 +50,7 @@ extension UINavigationBar {
         ]
         appearance.titleTextAttributes = attrsSmall
         appearance.largeTitleTextAttributes = attrsLarge
-        appearance.shadowColor = UIColor(Color.backgroundPrimary)
+        appearance.shadowColor = UIColor(Color.darkGray.opacity(0.3))
       
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance

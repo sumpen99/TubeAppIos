@@ -110,7 +110,7 @@ struct ContactMessagesView:View{
                 }
                 .padding()
             }
-       }
+        }
     }
     
     var mainPage2:some View{

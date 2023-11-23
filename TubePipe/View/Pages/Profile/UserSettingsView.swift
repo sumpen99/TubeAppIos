@@ -20,7 +20,7 @@ struct UserSettingsView:View{
     }
         
     var settingsLabel:some View{
-        Text("Settingsparameters")
+        Text("Tube settings")
         .font(.title)
         .bold()
         .hLeading()
@@ -120,25 +120,25 @@ struct UserSettingsView:View{
     }
     
     var sections:some View{
-        ScrollView{
-            LazyVStack{
-                ForEach(settingsOption,id:\.self){ op in
-                    settingsSection(op)
-                    Divider().overlay{ Color.tertiaryLabel }.padding([.leading,.trailing])
-                }
-                overlapSection
+        LazyVStack{
+            ForEach(settingsOption,id:\.self){ op in
+                settingsSection(op)
                 Divider().overlay{ Color.tertiaryLabel }.padding([.leading,.trailing])
-                clearSpaceAtBottom
             }
-        }.background(Color.lightText)
+            overlapSection
+            Divider().overlay{ Color.tertiaryLabel }.padding([.leading,.trailing])
+            clearSpaceAtBottom
+        }
     }
     
     var content:some View{
-        VStack(spacing:0){
-            settingsLabel.padding()
-            tubeWindow.padding([.leading,.trailing])
-            settingsFooter.padding([.leading,.trailing,.bottom])
-            sections.padding([.leading,.trailing])
+        ScrollView{
+            VStack(spacing:0){
+                settingsLabel.padding()
+                tubeWindow.padding([.leading,.trailing])
+                settingsFooter.padding([.leading,.trailing,.bottom])
+                sections.padding([.leading,.trailing])
+            }
         }
     }
     
@@ -168,7 +168,7 @@ struct UserSettingsView:View{
     var body:some View{
         AppBackgroundStack(content: {
             content
-        })
+        },title:"Default")
         .toastView(toast: $toast)
         .onAppear{ setUserDefaultValues() }
         .toolbar {

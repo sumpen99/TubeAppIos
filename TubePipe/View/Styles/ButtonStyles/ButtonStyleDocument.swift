@@ -14,10 +14,9 @@ struct ButtonStyleDocument: ButtonStyle {
             .padding([.bottom,.top],20)
             .background( color )
             .overlay(
-                RoundedRectangle(cornerRadius: 24)
+                Rectangle()
                     .stroke(Color.black, lineWidth: 2)
             )
-            .cornerRadius(24)
             .opacity(configuration.isPressed ? 0.5 : 1.0)
             .foregroundColor(Color.black)
             .fontWeight(.semibold)

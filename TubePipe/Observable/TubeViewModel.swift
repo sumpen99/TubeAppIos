@@ -7,16 +7,9 @@
 
 import SwiftUI
 
-struct TubePositionVariables{
-    var currentMagnification = 1.0
-    var currentRotation = Angle.zero
-    var location = CGPoint()
-}
-
 class TubeViewModel: ObservableObject{
     @Published var settingsVar:SettingsVar = SettingsVar()
     @Published var userDefaultSettingsVar:UserDefaultSettingsVar = UserDefaultSettingsVar()
-    @Published var posVar = TubePositionVariables()
     var tubeBase = TubeBase()
     var muffDetails = MuffDetails()
     var muff = Muff()
@@ -711,8 +704,7 @@ class TubeViewModel: ObservableObject{
         let b_r_y = t_l_y * -1
         muff.setMinMax(m_in:TPoint(x:t_l_x,y:t_l_y),m_ax:TPoint(x:b_r_x,y:b_r_y))
      }
-    
-   
+       
     func getMin(a:CGFloat,b:CGFloat,c:CGFloat) -> CGFloat{
         let aa = a.isNaN ? 0.0 : a
         let bb = b.isNaN ? 0.0 : b
@@ -796,8 +788,6 @@ extension TubeViewModel{
         return pointsList
     }
     
-    
-   
     func initViewFromTubeDefaultValues(_ model:TubeDefault){
         settingsVar.tube = model
     }
@@ -858,6 +848,32 @@ extension TubeViewModel{
         model.alreadyCalculated = settingsVar.tube.alreadyCalculated
         model.date = Date()
         
+    }
+    
+    func buildModelFromSharedTube(_ model:TubeModel,sharedTube:SharedTube,date:Date?) -> Bool{
+        if let dimension = sharedTube.dimension,
+           let segment = sharedTube.segment,
+           let steel = sharedTube.steel,
+           let grader = sharedTube.grader,
+           let radie = sharedTube.radie,
+           let lena = sharedTube.lena,
+           let lenb = sharedTube.lenb,
+           let center = sharedTube.center,
+           let alreadyCalculated = sharedTube.alreadyCalculated{
+            model.id = UUID().uuidString
+            model.dimension = Float(dimension)
+            model.segment = Float(segment)
+            model.steel = Float(steel)
+            model.grader = Float(grader)
+            model.radie = Float(radie)
+            model.lena = Float(lena)
+            model.lenb = Float(lenb)
+            model.center = Float(center)
+            model.alreadyCalculated = alreadyCalculated
+            model.date = date ?? Date()
+            return true
+        }
+        return false
     }
     
     func buildSharedTubeFromCurrentValues() -> SharedTube{

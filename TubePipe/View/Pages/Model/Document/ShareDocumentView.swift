@@ -118,7 +118,7 @@ struct ShareDocumentView:View{
             contactField
             clearContactField
         }
-        .halfSheetWhitePadding()
+        .roundedBorder()
     }
     
     var mainContent:some View{

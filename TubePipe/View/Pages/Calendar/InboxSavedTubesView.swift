@@ -156,7 +156,7 @@ struct InboxSavedTubesView:View{
     var body: some View{
         AppBackgroundStack(content: {
             mainpage
-        })
+        },title: "Storage")
         .alert(isPresented: $iVar.isDeleteTube, content: {
             onAlertWithOkAction(actionPrimary: {
                 deleteSelectedItems()

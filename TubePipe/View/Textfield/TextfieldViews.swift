@@ -33,7 +33,7 @@ struct BaseTubeTextField:View {
         VStack(spacing:20){
             message
         }
-        .halfSheetWhitePadding()
+        .roundedBorder()
     }
     
 }

@@ -49,6 +49,7 @@ struct TapAndHoldButton: View{
 struct BackButton:View{
     @Environment(\.dismiss) private var dismiss
     var title:String = "Back"
+    var imgLabel:String = "chevron.left"
     var color:Color = Color.accentColor
     var action: (() -> Void)? = nil
     
@@ -59,7 +60,7 @@ struct BackButton:View{
                 dismiss()
             }){
                 HStack(spacing: 5){
-                    Image(systemName: "chevron.left").font(.callout)
+                    Image(systemName: imgLabel).font(.headline)
                     //Text(title)
                 }
                 .foregroundColor(color)

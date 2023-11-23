@@ -280,7 +280,7 @@ struct ProfileView: View{
         NavigationStack(path:$navigationViewModel.pathTo){
             AppBackgroundStack(content: {
                 personalPage
-            })
+            },title:firestoreViewModel.currentUser?.displayName ?? "")
             .navigationDestination(for: Contact.self){  contact in
                 ContactMessagesView(contact: contact,backButtonLabel: "Messages")
             }

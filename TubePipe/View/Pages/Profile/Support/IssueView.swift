@@ -38,7 +38,7 @@ struct IssueView:View{
     }
     
     var issueHeader:some View{
-        Text("Report an issue")
+        Text("Report")
         .font(.title)
         .bold()
         .foregroundColor(Color.black)
@@ -187,7 +187,7 @@ struct IssueView:View{
             infoBody
             //.onSubmit { submitIssueReport() }
             //.submitLabel(.send)
-        })
+        },title:"Issue")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 shareButton

@@ -11,7 +11,7 @@ struct LoginVariables{
     var isFailedLoginAttempt:Bool = false
     var email:String = "fredrik@heatia.se"
     var password:String = "st3lv1oo"
-    var isLoginAttempt:Bool = false
+    var timeOut:Bool = false
 }
 
 struct LoginView : View {
@@ -38,7 +38,7 @@ struct LoginView : View {
     }
     
     var buttonIsDisabled:Bool{
-        (lVar.email.isEmpty||lVar.password.isEmpty)||lVar.isLoginAttempt
+        lVar.email.isEmpty||lVar.password.isEmpty
     }
     
     var accountLabel:some View{
@@ -100,37 +100,34 @@ struct LoginView : View {
             Button(action:logUserIn,label: {
                 Text("Log in").hCenter()
             })
-            .buttonStyle(ButtonStyleDocument(color: Color.backgroundButton))
+            .disabled(buttonIsDisabled)
+            .buttonStyle(ButtonStyleDisabledable(lblColor: .white,
+                                                 borderColor: .black,
+                                                 backgroundColor: .systemBlue))
         }
         .padding()
     }
     
     var loginFields:some View{
-        ScrollView{
-            VStack{
-                loginLabel
-                loginTextfields
-            }
+        VStack{
+            loginLabel
+            loginTextfields
+            loginButton
         }
-        .scrollDisabled(true)
+        .vTop()
     }
       
     var body: some View {
         AppBackgroundStack(content: {
             loginFields
-            .onSubmit { logUserIn() }
-            .submitLabel(.next)
         })
         .hiddenBackButtonWithCustomTitle(color:Color.black)
-        .onAppear{
-            focusField = .LOGIN_EMAIL
-        }
+        .onTapGesture { endTextEditing() }
    }
     
     func logUserIn(){
-        if buttonIsDisabled { return }
-        lVar.isLoginAttempt = true
-        toggleFailedLoginAttemptWithValue(false)
+        if buttonIsDisabled||lVar.timeOut{ return }
+        lVar.timeOut = true
         firebaseAuth.loginWithEmail(lVar.email,password: lVar.password){ (result,error) in
             guard let _ = error else { return }
             toggleFailedLoginAttemptWithValue(true)
@@ -140,8 +137,12 @@ struct LoginView : View {
     func toggleFailedLoginAttemptWithValue(_ value:Bool){
         withAnimation{
             lVar.isFailedLoginAttempt = value
-            lVar.isLoginAttempt = false
-            
+        }
+        if value{
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0){
+                self.lVar.timeOut = false
+                self.toggleFailedLoginAttemptWithValue(false)
+            }
         }
     }
     

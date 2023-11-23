@@ -72,22 +72,27 @@ struct SelectedTubeView: View{
         List{
             if let data = tubeModel.image?.data,
                let uiImage = UIImage(data: data){
-               attachedPhoto(uiImage).listRowBackground(Color.lightText)
+               attachedPhoto(uiImage).listRowBackground(Color.white)
             }
-            messageSummary.listRowBackground(Color.lightText)
-            muffSummary.listRowBackground(Color.lightText)
+            messageSummary.listRowBackground(Color.white)
+            muffSummary.listRowBackground(Color.white)
             buttons
         }
         .listStyle(.automatic)
         .scrollContentBackground(.hidden)
     }
     
-    var body:some View{
+    var mainPage:some View{
         VStack(spacing:0){
             TopMenu(title: tubeModel.date?.formattedString() ?? "Saved tube", actionCloseButton: closeView)
             data
         }
-        .halfSheetBackgroundStyle()
+    }
+    
+    var body:some View{
+        AppBackgroundSheetStack(content: {
+            mainPage
+        })
         .alert(isPresented: $isDeleteTube, content: {
             onAlertWithOkAction(actionPrimary: {
                 deleteTubeModel(tubeModel)

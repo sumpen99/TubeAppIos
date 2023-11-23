@@ -22,7 +22,7 @@ struct ContactView:View{
     }
     
     var contactsLabel:some View{
-        Text("Contacts")
+        Text("Phone book")
         .font(.largeTitle)
         .bold()
         .foregroundColor(.black)
@@ -70,7 +70,7 @@ struct ContactView:View{
     var body: some View{
         AppBackgroundStack(content: {
             mainpage
-        })
+        },title: "Contacts")
         .hiddenBackButtonWithCustomTitle("Profile")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {

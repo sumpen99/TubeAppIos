@@ -13,7 +13,7 @@ struct Model3DHelpView: View{
     var body:some View{
         AppBackgroundStack(content: {
             helpBody
-        })
+        },title:"Pan")
         .hiddenBackButtonWithCustomTitle("Model")
     }
     

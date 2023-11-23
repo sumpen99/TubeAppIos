@@ -183,15 +183,15 @@ extension View{
         }
     }
     
-    func halfSheetWhitePadding() -> some View{
+    func roundedBorder() -> some View{
         self.padding()
             .background{
-                RoundedRectangle(cornerRadius: 5).fill(Color.lightText)
+                RoundedRectangle(cornerRadius: 5).stroke(Color.black)
             }
     }
     
     func profileListRow() -> some View{
-        self.fullListWidthSeperator().listRowBackground(Color.lightText)
+        self.fullListWidthSeperator()
     }
     
     func fullListWidthSeperator() -> some View{

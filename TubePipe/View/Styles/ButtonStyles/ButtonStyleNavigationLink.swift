@@ -10,7 +10,7 @@ struct ButtonStyleNavigationLink: ButtonStyle {
 
     public func makeBody(configuration: ButtonStyle.Configuration) -> some View {
         configuration.label
-            .background( .white )
+            .background( Color.lightText )
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(Color.tertiaryLabel, lineWidth: 1)

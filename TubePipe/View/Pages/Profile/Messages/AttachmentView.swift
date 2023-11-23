@@ -7,14 +7,20 @@
 
 import SwiftUI
 
+struct AttachVar{
+    var showConfirmationDialog:Bool = false
+    var toast: Toast? = nil
+    var image:Image?
+    var alreadySaved:Bool = false
+    var isSaving:Bool = false
+}
+
 struct AttachmentView:View{
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
     @EnvironmentObject var navigationViewModel: NavigationViewModel
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @Environment(\.dismiss) private var dismiss
-    @State var showConfirmationDialog:Bool = false
-    @State private var toast: Toast? = nil
-    @State var image:Image?
+    @State var aVar:AttachVar = AttachVar()
     let message:Message
     let userName:String
     
@@ -27,16 +33,32 @@ struct AttachmentView:View{
         return from == currentUserID
     }
     
-    var loadButton:some View{
+    var saveButton:some View{
         Button(action: loadViewModelWithSharedTube ){
-            Text("Load Tube")
+            HStack{
+                Text("Save").hCenter()
+                Image(systemName: "arrow.down.doc")
+            }
         }
         .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemBlue))
     }
     
+    var loadButton:some View{
+        Button(action: loadViewModelWithSharedTube ){
+            HStack{
+                Text("Load").hCenter()
+                Image(systemName: "arrow.triangle.2.circlepath.circle")
+            }
+       }
+        .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemBlue))
+    }
+    
     var deleteButton:some View{
-        Button(action: { showConfirmationDialog.toggle() } ){
-            Text("Delete")
+        Button(action: { aVar.showConfirmationDialog.toggle() } ){
+            HStack{
+                Text("Delete").hCenter()
+                Image(systemName: "trash")
+            }
         }
         .disabled(!allowedToDelete)
         .buttonStyle(ButtonStyleFillListRow(
@@ -46,6 +68,8 @@ struct AttachmentView:View{
     var buttons:some View{
         return Section(content:{
             VStack(spacing:10){
+                saveButton
+                Divider()
                 loadButton
                 Divider()
                 deleteButton
@@ -58,9 +82,9 @@ struct AttachmentView:View{
     
     @ViewBuilder
     var userSentImage:some View{
-        if image != nil{
+        if aVar.image != nil{
             Section(content:{
-                image?
+                aVar.image?
                 .resizable()
                 .scaledToFit()
                 
@@ -81,9 +105,12 @@ struct AttachmentView:View{
     var topMenu:  some View{
         VStack{
             HStack{
-                BackButton(title: userName)
-                Text(userName).bold().hCenter()
+                Text(userName).font(.headline)
+                    .foregroundStyle(.primary)
+                    .lineLimit(1).hLeading()
+                BackButton(title: userName,imgLabel: "arrow.down")
             }
+            Divider()
         }
         .frame(height:MENU_HEIGHT)
         .padding()
@@ -96,7 +123,8 @@ struct AttachmentView:View{
             buttons
         }
         .listStyle(.automatic)
-    }
+        
+     }
     
     var mainPage:some View{
         VStack(spacing:0){
@@ -107,13 +135,13 @@ struct AttachmentView:View{
     }
     
     var body:some View{
-        AppBackgroundStack(content: {
+        AppBackgroundSheetStack(content: {
             mainPage
         })
-        .onDisappear{ image = nil }
-        .toastView(toast: $toast)
+        .onDisappear{ aVar.image = nil }
+        .toastView(toast: $aVar.toast)
         .confirmationDialog("Attention!",
-                            isPresented: $showConfirmationDialog,
+                            isPresented: $aVar.showConfirmationDialog,
                             titleVisibility: .visible){
                 buttonsConfirmation
         } message: {
@@ -136,7 +164,7 @@ struct AttachmentView:View{
            let groupid = message.groupId{
              firestoreViewModel.downloadImageFromStorage(groupId: groupid, storageId: storageId){ (error,uiImage) in
                  if let uiImage = uiImage{
-                     self.image = Image(uiImage: uiImage)
+                     self.aVar.image = Image(uiImage: uiImage)
                 }
             }
         }
@@ -150,7 +178,7 @@ struct AttachmentView:View{
                 closeView()
             }
             else{
-                toast = Toast(style: .error, message: "Failed to load tube!")
+                aVar.toast = Toast(style: .error, message: "Failed to load tube!")
             }
         }
     }
@@ -164,9 +192,39 @@ struct AttachmentView:View{
         firestoreViewModel.removeMessageFromGroup(groupId,
                                                   messageId: messagId,
                                                   storageId:message.storageId){ result in
-            if(!result.isSuccess){ toast = Toast(style: .error, message: "Failed to delete message!") }
+            if(!result.isSuccess){ aVar.toast = Toast(style: .error, message: "Failed to delete message!") }
             else{ self.closeView()}
         }
+    }
+    
+    func saveSharedTubeToDevice(){
+        if(!aVar.alreadySaved||aVar.isSaving){ return }
+        aVar.isSaving = true
+        if let sharedTube = message.sharedTube{
+            if saveSharedTube(sharedTube){
+                aVar.toast = Toast(style: .error, message: "Tube saved!")
+                aVar.alreadySaved = true
+            }
+            else{
+                aVar.toast = Toast(style: .error, message: "Failed to save tube!")
+            }
+            aVar.isSaving = false
+        }
+    }
+    
+    func saveSharedTube(_ tube:SharedTube) -> Bool{
+        let managedObjectContext = PersistenceController.shared.container.viewContext
+        let model = TubeModel(context:managedObjectContext)
+        tubeViewModel.buildModelFromSharedTube(model,sharedTube: tube,date:message.date)
+        model.message = message.message
+        do{
+            try PersistenceController.saveContext()
+            return true
+        }
+        catch{
+            return false
+        }
+        
     }
     
     func closeView(){

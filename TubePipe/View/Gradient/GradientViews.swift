@@ -26,7 +26,7 @@ var appLinearGradient: some View{
 }
 
 var halfSheetBackgroundColor:some View{
-    Color.backgroundSecondary.edgesIgnoringSafeArea(.all)
+    Color.lightText.edgesIgnoringSafeArea(.all)
 }
 
 struct HalfCircleGradient: View {

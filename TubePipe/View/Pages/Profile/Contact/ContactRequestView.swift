@@ -8,8 +8,8 @@
 import SwiftUI
 
 enum RequestsAwaitingheader:String,CaseIterable{
-    case REQUEST_SENT = "Sent requests"
-    case REQUESTS_RECIEVED = "Recieved requests"
+    case REQUEST_SENT = "Sent"
+    case REQUESTS_RECIEVED = "Recieved"
 }
 
 struct ContactRequestView:View{
@@ -120,7 +120,7 @@ struct ContactRequestView:View{
     var body: some View{
         AppBackgroundStack(content: {
             mainpage
-        })
+        },title: "Requests")
         .onAppear{
             requestHeader = headerOnEnter
         }

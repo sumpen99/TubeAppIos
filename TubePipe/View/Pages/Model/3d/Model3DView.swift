@@ -31,7 +31,9 @@ struct Model3DView: View{
         TubeSceneView(scene:tubeSceneViewModel.scnScene)
         .ignoresSafeArea(.all)
         .onChange(of: renderNewState){ newValue in
-            renderNewScene()
+            Task {
+                renderNewScene()
+            }
         }
         .task {
             tubeViewModel.initFromCache()
@@ -40,6 +42,20 @@ struct Model3DView: View{
     }
     
     func renderNewScene(){
+        tubeSceneViewModel.reset()
+        tubeSceneViewModel.setRenderState(tubeViewModel.collectModelRenderState())
+        tubeSceneViewModel.buildModelFromTubePoints(tubeViewModel.pointsWithAddedCircle(
+            renderSizePart: tubeSceneViewModel.renderSizePart),
+                                                    dimension: tubeViewModel.settingsVar.tube.dimension)
+        tubeSceneViewModel.buildSteelFromTubePoints(tubeViewModel.steelPotentiallyScaled(renderSizePart: tubeSceneViewModel.renderSizePart),dimension: tubeViewModel.settingsVar.tube.steel)
+         
+        tubeSceneViewModel.addWorldAxis()
+        tubeSceneViewModel.rotateParentNode()
+        tubeSceneViewModel.zoomScene()
+        tubeSceneViewModel.publishScene()
+    }
+    
+    func renderNewScene1(){
          DispatchQueue.global().async{
             tubeSceneViewModel.reset()
             tubeSceneViewModel.setRenderState(tubeViewModel.collectModelRenderState())
@@ -68,7 +84,6 @@ struct Model3DView: View{
             modelPage
         })
         .navigationBarBackButtonHidden()
-        .environmentObject(tubeSceneViewModel)
         .onChange(of: activeModelSheet){ item in
             if let item{
                 activeModelSheet = nil

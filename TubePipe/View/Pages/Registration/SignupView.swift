@@ -42,7 +42,7 @@ struct SignupView : View {
     }
     
     var buttonIsDisabled:Bool{
-        sVar.hideButton||sVar.isTimeOut
+        sVar.hideButton
     }
     
     var illegalCredentials:some View{
@@ -150,9 +150,10 @@ struct SignupView : View {
             Text("Create account")
             .hCenter()
         })
-        .disabled(sVar.isTimeOut)
-        .opacity(sVar.isTimeOut ? 0.5 : 1.0)
-        .buttonStyle(ButtonStyleDocument(color: Color.backgroundButton))
+        .disabled(buttonIsDisabled)
+        .buttonStyle(ButtonStyleDisabledable(lblColor: .white,
+                                             borderColor: .black,
+                                             backgroundColor: .systemBlue))
         .listRowSeparator(.hidden)
         .listRowBackground(Color.clear)
     }
@@ -164,6 +165,7 @@ struct SignupView : View {
                 emailSection
                 passwordSection
                 errorMessage
+                signupButton
             }
             .scrollDisabled(true)
             .scrollContentBackground(.hidden)
@@ -174,25 +176,19 @@ struct SignupView : View {
     var body: some View {
         AppBackgroundStack(content: {
             signupFields
-            .onSubmit { signUserUp() }
-            .submitLabel(.send)
+            //.onSubmit { signUserUp() }
+            //.submitLabel(.send)
         })
         .hiddenBackButtonWithCustomTitle(color:.black)
+        .onTapGesture { endTextEditing() }
     }
     
     func signUserUp(){
-        if buttonIsDisabled { return }
+        if buttonIsDisabled||sVar.timeOut { return }
         sVar.timeOut = true
-        
-        if sVar.hideButton{
-            toggleMissingCredentialstWithValue(true)
-            return
-        }
         firebaseAuth.signupWithEmail(sVar.passwordHelper.emailText,
                                      password: sVar.passwordHelper.password){ (result,error) in
-            guard let nsError = error as NSError? else {
-                return
-            }
+            guard let nsError = error as NSError? else { return }
             sVar.errorMessage = nsError.localizedDescription
             toggleFailedSignupAttemptWithValue(true)
         }
@@ -205,18 +201,6 @@ struct SignupView : View {
         if value{
             DispatchQueue.main.asyncAfter(deadline: .now() + 3.0){
                 self.toggleFailedSignupAttemptWithValue(false)
-                self.sVar.timeOut = false
-            }
-        }
-    }
-    
-    func toggleMissingCredentialstWithValue(_ value:Bool){
-        withAnimation{
-            sVar.isMissingCredentials = value
-        }
-        if value{
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0){
-                self.toggleMissingCredentialstWithValue(false)
                 self.sVar.timeOut = false
             }
         }

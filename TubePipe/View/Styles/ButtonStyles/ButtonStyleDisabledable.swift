@@ -9,16 +9,19 @@ import SwiftUI
 
 struct ButtonStyleDisabledable: ButtonStyle {
     let lblColor:Color
+    let borderColor:Color
     let backgroundColor:Color
     
     public func makeBody(configuration: ButtonStyle.Configuration) -> some View {
         Disabledable(lblColor:lblColor,
+                     borderColor: borderColor,
                      backgroundColor: backgroundColor,
                      configuration: configuration)
     }
 
     struct Disabledable: View {
         let lblColor:Color
+        let borderColor:Color
         let backgroundColor:Color
         let configuration: ButtonStyle.Configuration
 
@@ -28,14 +31,15 @@ struct ButtonStyleDisabledable: ButtonStyle {
             configuration.label
                 .padding([.leading,.trailing],10)
                 .padding([.bottom,.top],20)
-                .foregroundColor(lblColor.opacity(isEnabled ? 1.0 : 0.8))
+                .foregroundColor(lblColor)
+                .opacity(isEnabled ? 1.0 : 0.6)
                 .background(backgroundColor)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 24)
-                        .stroke(Color.black, lineWidth: 1)
-                        .opacity(isEnabled ? 1.0 : 0.8)
+                    Rectangle()
+                        .stroke(isEnabled ? borderColor : .black, lineWidth: 2)
+                        .opacity(isEnabled ? 1.0 : 0.6)
                 )
-                .opacity(isEnabled ? (configuration.isPressed ? 0.3 : 1.0) : 0.8)
+                .opacity(isEnabled ? (configuration.isPressed ? 0.3 : 1.0) : 0.6)
                 .fontWeight(.semibold)
                 .disabled(!isEnabled)
         }

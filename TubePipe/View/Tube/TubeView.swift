@@ -7,11 +7,10 @@
 
 import SwiftUI
 
-struct TubeVariables{
+struct TubePositionVariables{
     var currentMagnification = 1.0
     var currentRotation = Angle.zero
     var location = CGPoint()
-    
 }
 
 enum TubeInteraction{
@@ -26,6 +25,7 @@ struct TubeView: View{
     @GestureState private var twistAngle: Angle = Angle.zero
     @GestureState private var fingerLocation: CGPoint? = nil
     @GestureState private var startLocation: CGPoint? = nil
+    @State var posVar = TubePositionVariables()
     let tubeInteraction:TubeInteraction
     
     
@@ -44,12 +44,12 @@ struct TubeView: View{
     var simpleDragGesture: some Gesture {
         DragGesture()
         .onChanged { value in
-            var newLocation = startLocation ?? tubeViewModel.posVar.location
+            var newLocation = startLocation ?? posVar.location
             newLocation.x += value.translation.width
             newLocation.y += value.translation.height
-            tubeViewModel.posVar.location = newLocation
+            posVar.location = newLocation
         }.updating($startLocation) { (value, startLocation, transaction) in
-            startLocation = startLocation ?? tubeViewModel.posVar.location
+            startLocation = startLocation ?? posVar.location
         }
     }
         
@@ -66,7 +66,7 @@ struct TubeView: View{
             twistAngle = value
         }
         .onEnded { angle in
-            tubeViewModel.posVar.currentRotation += angle
+            posVar.currentRotation += angle
         }
     }
     
@@ -76,7 +76,7 @@ struct TubeView: View{
             pinchMagnification = value
         }
         .onEnded{ scale in
-            tubeViewModel.posVar.currentMagnification *= scale
+            posVar.currentMagnification *= scale
         }
     }
     
@@ -334,8 +334,6 @@ struct TubeView: View{
         }
     }
     
-    
-    
     var tubeMoveable:some View{
         GeometryReader{ reader in
             ZStack {
@@ -348,10 +346,10 @@ struct TubeView: View{
                     }
                 }
             }
-            .scaleEffect(tubeViewModel.posVar.currentMagnification * pinchMagnification * calculateScale(size: reader.size))
+            .scaleEffect(posVar.currentMagnification * pinchMagnification * calculateScale(size: reader.size))
             .rotation3DEffect(.degrees(180), axis: (x: 0, y: 1, z: 0))
-            .rotationEffect(tubeViewModel.posVar.currentRotation + twistAngle + Angle(degrees: 180.0))
-            .position(tubeViewModel.posVar.location)
+            .rotationEffect(posVar.currentRotation + twistAngle + Angle(degrees: 180.0))
+            .position(posVar.location)
             .offset(CGSizeMake(reader.size.width/2, reader.size.height/2))
             .simultaneousGesture(simpleDragGesture.simultaneously(with: fingerDragGesture))
             .simultaneousGesture(rotationGesture.simultaneously(with: magnificationGesture))

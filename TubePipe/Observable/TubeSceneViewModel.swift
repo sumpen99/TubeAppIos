@@ -58,7 +58,7 @@ extension RenderOption{
 }
 
 class TubeSceneViewModel: ObservableObject {
-    @Published var scnScene = SCNScene()
+    var scnScene = SCNScene()
     var initialZoomSet:Bool = false
     var renderState:UInt16 = 0
     var renderNode:RenderNode = .NODE_MUFF

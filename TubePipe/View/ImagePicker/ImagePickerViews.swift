@@ -81,7 +81,7 @@ struct ImagePickerSwiftUi<LabelText:View>: View {
             image = nil
         }
         .hLeading()
-        .halfSheetWhitePadding()
+        .roundedBorder()
         
     }
 }
