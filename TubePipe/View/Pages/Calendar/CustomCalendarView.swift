@@ -36,16 +36,6 @@ struct Selected{
     var activeCalendarSheet:CalendarSheet?
 }
 
-/*
- typealias YEAR = String
- typealias MONTH = String
- typealias DAY = String
- @Published var customers = [Customer]()
- @Published var ordersInProcess = [Order]()
- @Published var ordersSigned = [Order]()
- @Published var ordersSignedQuery: [YEAR:[MONTH:[DAY:[Order]]]] = [:]
- 
- */
 struct CustomCalendarView: View {
     @Namespace var animation
     typealias YEAR = String
@@ -103,7 +93,7 @@ struct CustomCalendarView: View {
             }
             
         }
-        .onAppear{
+        .task(id:selected.year,priority: .background){
             searchAndSet(year: true, month: true, day: true)
         }
    }
@@ -263,9 +253,9 @@ extension CustomCalendarView{
             Text(String(selected.year))
             addYearButton
         }
-        .onChange(of: selected.year, perform: { year in
-            searchAndSet(year:true,month:false,day:false)
-        })
+        /*.onChange(of: selected.year, perform: { year in
+            searchAndSet(year:true,month:true,day:true)
+        })*/
     }
     
     var yearGridButtons:some View{
