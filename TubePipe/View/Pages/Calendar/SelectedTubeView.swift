@@ -52,6 +52,10 @@ struct SelectedTubeView: View{
                                               subSecond: Text(tubeModel.message ?? ""))
                 SubHeaderSubHeaderLeadingView(subMain: Text("Saved:"),
                                               subSecond:Text(tubeModel.date?.formattedStringWithTime() ?? "00:00:00"))
+                if let title = tubeModel.title{
+                    SubHeaderSubHeaderLeadingView(subMain: Text("Not:"),
+                                                  subSecond:Text(title))
+                }
             }},
             header: {Text("Details:").listSectionHeader()}) {
             

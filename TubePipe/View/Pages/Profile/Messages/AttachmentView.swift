@@ -22,8 +22,8 @@ struct AttachmentView:View{
     @Environment(\.dismiss) private var dismiss
     @State var aVar:AttachVar = AttachVar()
     let message:Message
-    let userName:String
-    
+    let title:String
+    let contactDisplayName:String?
     let confStr = "Message will be permantly deleted, proceed?"
     
     var allowedToDelete:Bool{
@@ -33,14 +33,20 @@ struct AttachmentView:View{
         return from == currentUserID
     }
     
+    var notAllowedToSave:Bool{
+        aVar.alreadySaved||aVar.isSaving
+    }
+    
     var saveButton:some View{
-        Button(action: loadViewModelWithSharedTube ){
+        Button(action: saveSharedTubeToDevice ){
             HStack{
                 Text("Save").hCenter()
                 Image(systemName: "arrow.down.doc")
             }
         }
-        .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemBlue))
+        .disabled(notAllowedToSave)
+        .buttonStyle(ButtonStyleFillListRow(
+            lblColor: notAllowedToSave ? Color.black.opacity(0.3) : Color.systemBlue))
     }
     
     var loadButton:some View{
@@ -105,10 +111,10 @@ struct AttachmentView:View{
     var topMenu:  some View{
         VStack{
             HStack{
-                Text(userName).font(.headline)
+                Text(title).font(.headline)
                     .foregroundStyle(.primary)
                     .lineLimit(1).hLeading()
-                BackButton(title: userName,imgLabel: "arrow.down")
+                BackButton(title: title,imgLabel: "arrow.down")
             }
             Divider()
         }
@@ -138,6 +144,9 @@ struct AttachmentView:View{
         AppBackgroundSheetStack(content: {
             mainPage
         })
+        .task {
+            validateIfTubeIsAlreadyStored()
+        }
         .onDisappear{ aVar.image = nil }
         .toastView(toast: $aVar.toast)
         .confirmationDialog("Attention!",
@@ -198,34 +207,57 @@ struct AttachmentView:View{
     }
     
     func saveSharedTubeToDevice(){
-        if(!aVar.alreadySaved||aVar.isSaving){ return }
+        if(notAllowedToSave){ return }
         aVar.isSaving = true
         if let sharedTube = message.sharedTube{
             if saveSharedTube(sharedTube){
-                aVar.toast = Toast(style: .error, message: "Tube saved!")
+                aVar.toast = Toast(style: .success, message: "Tube saved!")
                 aVar.alreadySaved = true
+                return
             }
-            else{
-                aVar.toast = Toast(style: .error, message: "Failed to save tube!")
-            }
-            aVar.isSaving = false
         }
+        aVar.toast = Toast(style: .error, message: "Failed to save tube!")
+        aVar.isSaving = false
     }
     
     func saveSharedTube(_ tube:SharedTube) -> Bool{
         let managedObjectContext = PersistenceController.shared.container.viewContext
         let model = TubeModel(context:managedObjectContext)
-        tubeViewModel.buildModelFromSharedTube(model,sharedTube: tube,date:message.date)
-        model.message = message.message
-        model.from = userName
-        do{
-            try PersistenceController.saveContext()
-            return true
+        let details = inspectSenderRecieverFromMessage(message)
+        let title = details.sentBySelf ?
+        "Originated from message sent to \(details.to)) on \(message.date?.toISO8601String() ?? "00:00:00")" :
+        "Originated from message recieved from \(details.from)) \(message.date?.toISO8601String() ?? "00:00:00")"
+        if tubeViewModel.buildModelFromSharedTube(model,
+                                               sharedTube: tube,
+                                               date:message.date,
+                                               id:message.id,
+                                               message:message.message,
+                                               from:details.from,
+                                               title: title){
+            do{
+                try PersistenceController.saveContext()
+                return true
+            }
+            catch{
+                return false
+            }
         }
-        catch{
-            return false
+        return false
+    }
+    
+    func inspectSenderRecieverFromMessage(_ message:Message) -> (from:String,to:String,sentBySelf:Bool){
+        if let from = message.senderId,
+           let currentUserID = firestoreViewModel.currentUserID{
+            if from == currentUserID{
+                return (from:USER_IDENTIFIER_COREDATA,to:contactDisplayName ?? "",sentBySelf:true)
+            }
+            return (from:contactDisplayName ?? "",to:firestoreViewModel.currentUserDisplayName,sentBySelf:false)
         }
-        
+        return (from:"",to:"",sentBySelf:true)
+    }
+    
+    func validateIfTubeIsAlreadyStored(){
+        aVar.alreadySaved = PersistenceController.fetchTubeCountById(message.id) > 0
     }
     
     func closeView(){

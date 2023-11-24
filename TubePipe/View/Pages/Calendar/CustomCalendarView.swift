@@ -32,6 +32,7 @@ struct Selected{
     var collapseMonth:Bool = false
     var collapseDay:Bool = false
     var isDeleteTube:Bool = false
+    var reloadTubes:Bool = false
     var tubeModel:TubeModel?
     var activeCalendarSheet:CalendarSheet?
 }
@@ -79,6 +80,9 @@ struct CustomCalendarView: View {
                     navigateToSavedTubesButton
                 }
             }
+            .task(id:selected.reloadTubes,priority: .background){
+                searchAndSet(year: true, month: true, day: true)
+            }
         }
         .onChange(of: selected.tubeModel){ tube in
             if let tube = tube{
@@ -93,9 +97,7 @@ struct CustomCalendarView: View {
             }
             
         }
-        .task(id:selected.year,priority: .background){
-            searchAndSet(year: true, month: true, day: true)
-        }
+        
    }
     
     var mainPage:some View{
@@ -253,9 +255,9 @@ extension CustomCalendarView{
             Text(String(selected.year))
             addYearButton
         }
-        /*.onChange(of: selected.year, perform: { year in
-            searchAndSet(year:true,month:true,day:true)
-        })*/
+        .onChange(of: selected.year, perform: { year in
+            selected.reloadTubes.toggle()
+        })
     }
     
     var yearGridButtons:some View{
@@ -459,7 +461,7 @@ extension CustomCalendarView{
     func deleteTubeModel(_ tube:TubeModel){
         PersistenceController.deleteTubeImage(tube.image)
         PersistenceController.deleteTubeModel(tube)
-        searchAndSet(year: true, month: true, day: true)
+        selected.reloadTubes.toggle()
         selected.tubeModel = nil
     }
     

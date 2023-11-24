@@ -13,6 +13,10 @@ enum CoreDataError:Error{
 }
 
 final class PersistenceController {
+    typealias YEAR = String
+    typealias MONTH = String
+    typealias DAY = String
+    typealias FETCH_RECORD = [YEAR:[MONTH:[DAY:Int]]]
     // A singleton for our entire app to use
     static let shared = PersistenceController()
 
@@ -66,11 +70,11 @@ final class PersistenceController {
         saveChanges()
     }
     
-    static func fetchAndSortYearOfTubes(startDate:NSDate,endDate:NSDate) -> [String:[String:[String:Int]]]{
+    static func fetchAndSortYearOfTubes(startDate:NSDate,endDate:NSDate) -> FETCH_RECORD{
         let fetchedTubeIds = fetchAllDatesDuringCurrentYear(NSPredicate(format: "date >= %@ AND date < %@",
                                                                         startDate,
                                                                         endDate))
-        var fetchResult: [String:[String:[String:Int]]] = [:]
+        var fetchResult: FETCH_RECORD = [:]
         for obj in fetchedTubeIds {
             
             guard let date = obj["date"] as? Date else { continue }
@@ -111,6 +115,12 @@ final class PersistenceController {
         } catch {
             return []
         }
+    }
+    
+    static func fetchTubeCountById(_ id:String?) -> Int{
+        guard let id = id else { return 0 }
+        let predicate = NSPredicate(format: "id == %@",id)
+        return fetchCountByPredicate(predicate)
     }
     
     static func fetchCountByPredicate(_ predicate:NSPredicate) -> Int {

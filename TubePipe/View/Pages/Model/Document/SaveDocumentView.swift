@@ -92,8 +92,8 @@ struct SaveDocumentView:View{
         docContent.isSaving = true
         let managedObjectContext = PersistenceController.shared.container.viewContext
         let model = TubeModel(context:managedObjectContext)
-        tubeViewModel.buildModelFromCurrentValues(model)
-        model.message = docContent.message
+        tubeViewModel.buildModelFromCurrentValues(model,
+                                                  message: docContent.message)
         if docContent.data != nil{
             let image = TubeImage(context:managedObjectContext)
             image.id = model.id

@@ -220,6 +220,7 @@ extension View{
             leading: 0,
             bottom: 5,
             trailing: 0))
+        .listRowBackground(Color.lightText)
     }
     
     func persistent() -> some View {

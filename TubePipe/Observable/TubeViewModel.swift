@@ -835,7 +835,7 @@ extension TubeViewModel{
         }
     }
     
-    func buildModelFromCurrentValues(_ model:TubeModel){
+    func buildModelFromCurrentValues(_ model:TubeModel,message:String){
         model.id = UUID().uuidString
         model.dimension = Float(settingsVar.tube.dimension)
         model.segment = Float(settingsVar.tube.segment)
@@ -847,11 +847,17 @@ extension TubeViewModel{
         model.center = Float(settingsVar.tube.center)
         model.alreadyCalculated = settingsVar.tube.alreadyCalculated
         model.date = Date()
-        model.from = "_Self_"
-        
+        model.from = USER_IDENTIFIER_COREDATA
+        model.message = message
     }
     
-    func buildModelFromSharedTube(_ model:TubeModel,sharedTube:SharedTube,date:Date?) -> Bool{
+    func buildModelFromSharedTube(_ model:TubeModel,
+                                  sharedTube:SharedTube,
+                                  date:Date?,
+                                  id:String?,
+                                  message:String?,
+                                  from:String?,
+                                  title:String) -> Bool{
         if let dimension = sharedTube.dimension,
            let segment = sharedTube.segment,
            let steel = sharedTube.steel,
@@ -861,7 +867,10 @@ extension TubeViewModel{
            let lenb = sharedTube.lenb,
            let center = sharedTube.center,
            let alreadyCalculated = sharedTube.alreadyCalculated{
-            model.id = UUID().uuidString
+            model.id = id
+            model.message = message
+            model.from = from
+            model.date = Date()
             model.dimension = Float(dimension)
             model.segment = Float(segment)
             model.steel = Float(steel)
@@ -871,7 +880,7 @@ extension TubeViewModel{
             model.lenb = Float(lenb)
             model.center = Float(center)
             model.alreadyCalculated = alreadyCalculated
-            model.date = date ?? Date()
+            model.title = title
             return true
         }
         return false

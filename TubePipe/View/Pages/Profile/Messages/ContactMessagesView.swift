@@ -131,8 +131,9 @@ struct ContactMessagesView:View{
             if let message = message{
                 cmVar.currentMessage = nil
                 SheetPresentView(style: .sheet){
-                    AttachmentView(message: message,userName:message.date?.iosLongMessageFormat() ?? "")
-                    .presentationDragIndicator(.visible)
+                    AttachmentView(message: message,
+                                   title:message.date?.iosLongMessageFormat() ?? "",
+                                   contactDisplayName:contact.displayName)
                     .environmentObject(firestoreViewModel)
                     .environmentObject(navigationViewModel)
                     .environmentObject(tubeViewModel)

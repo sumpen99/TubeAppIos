@@ -16,6 +16,7 @@ struct ButtonStyleFillListRow: ButtonStyle {
             .foregroundColor(lblColor)
             .cornerRadius(16)
             .fontWeight(.semibold)
+            .font(.title3)
     }
 
 }
