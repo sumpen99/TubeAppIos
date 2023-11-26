@@ -15,6 +15,14 @@ struct SelectedTubeView: View{
     @Environment(\.dismiss) private var dismiss
     @State var isDeleteTube:Bool = false
     
+    var savedTubeLabel:some View{
+        Text(tubeModel.date?.formattedString() ?? "")
+        .font(.callout)
+        .bold()
+        .foregroundColor(.black)
+        .hLeading()
+        .padding([.leading])
+    }
     
     var loadButton:some View{
         Button(action: { loadViewModelWithTubeModel(tubeModel);closeView() }){
@@ -88,7 +96,10 @@ struct SelectedTubeView: View{
     
     var mainPage:some View{
         VStack(spacing:0){
-            TopMenu(title: tubeModel.date?.formattedString() ?? "Saved tube", actionCloseButton: closeView)
+            TopMenu(title: "Saved tube",
+                    actionCloseButton: closeView,
+                    edgesSet: [.top,.leading,.trailing])
+            savedTubeLabel
             data
         }
     }

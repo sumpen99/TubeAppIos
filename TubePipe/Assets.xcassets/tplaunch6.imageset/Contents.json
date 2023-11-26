@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "two-finger-zoom.png",
+      "filename" : "tplaunch6.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -19,6 +19,6 @@
     "version" : 1
   },
   "properties" : {
-    "compression-type" : "gpu-optimized-smallest"
+    "preserves-vector-representation" : true
   }
 }

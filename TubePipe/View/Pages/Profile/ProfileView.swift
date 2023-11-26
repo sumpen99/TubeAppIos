@@ -267,11 +267,11 @@ struct ProfileView: View{
     
     var personalPage:some View{
         List{
-            accountSection
-            userSocialSection
-            settingsSection
-            supportSection
-            privacySection
+            accountSection.listRowBackground(Color.lightText)
+            userSocialSection.listRowBackground(Color.lightText)
+            settingsSection.listRowBackground(Color.lightText)
+            supportSection.listRowBackground(Color.lightText)
+            privacySection.listRowBackground(Color.lightText)
         }
         .listStyle(.insetGrouped)
     }

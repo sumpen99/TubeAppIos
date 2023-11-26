@@ -26,7 +26,7 @@ struct TubeHelpView: View{
         VStack(spacing:10){
             List{
                 Section {
-                    Image("tubeskiss_3")
+                    Image("tubeskiss_5")
                         .resizable()
                         .scaledToFill()
                 } header: {

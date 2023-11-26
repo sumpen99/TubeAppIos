@@ -37,6 +37,15 @@ struct AttachmentView:View{
         aVar.alreadySaved||aVar.isSaving
     }
     
+    var attachmentLabel:some View{
+        Text(title)
+        .font(.callout)
+        .bold()
+        .foregroundColor(.black)
+        .hLeading()
+        .padding([.leading])
+    }
+    
     var saveButton:some View{
         Button(action: saveSharedTubeToDevice ){
             HStack{
@@ -111,7 +120,7 @@ struct AttachmentView:View{
     var topMenu:  some View{
         VStack{
             HStack{
-                Text(title).font(.headline)
+                Text("Attached tube").font(.headline)
                     .foregroundStyle(.primary)
                     .lineLimit(1).hLeading()
                 BackButton(title: title,imgLabel: "arrow.down")
@@ -119,7 +128,7 @@ struct AttachmentView:View{
             Divider()
         }
         .frame(height:MENU_HEIGHT)
-        .padding()
+        .padding([.leading,.trailing,.top])
    }
     
     var messageData:some View{
@@ -135,6 +144,7 @@ struct AttachmentView:View{
     var mainPage:some View{
         VStack(spacing:0){
             topMenu
+            attachmentLabel
             messageData
             .task{ loadImageFromStorage() }
         }
@@ -225,8 +235,8 @@ struct AttachmentView:View{
         let model = TubeModel(context:managedObjectContext)
         let details = inspectSenderRecieverFromMessage(message)
         let title = details.sentBySelf ?
-        "Originated from message sent to \(details.to)) on \(message.date?.toISO8601String() ?? "00:00:00")" :
-        "Originated from message recieved from \(details.from)) \(message.date?.toISO8601String() ?? "00:00:00")"
+        "Message sent to \(details.to)) on \(message.date?.toISO8601String() ?? "00:00:00")" :
+        "Message recieved from \(details.from)) \(message.date?.toISO8601String() ?? "00:00:00")"
         if tubeViewModel.buildModelFromSharedTube(model,
                                                sharedTube: tube,
                                                date:message.date,

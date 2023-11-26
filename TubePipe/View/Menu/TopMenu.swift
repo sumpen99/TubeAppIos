@@ -10,6 +10,7 @@ import SwiftUI
 struct TopMenu:View{
     let title:String
     let actionCloseButton: () -> Void
+    var edgesSet:Edge.Set = .all
     
     var topMenu:  some View{
         VStack{
@@ -26,7 +27,7 @@ struct TopMenu:View{
             Divider()
         }
         .frame(height:MENU_HEIGHT)
-        .padding()
+        .padding(edgesSet)
     }
     
     var topMenuHeaderCell: some View{

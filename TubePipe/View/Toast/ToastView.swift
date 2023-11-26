@@ -23,7 +23,7 @@ struct ToastView: View {
     }
     .padding()
     .background(
-        RoundedRectangle(cornerRadius: 16).stroke(Color.black)
+        RoundedRectangle(cornerRadius: 8).stroke(Color.tertiaryLabel)
     )
     .padding(.horizontal)
     .hCenter()

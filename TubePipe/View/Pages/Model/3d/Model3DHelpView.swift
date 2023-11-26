@@ -21,7 +21,7 @@ struct Model3DHelpView: View{
         VStack{
             List{
                 Section {
-                    Image("one-finger-rotate")
+                    Image("one-finger-rotate-updated")
                     .resizable()
                     .frame(width:100,height:100)
                     .hCenter()
@@ -31,7 +31,7 @@ struct Model3DHelpView: View{
                     Text("Pan with one finger to rotate the camera around the tube").listSectionFooter()
                 } .listRowBackground(Color.lightText)
                 Section {
-                    Image("two-finger-move")
+                    Image("two-finger-move-updated")
                     .resizable()
                     .frame(width:100,height:100)
                     .hCenter()
@@ -41,7 +41,7 @@ struct Model3DHelpView: View{
                     Text("Pan with two fingers to move the tube around in the screen").listSectionFooter()
                 } .listRowBackground(Color.lightText)
                 Section {
-                    Image("two-finger-rotate")
+                    Image("two-finger-rotate-updated")
                     .resizable()
                     .frame(width:100,height:100)
                     .hCenter()
@@ -51,7 +51,7 @@ struct Model3DHelpView: View{
                     Text("Rotate with two fingers to roll the tube").listSectionFooter()
                 } .listRowBackground(Color.lightText)
                 Section {
-                    Image("two-finger-zoom")
+                    Image("two-finger-zoom-updated")
                     .resizable()
                     .frame(width:100,height:100)
                     .hCenter()
