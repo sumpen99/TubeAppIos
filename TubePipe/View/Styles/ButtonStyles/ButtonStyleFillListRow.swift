@@ -15,8 +15,8 @@ struct ButtonStyleFillListRow: ButtonStyle {
             .opacity(configuration.isPressed ? 0.5 : 1.0)
             .foregroundColor(lblColor)
             .cornerRadius(16)
-            .fontWeight(.semibold)
-            .font(.title2)
+            .fontWeight(.medium)
+          
     }
 
 }

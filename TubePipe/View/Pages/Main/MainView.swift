@@ -7,6 +7,26 @@
 
 import SwiftUI
 
+/*
+ @Environment(\.scenePhase) private var phase
+ .onChange(of: phase) { newPhase in
+    switch newPhase {
+     case .active:
+         debugLog(object:newPhase)
+     case .inactive:
+         debugLog(object:newPhase)
+         //firestoreViewModel.closeListeners(FirestoreListener.all())
+         //firestoreViewModel.releaseData(FirestoreData.all())
+     case .background:
+         debugLog(object:newPhase)
+         //firestoreViewModel.closeListeners(FirestoreListener.all())
+         //firestoreViewModel.releaseData(FirestoreData.all())
+     @unknown default:
+         debugLog(object:"Unknown Future Options")
+   }
+ }
+ */
+
 struct MainView: View{
     @EnvironmentObject var firebaseAuth: FirebaseAuth
     @StateObject private var firestoreViewModel: FirestoreViewModel

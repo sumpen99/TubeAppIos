@@ -7,32 +7,40 @@
 
 import SwiftUI
 
-struct TubeDocFileView:View{
-    let tube:TubeModel
-    let onSelected:(TubeModel) -> Void
+struct DocFileImage:View{
+    let showStaroFill:Bool
     
-    var docFileImage:some View{
+    var body:some View{
         ZStack{
             Image(systemName: "doc").resizable().scaledToFill()
         }
         .frame(width: 35.0,height: 50.0)
         .padding()
         .background(
-            RoundedRectangle(cornerRadius: 8).fill(Color.systemYellow)
+            RoundedRectangle(cornerRadius: 8).fill(Color.systemYellow.opacity(0.7))
         )
         .overlay{
             RoundedRectangle(cornerRadius: 8).stroke(lineWidth: 2.0).foregroundColor(.black)
-            if (tube.from ?? USER_IDENTIFIER_COREDATA) != USER_IDENTIFIER_COREDATA{
+            if showStaroFill{
                 Image(systemName: "staroflife.fill")
                 .resizable()
-                .frame(width: 15,height:15)
+                .frame(width: 10,height:10)
                 .hTrailing()
                 .vTop()
                 .padding([.trailing,.top],2)
              }
          }
     }
+}
+
+struct TubeDocFileView:View{
+    let tube:TubeModel
+    let onSelected:(TubeModel) -> Void
     
+    var showStaroFill:Bool{
+        (tube.from ?? USER_IDENTIFIER_COREDATA) != USER_IDENTIFIER_COREDATA
+    }
+        
     @ViewBuilder
     var tubeDate: some View{
         if let date = tube.date{
@@ -56,7 +64,7 @@ struct TubeDocFileView:View{
     
     var tubeBody: some View{
         VStack{
-            docFileImage
+            DocFileImage(showStaroFill: showStaroFill)
             tubeMessage
             tubeDate
         }
@@ -89,6 +97,9 @@ struct ExtendedTubeDocFileView:View{
     let onToggleListWithId:(String?) -> Void
     let onListContainsId:(String?) -> Bool
     let childViewHeight:CGFloat
+    var showStaroFill:Bool{
+        (tube.from ?? USER_IDENTIFIER_COREDATA) != USER_IDENTIFIER_COREDATA
+    }
     
     var checkmarkCircle:some View{
         Image(systemName: "checkmark.circle.fill")
@@ -108,28 +119,6 @@ struct ExtendedTubeDocFileView:View{
             .hLeading()
             .vBottom()
             .padding([.leading,.bottom])
-        }
-    }
-    
-    var docFileImage:some View{
-        ZStack{
-            Image(systemName: "doc").resizable().scaledToFill()
-        }
-        .frame(width: 35.0,height: childViewHeight)
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: 8).fill(Color.systemYellow)
-        )
-        .overlay{
-            RoundedRectangle(cornerRadius: 8).stroke(lineWidth: 2.0).foregroundColor(.black)
-            if (tube.from ?? USER_IDENTIFIER_COREDATA) != USER_IDENTIFIER_COREDATA{
-                Image(systemName: "staroflife.fill")
-                .resizable()
-                .frame(width: 15,height:15)
-                .hTrailing()
-                .vTop()
-                .padding([.trailing,.top],2)
-             }
         }
     }
     
@@ -155,7 +144,7 @@ struct ExtendedTubeDocFileView:View{
     
     var tubeContent:some View{
         VStack{
-            docFileImage
+            DocFileImage(showStaroFill: showStaroFill)
             tubeMessage
             tubeDate
         }

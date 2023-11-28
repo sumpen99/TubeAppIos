@@ -191,7 +191,7 @@ extension View{
     }
     
     func profileListRow() -> some View{
-        self.fullListWidthSeperator().listRowBackground(Color.lightText)
+        self.fullListWidthSeperator().listRowBackground(Color.white)
     }
     
     func fullListWidthSeperator() -> some View{

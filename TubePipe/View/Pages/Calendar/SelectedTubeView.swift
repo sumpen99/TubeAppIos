@@ -26,14 +26,14 @@ struct SelectedTubeView: View{
     
     var loadButton:some View{
         Button(action: { loadViewModelWithTubeModel(tubeModel);closeView() }){
-            Text("Load")
+            LabelButton(title: "Load tube", imgLabel: "arrow.up.circle")
         }
         .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemBlue))
     }
     
     var deleteButton:some View{
         Button(action: removeTubeAlert ){
-            Text("Delete")
+            LabelButton(title: "Delete file", imgLabel: "minus.circle")
         }
         .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemRed))
     }
@@ -60,14 +60,13 @@ struct SelectedTubeView: View{
                                               subSecond: Text(tubeModel.message ?? ""))
                 SubHeaderSubHeaderLeadingView(subMain: Text("Saved:"),
                                               subSecond:Text(tubeModel.date?.formattedStringWithTime() ?? "00:00:00"))
-                if let title = tubeModel.title{
-                    SubHeaderSubHeaderLeadingView(subMain: Text("Not:"),
-                                                  subSecond:Text(title))
-                }
+                
             }},
-            header: {Text("Details:").listSectionHeader()}) {
-            
-        }
+           header: {Text("Details:").listSectionHeader()},
+           footer: {
+            if let title = tubeModel.title{
+                Text(title).listSectionFooter()
+            }})
     }
     
     func attachedPhoto(_ uiImage:UIImage) -> some View{
@@ -99,7 +98,6 @@ struct SelectedTubeView: View{
             TopMenu(title: "Saved tube",
                     actionCloseButton: closeView,
                     edgesSet: [.top,.leading,.trailing])
-            savedTubeLabel
             data
         }
     }

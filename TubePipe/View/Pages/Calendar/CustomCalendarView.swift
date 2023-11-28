@@ -62,12 +62,12 @@ struct CustomCalendarView: View {
         ]
     
     var calendarLabel:some View{
-        Text("Storage")
+        Text("Stored files")
         .font(.largeTitle)
         .bold()
         .foregroundColor(.black)
         .hLeading()
-        .padding([.leading,.top])
+        .padding([.leading,.top,.bottom])
     }
     
     var body: some View {

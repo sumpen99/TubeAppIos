@@ -20,14 +20,14 @@ struct UserSettingsView:View{
     }
         
     var settingsLabel:some View{
-        Text("Tube settings")
+        Text("Default values")
         .font(.title)
         .bold()
         .hLeading()
     }
     
     var settingsFooter:some View{
-        Text("Specify value for each settings parameter you would like the tube to have on startup.")
+        Text("Specify each value you would like the tube to have on startup.")
         .listSectionFooter()
         .font(.footnote)
         .hLeading()
@@ -57,7 +57,7 @@ struct UserSettingsView:View{
         .padding()
         .padding()
         .hCenter()
-        .frame(height: 250.0)
+        .frame(height: 150.0)
         .background{
             tubeViewModel.muff.emptyL1OrL2 ? Color.black.opacity(0.2) : Color.lightText
         }
@@ -126,18 +126,21 @@ struct UserSettingsView:View{
                 Divider().overlay{ Color.tertiaryLabel }.padding([.leading,.trailing])
             }
             overlapSection
-            Divider().overlay{ Color.tertiaryLabel }.padding([.leading,.trailing])
-            clearSpaceAtBottom
+        }.background{
+            Color.lightText
         }
     }
     
     var content:some View{
-        ScrollView{
-            VStack(spacing:0){
-                settingsLabel.padding()
-                tubeWindow.padding([.leading,.trailing])
-                settingsFooter.padding([.leading,.trailing,.bottom])
-                sections.padding([.leading,.trailing])
+        VStack(spacing:0){
+            settingsLabel.padding()
+            tubeWindow.padding([.leading,.trailing])
+            settingsFooter.padding([.leading,.trailing,.bottom])
+            ScrollView{
+                VStack(spacing:0){
+                    sections.padding([.leading,.trailing])
+                }
+          
             }
         }
     }
@@ -168,7 +171,7 @@ struct UserSettingsView:View{
     var body:some View{
         AppBackgroundStack(content: {
             content
-        },title:"Default")
+        },title:"Tube settings")
         .toastView(toast: $toast)
         .onAppear{ setUserDefaultValues() }
         .toolbar {

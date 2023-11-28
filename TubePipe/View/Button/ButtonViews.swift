@@ -68,3 +68,17 @@ struct BackButton:View{
         }
     }
 }
+
+struct LabelButton:View{
+    let title:String
+    let imgLabel:String
+    
+    var body: some View{
+        HStack{
+            Image(systemName: imgLabel)
+                .font(.title2)
+            Text(title).hCenter()
+                .font(.title2)
+        }
+    }
+}

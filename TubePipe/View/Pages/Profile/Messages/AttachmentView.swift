@@ -48,10 +48,7 @@ struct AttachmentView:View{
     
     var saveButton:some View{
         Button(action: saveSharedTubeToDevice ){
-            HStack{
-                Text("Save").hCenter()
-                Image(systemName: "arrow.down.doc")
-            }
+            LabelButton(title: "Save", imgLabel: "arrow.down.doc")
         }
         .disabled(notAllowedToSave)
         .buttonStyle(ButtonStyleFillListRow(
@@ -60,20 +57,14 @@ struct AttachmentView:View{
     
     var loadButton:some View{
         Button(action: loadViewModelWithSharedTube ){
-            HStack{
-                Text("Load").hCenter()
-                Image(systemName: "arrow.triangle.2.circlepath.circle")
-            }
+            LabelButton(title: "Load tube", imgLabel: "arrow.up.circle")
        }
         .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemBlue))
     }
     
     var deleteButton:some View{
         Button(action: { aVar.showConfirmationDialog.toggle() } ){
-            HStack{
-                Text("Delete").hCenter()
-                Image(systemName: "trash")
-            }
+            LabelButton(title: "Delete message", imgLabel: "minus.circle")
         }
         .disabled(!allowedToDelete)
         .buttonStyle(ButtonStyleFillListRow(
@@ -120,9 +111,11 @@ struct AttachmentView:View{
     var topMenu:  some View{
         VStack{
             HStack{
-                Text("Attached tube").font(.headline)
+                Text("Attached tube")
+                    .font(.headline)
                     .foregroundStyle(.primary)
-                    .lineLimit(1).hLeading()
+                    .lineLimit(1)
+                    .hLeading()
                 BackButton(title: title,imgLabel: "arrow.down")
             }
             Divider()
@@ -144,8 +137,7 @@ struct AttachmentView:View{
     var mainPage:some View{
         VStack(spacing:0){
             topMenu
-            attachmentLabel
-            messageData
+             messageData
             .task{ loadImageFromStorage() }
         }
     }
@@ -235,8 +227,8 @@ struct AttachmentView:View{
         let model = TubeModel(context:managedObjectContext)
         let details = inspectSenderRecieverFromMessage(message)
         let title = details.sentBySelf ?
-        "Message sent to \(details.to)) on \(message.date?.toISO8601String() ?? "00:00:00")" :
-        "Message recieved from \(details.from)) \(message.date?.toISO8601String() ?? "00:00:00")"
+        "Sent to \(details.to) on \(message.date?.toISO8601String() ?? "00:00:00")" :
+        "Recieved from \(details.from) \(message.date?.toISO8601String() ?? "00:00:00")"
         if tubeViewModel.buildModelFromSharedTube(model,
                                                sharedTube: tube,
                                                date:message.date,
