@@ -22,14 +22,13 @@ struct ContactView:View{
     }
     
     var contactsLabel:some View{
-        Text("Phone book")
-        .font(.largeTitle)
-        .bold()
-        .foregroundColor(.black)
-        .hLeading()
-        .padding([.leading,.top])
+        Image("Contacts")
+        .resizable()
+        .vCenter()
+        .hCenter()
     }
     
+    @ViewBuilder
     var confirmedContactRequestSection:some View{
         SortedContactsList(currentContact:$cVar.currentContact,
                            showingOptions: $cVar.showingOptions,
@@ -59,13 +58,21 @@ struct ContactView:View{
     }
     
     
+    
     @ViewBuilder
     var mainpage:some View{
-        VStack(spacing:V_SPACING_REG){
+        ZStack{
             contactsLabel
-            confirmedContactRequestSection
+            confirmedContactRequestSection.padding(.top)
         }
-        .padding([.leading,.trailing])
+        /*if firestoreViewModel.confirmedContacts.isEmpty{
+            contactsLabel
+        }
+        else{
+            confirmedContactRequestSection
+            .padding([.leading,.trailing,.top])
+        }*/
+        
    }
     
     var body: some View{
@@ -75,10 +82,7 @@ struct ContactView:View{
         .hiddenBackButtonWithCustomTitle("Profile")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: {
-                    withAnimation{
-                        cVar.isSearchOption.toggle()
-                    }}){
+                Button(action: { cVar.isSearchOption.toggle() }){
                         Label("Search", systemImage: "magnifyingglass")
                         .toolbarFontAndPadding()
                     }

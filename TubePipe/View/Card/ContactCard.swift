@@ -60,5 +60,8 @@ struct ContactCard:View{
         }
         .padding()
         .hLeading()
+        .background{
+            Color.white.opacity(0.7)
+        }
    }
 }

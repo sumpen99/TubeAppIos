@@ -81,9 +81,4 @@ class FirestoreViewModel: ObservableObject{
         currentUser = nil
     }
     
-    // this will never happen because of environmentobject i think
-    deinit{
-        debugLog(object: "close firestore")
-    }
-    
 }

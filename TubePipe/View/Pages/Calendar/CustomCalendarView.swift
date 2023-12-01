@@ -28,7 +28,7 @@ struct Selected{
     var dayHasSavedTubes:Bool = false
     var userWillEditTubes:Bool = false
     var expandedCalendar:Bool = false
-    var collapseYear:Bool = true
+    var collapseYear:Bool = false
     var collapseMonth:Bool = false
     var collapseDay:Bool = false
     var isDeleteTube:Bool = false
@@ -66,9 +66,9 @@ struct CustomCalendarView: View {
         .font(.largeTitle)
         .bold()
         .foregroundColor(.black)
-        .hLeading()
-        .padding([.leading,.top,.bottom])
-    }
+        .listRowBackground(Color.clear)
+     
+     }
     
     var body: some View {
         NavigationStack{
@@ -101,24 +101,18 @@ struct CustomCalendarView: View {
    }
     
     var mainPage:some View{
-        VStack(spacing:0){
-            calendarLabel
-            List{
-                calendarYearMonths
-                calendarWeekdays
-                tubesInfo
-            }
-            .listStyle(.insetGrouped)
+        List{
+            calendarYearMonths
+            calendarWeekdays
+            tubesInfo
         }
-        
+        .listStyle(.automatic)
     }
     
     var calendarYearMonths: some View{
         Section(content: {
             if !selected.collapseYear{
-                LazyVStack {
-                    monthGridView
-                }
+                monthGridView
           }
         }, header: { yearGridButtons })
         .calendarSectionEdgeInsets()
@@ -127,7 +121,7 @@ struct CustomCalendarView: View {
     var calendarWeekdays: some View{
         Section(content: {
             if !selected.collapseMonth{
-                LazyVStack {
+                VStack {
                     weekdaysName
                     daysGridView
                 }
@@ -164,9 +158,9 @@ extension CustomCalendarView{
                }
            }
         }
-        /*.onChange(of: selected.month, perform: { month in
+        .onChange(of: selected.month, perform: { month in
             searchAndSet(year:false,month:true,day:true)
-        })*/
+        })
     }
     
     func getMonthCell(_ month:String,haveSavedTubes:Bool) -> some View{
@@ -268,7 +262,7 @@ extension CustomCalendarView{
         }
         .padding(.horizontal)
         .background{
-            Rectangle().fill(Color.lightText.opacity(0.5))
+            RoundedRectangle(cornerRadius: 10).fill(Color.lightText)
         }
     }
     
@@ -281,7 +275,7 @@ extension CustomCalendarView{
         }
         .padding(.horizontal)
         .background{
-            RoundedRectangle(cornerRadius: 10).fill(Color.lightText.opacity(0.5))
+            RoundedRectangle(cornerRadius: 10).fill(Color.lightText)
         }
     }
     
@@ -294,7 +288,7 @@ extension CustomCalendarView{
         }
         .padding(.horizontal)
         .background{
-            Rectangle().fill(Color.lightText.opacity(0.5))
+            RoundedRectangle(cornerRadius: 10).fill(Color.lightText)
         }
     }
     

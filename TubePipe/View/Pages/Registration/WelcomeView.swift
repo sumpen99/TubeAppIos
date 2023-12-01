@@ -19,7 +19,7 @@ struct WelcomeView : View {
     
     var appLogoImage:some View{
         GeometryReader{ reader in
-            Image("tp3")
+            Image("tpIcon")
                 .resizable()
                 .frame(width: reader.size.width/2.0, height:reader.size.width/2.0)
               .hCenter()
@@ -79,7 +79,7 @@ struct WelcomeView : View {
        }
        .padding(.horizontal, 16)
        .padding(.bottom, 42)
-       .transition(.move(edge: .leading))
+       .transition(.move(edge: .bottom))
        .background(
             Color.white
             .overlay(
@@ -119,21 +119,21 @@ struct WelcomeView : View {
                 Text("I already have an account, log in")
                 .hCenter()
             }
-            .buttonStyle(ButtonStyleDocument(color: Color.white))
+            .buttonStyle(ButtonStyleDocument(color: Color.systemGreen))
             NavigationLink(destination:LazyDestination(destination: {
                 SignupView()
             })){
                 Text("Create account")
                 .hCenter()
             }
-            .buttonStyle(ButtonStyleDocument(color: Color.white))
+            .buttonStyle(ButtonStyleDocument(color: Color.systemBlue))
             Button(action: proceedAsAnonymous ,label: {
                 HStack(){
                     Text("Proceed as guest")
                 }
                 .hCenter()
             })
-            .buttonStyle(ButtonStyleDocument(color: Color.white))
+            .buttonStyle(ButtonStyleDocument(color: Color.systemOrange))
         }
     }
     

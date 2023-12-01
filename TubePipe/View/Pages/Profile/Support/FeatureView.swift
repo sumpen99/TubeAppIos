@@ -28,7 +28,7 @@ struct FeatureView:View{
     }
     
     var featureHeader:some View{
-        Text("Request")
+        Text("Feature Request")
         .font(.title)
         .bold()
         .foregroundColor(Color.black)
@@ -38,7 +38,7 @@ struct FeatureView:View{
     
     var featureFooter:some View{
         Text("Fill out the following form to submit a new feature request.")
-        .listSectionFooter()
+            .listSectionFooter(color:.black)
         .hLeading()
     }
     
@@ -151,7 +151,7 @@ struct FeatureView:View{
             infoBody
             //.onSubmit { submitFeatureRequest() }
             //.submitLabel(.send)
-        },title: "Feature")
+        },title: "")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 shareButton

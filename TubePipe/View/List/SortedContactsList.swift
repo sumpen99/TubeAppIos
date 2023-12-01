@@ -140,7 +140,7 @@ extension SortedContactsList{
                 }
             }
         } header: {
-            Text(initial).sectionText(font: .largeTitle,color: Color.systemGray).padding(.leading)
+            Text(initial).sectionText(font: .title3,color: Color.systemGray).padding(.leading)
         }
     }
     
@@ -158,6 +158,9 @@ extension SortedContactsList{
             .padding()
             .hLeading()
             Divider()
+        }
+        .background{
+            Color.white.opacity(0.7)
         }
         
     }

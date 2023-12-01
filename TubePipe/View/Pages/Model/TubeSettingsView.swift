@@ -114,17 +114,12 @@ struct TubeSettingsView:View{
     
     //MARK: - HORIZONTAL MENU-SCROLLVIEWS
     var settingsHeaderMenuList:  some View{
-        HStack{
-            ScrollView(.horizontal){
-                LazyHStack(alignment: .top, spacing: 30, pinnedViews: [.sectionHeaders]){
-                    ForEach(settingsHeader, id: \.self) { header in
-                        settingsHeaderCell(header)
-                   }
-                }
-            }
-            .scrollIndicators(.never)
+        LazyHStack(alignment: .top, spacing: 30, pinnedViews: [.sectionHeaders]){
+            ForEach(settingsHeader, id: \.self) { header in
+                settingsHeaderCell(header)
+           }
         }
-        .hCenter()
+        .hLeading()
         .padding([.leading,.trailing,.top])
         .frame(height:MENU_HEIGHT)
     }

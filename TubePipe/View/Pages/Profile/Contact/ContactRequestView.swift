@@ -23,16 +23,35 @@ struct ContactRequestView:View{
         .REQUESTS_RECIEVED
     ]
     
+    var sentLabel:some View{
+        Image("Sent")
+        .resizable()
+        .vCenter()
+        .hCenter()
+    }
+    
+    var recievedLabel:some View{
+        Image("Recieved")
+        .resizable()
+        .vCenter()
+        .hCenter()
+    }
+    
     var requestHeaderMenuList:  some View{
-        ScrollView(.horizontal){
+        VStack{
             LazyHStack(alignment: .top, spacing: 30, pinnedViews: [.sectionHeaders]){
                 ForEach(requestsAwaitingheader, id: \.self) { header in
                     requestHeaderCell(header)
                }
             }
+            .hCenter()
+            .scrollIndicators(.never)
+            .frame(height:35.0)
+            Divider()
         }
-        .scrollIndicators(.never)
-        .frame(height:MENU_HEIGHT)
+        .background{
+            Color.lightText
+        }
     }
     
     var headerOnEnter:RequestsAwaitingheader{
@@ -44,9 +63,9 @@ struct ContactRequestView:View{
     
     func requestHeaderCell(_ request:RequestsAwaitingheader) -> some View{
         return Text(request.rawValue)
-        .font(.headline)
+        .font(.title3)
+        .frame(height: 35.0)
         .bold()
-        .frame(height: 33)
         .foregroundColor(request == requestHeader ? .black : Color.tertiaryLabel )
         .background(
              ZStack{
@@ -68,20 +87,20 @@ struct ContactRequestView:View{
     @ViewBuilder
     func contactDescription(_ contact:Contact?) -> some View{
         if let contact = contact{
-            VStack{
-                ContactCard(contact:contact,cVar: $cVar)
-                Divider()
-            }
+            ContactCard(contact:contact,cVar: $cVar)
         }
     }
     
     var recievedContactRequestSection:some View{
-        ScrollView{
-            LazyVStack(){
-                if firestoreViewModel.recievedContacts.keys.count > 0{
-                    ForEach(firestoreViewModel.recievedContacts.keys,id:\.self){ key in
-                        let contact = firestoreViewModel.recievedContacts[key]
-                        contactDescription(contact)
+        ZStack{
+            recievedLabel
+            ScrollView{
+                LazyVStack(){
+                    if firestoreViewModel.recievedContacts.keys.count > 0{
+                        ForEach(firestoreViewModel.recievedContacts.keys,id:\.self){ key in
+                            let contact = firestoreViewModel.recievedContacts[key]
+                            contactDescription(contact)
+                        }
                     }
                 }
             }
@@ -89,15 +108,18 @@ struct ContactRequestView:View{
     }
     
     var pendingContactRequestSection:some View{
-        ScrollView{
-            LazyVStack(){
-                if firestoreViewModel.pendingContacts.keys.count > 0{
-                    ForEach(firestoreViewModel.pendingContacts.keys,id:\.self){ key in
-                        let contact = firestoreViewModel.pendingContacts[key]
-                        contactDescription(contact)
+        ZStack{
+            sentLabel
+            ScrollView{
+                LazyVStack(){
+                    if firestoreViewModel.pendingContacts.keys.count > 0{
+                        ForEach(firestoreViewModel.pendingContacts.keys,id:\.self){ key in
+                            let contact = firestoreViewModel.pendingContacts[key]
+                            contactDescription(contact)
+                        }
                     }
                 }
-             }
+            }
         }
     }
     
@@ -110,11 +132,10 @@ struct ContactRequestView:View{
     }
     
     var mainpage:some View{
-        VStack(spacing:10){
+        VStack(spacing:0){
             requestHeaderMenuList
             getCurrentPage(requestHeader)
         }
-        .padding()
     }
     
     var body: some View{
@@ -223,6 +244,6 @@ struct ContactRequestView:View{
                 // else show some info
             }
         }
-        cVar.currentContact = nil
+        //cVar.currentContact = nil
     }
 }

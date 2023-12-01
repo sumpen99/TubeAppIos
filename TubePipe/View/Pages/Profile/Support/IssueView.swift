@@ -38,7 +38,7 @@ struct IssueView:View{
     }
     
     var issueHeader:some View{
-        Text("Report")
+        Text("Issue Report")
         .font(.title)
         .bold()
         .foregroundColor(Color.black)
@@ -66,15 +66,15 @@ struct IssueView:View{
     var issueFooterLong:some View{
         ScrollView{
             Text("\(issueString)")
-            .listSectionFooter()
+            .listSectionFooter(color: .black)
+            .lineLimit(nil)
             .hLeading()
         }
-        
     }
     
     var issueFooterShort:some View{
         Text(issueString)
-        .listSectionFooter()
+        .listSectionFooter(color: .black)
         .lineLimit(/*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
         .hLeading()
     }
@@ -188,7 +188,7 @@ struct IssueView:View{
             infoBody
             //.onSubmit { submitIssueReport() }
             //.submitLabel(.send)
-        },title:"Issue")
+        },title:"")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 shareButton

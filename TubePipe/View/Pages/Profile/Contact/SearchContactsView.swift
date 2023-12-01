@@ -25,6 +25,13 @@ struct SearchContactsView: View{
     @FocusState var focusField: Field?
     @State var sVar:SearchVar = SearchVar()
     
+    var searchLabel:some View{
+        Image("Search")
+        .resizable()
+        .vCenter()
+        .hCenter()
+    }
+    
     func contactAvatar(c:String) -> some View{
         Text("\(c)").avatar(initial: c)
     }
@@ -67,6 +74,9 @@ struct SearchContactsView: View{
         }
         .padding()
         .hLeading()
+        .background{
+            Color.white.opacity(0.7)
+        }
    }
     
     var searchField:some View{
@@ -80,8 +90,7 @@ struct SearchContactsView: View{
                 .hLeading()
                 .onSubmit { startSearch() }
                 .submitLabel(.search)
-            Spacer()
-            Button("Cancel",action:closeView)
+             Button("Cancel",action:closeView)
             .padding(.trailing)
             .foregroundColor(Color.systemBlue)
         }
@@ -93,22 +102,23 @@ struct SearchContactsView: View{
         .padding()
     }
     
-    var searchResult:some View{
-        ScrollView{
-            LazyVStack(){
-                ForEach(firestoreViewModel.contactSuggestions,id:\.self){ contact in
-                    contactCard(contact)
+     var searchResult:some View{
+         ZStack{
+            searchLabel
+            ScrollView{
+                LazyVStack(){
+                    ForEach(firestoreViewModel.contactSuggestions,id:\.self){ contact in
+                        contactCard(contact)
+                    }
                 }
             }
         }
+        
     }
     
     var buttonsSendRequest:some View{
-        VStack{
-            Button("Send request") {
-                sendContactRequest()
-            }
-            Button("Cancel", role: .destructive){}
+        Button("Send request") {
+            sendContactRequest()
         }
         
     }
@@ -117,6 +127,10 @@ struct SearchContactsView: View{
         VStack{
             searchField
             searchResult
+        }
+        .onAppear{
+            //focusField = .FIND_USER
+            firestoreViewModel.releaseData([.DATA_CONTACT_SUGGESTION])
         }
         .modifier(HalfSheetModifier())
         .confirmationDialog(sVar.currentContact?.displayName ?? "",
@@ -130,10 +144,7 @@ struct SearchContactsView: View{
             onResultAlert()
         })
         .onTapGesture{ endTextEditing() }
-        .onAppear{
-            firestoreViewModel.releaseData([.DATA_CONTACT_SUGGESTION])
-            focusField = .FIND_USER
-        }
+        
     }
     
     //MARK: HELPER METHODS

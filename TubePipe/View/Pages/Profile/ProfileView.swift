@@ -61,6 +61,11 @@ struct ProfileVariables{
     var activeProfileSheet: ActiveProfileSheet?
     var displayName: String = ""
     var isDeleteAccount:Bool = false
+    var isEditUsername:Bool = false
+    
+    var userNameText:String{
+        displayName == "" ? "username" : displayName
+    }
     
     mutating func updateUserVar(currentUser:AppUser?){
         guard let user = currentUser else { return }
@@ -86,6 +91,7 @@ struct ProfileVariables{
         changes += compareUserMode(currentUser: currentUser, userSharing: userSharing)
         return changes != 0
     }
+        
 }
 
 struct ProfileView: View{
@@ -136,6 +142,36 @@ struct ProfileView: View{
         return tag
     }
     
+    var usernameTextfield: some View{
+        TextField("",text:$pVar.displayName.max(MAX_TEXTFIELD_LEN),onCommit: {
+            if !changesHasHappend{
+                pVar.isEditUsername.toggle()
+            }
+        })
+        .preferedProfileSettingsField()
+        .focused($focusField,equals: .PROFILE_DISPLAY_NAME)
+        .placeholder(when: showPlaceholderText){
+            placeHolderText
+        }
+        .foregroundColor(userAllowSharing ? .black : .darkGray)
+        .hLeading()
+        .disabled(!userAllowSharing)
+        .onChange(of: focusField,perform: replaceDisplaynameIfEmpty)
+    }
+    
+    var usernameText:some View{
+        HStack{
+            Text(pVar.userNameText).foregroundColor(.darkGray).italic().hLeading()
+            Button(action: {
+                pVar.isEditUsername.toggle()
+                focusField = .PROFILE_DISPLAY_NAME
+            }, label: {
+                Image(systemName: "square.and.pencil")
+            })
+            .disabled(!userAllowSharing)
+        }
+    }
+    
     @ViewBuilder
     var placeHolderText:some View{
         if userAllowSharing{
@@ -148,25 +184,18 @@ struct ProfileView: View{
         }
     }
     
+    @ViewBuilder
     var displayName:some View{
         HStack{
             Text("Username: ")
             .lineLimit(1)
             .italic()
-            .foregroundColor(.darkGray)
-            TextField("",text:$pVar.displayName.max(MAX_TEXTFIELD_LEN))
-            .preferedProfileSettingsField()
-            .focused($focusField,equals: .PROFILE_DISPLAY_NAME)
-            .placeholder(when: showPlaceholderText){
-                placeHolderText
-            }
-            .foregroundColor(userAllowSharing ? .black : .darkGray)
-            .hLeading()
-            .disabled(!userAllowSharing)
-            .onChange(of: focusField,perform: replaceDisplaynameIfEmpty)
+            .foregroundColor(.black)
+            if pVar.isEditUsername{ usernameTextfield }
+            else{ usernameText }
+            
         }
         .profileListRow()
-        
     }
         
     var userEmailtext:some View{
@@ -174,7 +203,7 @@ struct ProfileView: View{
             Text("Email: ")
                 .lineLimit(1)
                 .italic()
-                .foregroundColor(.darkGray)
+                .foregroundColor(.black)
             Text(firestoreViewModel.currentUser?.email ?? "")
                 .lineLimit(1)
                 .hLeading()
@@ -244,6 +273,10 @@ struct ProfileView: View{
             navigateToMessages
         } header: {
             Text("Social").profileSectionHeader()
+        }footer:{
+            if !userHasAllowedSharing{
+                Text("Public mode need to be set in order to connect with friends.").listSectionFooter()
+            }
         }
     }
     
@@ -298,7 +331,7 @@ struct ProfileView: View{
             }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
-                    Button(action: { replaceDisplayName();replacePublicMode();endTextEditing(); }) {
+                    Button(action: dismissUserChanges ) {
                         Text("Dismiss").foregroundColor(.systemRed).bold().font(.headline)
                     }
                     .toolbarFontAndPadding()
@@ -306,7 +339,7 @@ struct ProfileView: View{
                     .disabled(!changesHasHappend)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: { saveChanges();endTextEditing(); }) {
+                    Button(action: saveUserChanges ) {
                         Text("Save").foregroundColor(.systemBlue).bold().font(.headline)
                     }
                     .toolbarFontAndPadding()
@@ -351,6 +384,19 @@ struct ProfileView: View{
         if field != .PROFILE_DISPLAY_NAME && pVar.displayName.isEmpty{
             pVar.displayName = firestoreViewModel.currentUserDisplayName
         }
+    }
+    
+    func saveUserChanges(){
+        saveChanges()
+        endTextEditing()
+        pVar.isEditUsername.toggle()
+    }
+    
+    func dismissUserChanges(){
+        replaceDisplayName()
+        replacePublicMode()
+        endTextEditing()
+        pVar.isEditUsername.toggle()
     }
     
     //MARK: NAVIGATIONBUTTONS

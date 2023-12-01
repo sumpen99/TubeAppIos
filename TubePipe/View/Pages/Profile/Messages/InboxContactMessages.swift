@@ -13,12 +13,10 @@ struct InboxContactMessages:View{
     @State var cVar = ContactVar()
     
     var messageLabel:some View{
-        Text("Inbox")
-        .font(.largeTitle)
-        .bold()
-        .foregroundColor(.black)
-        .hLeading()
-        .padding([.leading,.top])
+        Image("Chat")
+        .resizable()
+        .vCenter()
+        .hCenter()
     }
     
     var contactList:some View{
@@ -29,12 +27,15 @@ struct InboxContactMessages:View{
                            contactAvatarColor: .black,
                            contactInfoColor: .black)
     }
-        
+    
+    @ViewBuilder
     var messagesBody:some View{
-        VStack(spacing:V_SPACING_REG){
+        ZStack{
             messageLabel
             contactList
         }
+        //if firestoreViewModel.messageGroups.isEmpty{ messageLabel }
+        //else{ contactList }
     }
    
     var body: some View{
