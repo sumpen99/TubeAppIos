@@ -35,7 +35,7 @@ struct Model2DView: View{
                     switch item{
                     case ActiveHomeSheet.OPEN_TUBE_SETTINGS:
                         SheetPresentView(style: .detents([.medium()])){
-                            TubeSettingsView()
+                            TubeSettingsView(member:true)
                                 .environmentObject(tubeViewModel)
                         }
                         .makeUIView()

@@ -10,16 +10,20 @@ import SwiftUI
 struct AnonymousProfileView:View{
     
     var footerText:String = """
-                                As a member you gain access to ex:
-                                \(pointTab)Save and store tubes on device.
-                                \(pointTab)Share tubes with other TubePipe users.
+                                Create a free account and gain access to:
+                                \(pointTab)Model in 3D.
+                                \(pointTab)Model up to 100 segments.
+                                \(pointTab)Save and store tubemodels on device.
+                                \(pointTab)Connect with other TubePipe users.
+                                \(pointTab)Share tubemodels with other TubePipe users.
+                                \(pointTab)And more...
                             """
     
     var accountSection:some View{
         Section {
              navigateToRegisterPage
         } header: {
-            Text("Account").listSectionHeader()
+            Text("").listSectionHeader()
         } footer: {
             Text(footerText).listSectionFooter()
         }
@@ -37,7 +41,7 @@ struct AnonymousProfileView:View{
         NavigationStack{
             AppBackgroundStack(content: {
                 personalPage
-            },title: "Register")
+            },title: "Account")
         }
     }
     

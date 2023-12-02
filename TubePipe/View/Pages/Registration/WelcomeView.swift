@@ -130,7 +130,7 @@ struct WelcomeView : View {
             }
             .buttonStyle(ButtonStyleDocument(color: Color(hex: 0xDBA63F)))
             Button(action: proceedAsAnonymous ,label: {
-                buttonAsNavigationLink(title: "Take a look first? Enter as guest",
+                buttonAsNavigationLink(title: "Take a peek first? Enter as guest",
                                        systemImage: "person.crop.circle.badge.questionmark",
                                        lblColor: .black,imgColor: .black)
             })

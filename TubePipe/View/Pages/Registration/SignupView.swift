@@ -175,12 +175,16 @@ struct SignupView : View {
     
     var body: some View {
         AppBackgroundStack(content: {
-            signupFields
-            //.onSubmit { signUserUp() }
-            //.submitLabel(.send)
+            ZStack{
+                signupFields
+                if sVar.timeOut{
+                    ZStack{
+                        Color.white.opacity(0.2)
+                    }
+                }
+            }
         })
         .hiddenBackButtonWithCustomTitle(color:.black)
-        .onTapGesture { endTextEditing() }
     }
     
     func signUserUp(){
@@ -188,7 +192,10 @@ struct SignupView : View {
         sVar.timeOut = true
         firebaseAuth.signupWithEmail(sVar.passwordHelper.emailText,
                                      password: sVar.passwordHelper.password){ (result,error) in
-            guard let nsError = error as NSError? else { return }
+            guard let nsError = error as NSError? else {
+                sVar.timeOut = false
+                return
+            }
             sVar.errorMessage = nsError.localizedDescription
             toggleFailedSignupAttemptWithValue(true)
         }

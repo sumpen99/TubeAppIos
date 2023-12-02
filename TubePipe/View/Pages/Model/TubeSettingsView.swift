@@ -95,14 +95,15 @@ struct TubeSettingsVar{
 struct TubeSettingsView:View{
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @State var tsVar:TubeSettingsVar = TubeSettingsVar()
+    let member:Bool
     @Namespace var animation
     
-    private var settingsHeader:[SettingsHeader] = [
+    var settingsHeader:[SettingsHeader] = [
         SettingsHeader.BUILD,
         SettingsHeader.INFO
     ]
     
-    private var settingsItem:[SettingsOption] = [
+    var settingsItem:[SettingsOption] = [
         SettingsOption.DEGREES,
         SettingsOption.SEGMENT,
         SettingsOption.RADIUS,
@@ -200,7 +201,7 @@ struct TubeSettingsView:View{
             case .SEGMENT:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.segment,
                               minValue: 0,
-                              maxValue: SLIDER_MAX_SEGMENT,
+                              maxValue: member ? SLIDER_MAX_SEGMENT : MAX_GUEST_SEGMENT,
                               textEnding: "st")
             case .STEEL:
                 SliderSection(sliderValue: $tubeViewModel.settingsVar.tube.steel,

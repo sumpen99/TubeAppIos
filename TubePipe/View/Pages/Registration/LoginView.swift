@@ -119,17 +119,26 @@ struct LoginView : View {
       
     var body: some View {
         AppBackgroundStack(content: {
-            loginFields
+            ZStack{
+                loginFields
+                if lVar.timeOut{
+                    ZStack{
+                        Color.white.opacity(0.2)
+                    }
+                }
+            }
         })
         .hiddenBackButtonWithCustomTitle(color:Color.black)
-        .onTapGesture { endTextEditing() }
    }
     
     func logUserIn(){
         if buttonIsDisabled||lVar.timeOut{ return }
         lVar.timeOut = true
         firebaseAuth.loginWithEmail(lVar.email,password: lVar.password){ (result,error) in
-            guard let _ = error else { return }
+            guard let _ = error else {
+                lVar.timeOut = false
+                return
+            }
             toggleFailedLoginAttemptWithValue(true)
         }
     }

@@ -157,9 +157,9 @@ struct FeatureView:View{
                 shareButton
             }
         }
-        .onTapGesture {
+        /*.onTapGesture {
             endTextEditing()
-        }
+        }*/
         .modifier(NavigationViewModifier(title: ""))
         .hiddenBackButtonWithCustomTitle("Profile")
         .alert("Feature request sent",

@@ -194,9 +194,9 @@ struct IssueView:View{
                 shareButton
             }
         }
-        .onTapGesture {
+        /*.onTapGesture {
             endTextEditing()
-        }
+        }*/
         .modifier(NavigationViewModifier(title: ""))
         .hiddenBackButtonWithCustomTitle("Profile")
         .alert("Report submitted",

@@ -42,7 +42,7 @@ struct AnonymousModel2DView: View{
                     switch item{
                     case ActiveHomeSheet.OPEN_TUBE_SETTINGS:
                         SheetPresentView(style: .detents([.medium()])){
-                            TubeSettingsView()
+                            TubeSettingsView(member:false)
                             .environmentObject(tubeViewModel)
                         }
                         .makeUIView()
@@ -52,13 +52,7 @@ struct AnonymousModel2DView: View{
                             .environmentObject(tubeViewModel)
                         }
                         .makeUIView()
-                    case ActiveHomeSheet.OPEN_TUBE_SAVE:
-                        SheetPresentView(style: .sheet){
-                            SaveDocumentView()
-                            .environmentObject(tubeViewModel)
-                        }
-                        .makeUIView()
-                   case ActiveHomeSheet.OPEN_TUBE_INFORMATION:
+                    case ActiveHomeSheet.OPEN_TUBE_INFORMATION:
                         SheetPresentView(style: .sheet){
                             TubeHelpView()
                         }
@@ -72,13 +66,9 @@ struct AnonymousModel2DView: View{
     }
     
     var navModel3DButton:some View{
-        NavigationLink(destination:LazyDestination(destination: {
-            Model3DView()
-        })){
-            ZStack{
-                Image(systemName: "arrow.triangle.2.circlepath").font(.title).foregroundColor(.systemBlue)
-                Image(systemName: "view.3d").imageScale(.small).foregroundColor(.systemBlue)
-            }
+        ZStack{
+            Image(systemName: "arrow.triangle.2.circlepath").font(.title).foregroundColor(.systemGray)
+            Image(systemName: "view.3d").imageScale(.small).foregroundColor(.systemGray)
         }
         .toolbarFontAndPadding()
     }
