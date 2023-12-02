@@ -132,8 +132,7 @@ struct UserSettingsView:View{
     }
     
     var content:some View{
-        VStack(spacing:0){
-            settingsLabel.padding()
+        VStack{
             tubeWindow.padding([.leading,.trailing])
             settingsFooter.padding([.leading,.trailing,.bottom])
             ScrollView{
@@ -171,7 +170,7 @@ struct UserSettingsView:View{
     var body:some View{
         AppBackgroundStack(content: {
             content
-        },title:"Tube settings")
+        },title:"Default settings")
         .toastView(toast: $toast)
         .onAppear{ setUserDefaultValues() }
         .toolbar {

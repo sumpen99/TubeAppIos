@@ -24,11 +24,11 @@ struct ShareDocumentView:View{
     @State var invalidTube:Bool = false
   
     var buttonIsDisabled:Bool{
-        docContent.isSaving||(sclVar.currentContact == nil || docContent.message.isEmpty)
+        sclVar.currentContact == nil||docContent.message.isEmpty
     }
     
     var buttonClearIsDisabled:Bool{
-        docContent.isSaving||docContent.message.isEmpty
+        docContent.message.isEmpty
     }
     
     @ViewBuilder
@@ -97,12 +97,11 @@ struct ShareDocumentView:View{
     var clearContactField:some View{
         if sclVar.currentContact != nil{
             HStack{
-                let initial = sclVar.currentContact?.initial ?? ""
+                //let initial = sclVar.currentContact?.initial ?? ""
                 Label(sclVar.currentContact?.displayName ?? "",
-                      systemImage: "bubbles.and.sparkles")
-                .font(.headline)
-                .bold()
-                .foregroundColor(Color[initial])
+                      systemImage: "person")
+                .font(.title3)
+                .foregroundColor(.black)
                 .hLeading()
                 Button(action: { withAnimation{ sclVar.currentContact = nil } }){
                     Image(systemName: "xmark")
@@ -153,12 +152,17 @@ struct ShareDocumentView:View{
             Text("Current Tubevalues are invalid. We dont think there`s a friend who would like to recieve them. Sorry for any inconvenience. We`re closing this view now.")
         }
         .onAppear{
-            closeIfInvalidTube()
+            if !closeIfInvalidTube(){
+                firestoreViewModel.initializeListenerContactRequests([.LISTENER_CONTACT_REQUESTS_CONFIRMED])
+            }
+        }
+        .onDisappear(){
+            firestoreViewModel.closeListener(.LISTENER_CONTACT_REQUESTS_CONFIRMED)
+            firestoreViewModel.releaseData([.DATA_CONTACT_REQUEST])
         }
         .toastView(toast: $toast)
         .onChange(of: sclVar.showingOptions){ value in
            withAnimation{ sclVar.isSuggestionShowing.toggle() }
-            
         }
         .halfSheetBackgroundStyle()
         .onTapGesture {
@@ -171,15 +175,17 @@ struct ShareDocumentView:View{
         dismiss()
     }
     
-    func closeIfInvalidTube(){
+    func closeIfInvalidTube() -> Bool{
         if tubeViewModel.muff.emptyL1OrL2{
             invalidTube.toggle()
+            return true
         }
+        return false
     }
     
     func startSendingMessageProcess(){
         docContent.trim()
-        if buttonIsDisabled{ return }
+        if buttonIsDisabled||docContent.isSaving{ return }
         docContent.isSaving = true
         guard let contact = sclVar.currentContact,
               let senderId = firestoreViewModel.currentUserID,

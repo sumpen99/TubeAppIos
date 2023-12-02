@@ -45,11 +45,9 @@ extension FirebaseError: LocalizedError {
         case .MISSING_USER_DISPLAY_NAME: return "Please provide a valid displayname"
         case .FAILED_TO_SEND_MESSAGE: return "Failed to send message"
         case .FAILED_TO_UPLOAD_IMAGE: return "Failed to upload image"
-        case .FAILED_TO_CONVERT_DATA_TO_UIIMAGE:
-            return "Unexpected error while fetching data from server"
+        case .FAILED_TO_CONVERT_DATA_TO_UIIMAGE: return "Unexpected error while fetching data from server"
         case .FAILED_TO_DOWNLOAD_IMAGE(message: let message): return"FAILED_TO_DOWNLOAD_IMAGE: \(message)"
-        case .TRY_SET_DATA_FAILED(message: let message):
-            return "TRY_SET_DATA_FAILED: \(message)"
+        case .TRY_SET_DATA_FAILED(message: let message): return "TRY_SET_DATA_FAILED: \(message)"
         case .OPTIONAL_ERROR(message: let message): return "\(message)"
         case .UNEXPECTED_ERROR: return "Unexpected error"
         }
@@ -80,5 +78,5 @@ class FirestoreViewModel: ObservableObject{
         listenerContainer.removeAll()
         currentUser = nil
     }
-    
+  
 }

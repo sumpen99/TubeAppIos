@@ -114,26 +114,27 @@ struct WelcomeView : View {
     var dialogButtons: some View{
         VStack{
             NavigationLink(destination:LazyDestination(destination: {
-                LoginView()
-            })){
-                Text("I already have an account, log in")
-                .hCenter()
-            }
-            .buttonStyle(ButtonStyleDocument(color: Color.systemGreen))
-            NavigationLink(destination:LazyDestination(destination: {
                 SignupView()
             })){
-                Text("Create account")
-                .hCenter()
+                buttonAsNavigationLink(title: "I would like to create an account",
+                                       systemImage: "person.crop.circle.badge.plus",
+                                       lblColor: .black,imgColor: .black)
             }
-            .buttonStyle(ButtonStyleDocument(color: Color.systemBlue))
+            .buttonStyle(ButtonStyleDocument(color: Color(hex: 0xF3BC54)))
+            NavigationLink(destination:LazyDestination(destination: {
+                LoginView()
+            })){
+                buttonAsNavigationLink(title: "I already have an account, log in",
+                                       systemImage: "person.crop.circle.badge.checkmark",
+                                       lblColor: .black,imgColor: .black)
+            }
+            .buttonStyle(ButtonStyleDocument(color: Color(hex: 0xDBA63F)))
             Button(action: proceedAsAnonymous ,label: {
-                HStack(){
-                    Text("Proceed as guest")
-                }
-                .hCenter()
+                buttonAsNavigationLink(title: "Take a look first? Enter as guest",
+                                       systemImage: "person.crop.circle.badge.questionmark",
+                                       lblColor: .black,imgColor: .black)
             })
-            .buttonStyle(ButtonStyleDocument(color: Color.systemOrange))
+            .buttonStyle(ButtonStyleDocument(color: Color(hex: 0xFFD26A)))
         }
     }
     

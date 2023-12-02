@@ -10,7 +10,7 @@ import SwiftUI
 extension View{
     
     func badge(value: String?) -> some View {
-        modifier(BadgeViewModifier(text: value))
+        self.modifier(BadgeViewModifier(text: value))
     }
         
     @ViewBuilder func `if`<Result: View>(_ condition: Bool, closure: @escaping (Self) -> Result) -> some View {
@@ -244,11 +244,13 @@ extension View{
     
 }
 
-func buttonAsNavigationLink(title:String,systemImage:String) -> some View{
+func buttonAsNavigationLink(title:String,
+                            systemImage:String,
+                            lblColor:Color = .black,
+                            imgColor:Color = .tertiaryLabel) -> some View{
     return HStack{
-        Label(title, systemImage: systemImage).foregroundColor(.black).hLeading()
-        Spacer()
-        Image(systemName: "chevron.right").foregroundColor(.tertiaryLabel).font(.subheadline).bold()
+        Label(title, systemImage: systemImage).foregroundColor(lblColor).hLeading()
+        Image(systemName: "chevron.right").foregroundColor(imgColor).font(.subheadline).bold()
     }
 }
 

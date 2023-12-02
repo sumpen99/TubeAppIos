@@ -18,7 +18,7 @@ struct AnonymousModel2DView: View{
                     navOpenTubeSettingsButton
                 }
                 ToolbarItem(placement: .principal) {
-                    navModel3DButton
+                    navModel3DButton.disabled(true)
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu{
@@ -41,7 +41,7 @@ struct AnonymousModel2DView: View{
                     activeHomeSheet = nil
                     switch item{
                     case ActiveHomeSheet.OPEN_TUBE_SETTINGS:
-                        SheetPresentView(style: .detents([.medium(),.large()])){
+                        SheetPresentView(style: .detents([.medium()])){
                             TubeSettingsView()
                             .environmentObject(tubeViewModel)
                         }

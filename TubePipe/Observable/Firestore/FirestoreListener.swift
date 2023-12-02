@@ -15,11 +15,10 @@ extension FirestoreViewModel{
         let doc = repo.userDocument(userId)
         let listenerAppUser = doc.addSnapshotListener{ [weak self] snapshot, error in
             guard let strongSelf = self else { return }
-            guard let changes = snapshot else { return }
+            guard let snap = snapshot else { return }
             do {
-                let user  = try changes.data(as: AppUser.self)
+                let user  = try snap.data(as: AppUser.self)
                 strongSelf.currentUser = user
-                strongSelf.initializeListenerContactRequestsIfUserIsPublic()
             }
             catch {
                 debugLog(object: error.localizedDescription)
@@ -34,8 +33,8 @@ extension FirestoreViewModel{
             guard let documents = snapshot?.documents,
                   let strongSelf = self else { return }
             var newContacts:OrderedDictionary<USERID,Contact> = [:]
-            for document in documents {
-                guard let contact = try? document.data(as : Contact.self),
+            for doc in documents {
+                guard let contact = try? doc.data(as : Contact.self),
                       let userId = contact.userId else { continue }
                 newContacts[userId] = contact
             }
@@ -49,8 +48,8 @@ extension FirestoreViewModel{
             guard let documents = snapshot?.documents,
                   let strongSelf = self else { return }
             var newContacts:OrderedDictionary<USERID,Contact> = [:]
-            for document in documents {
-                guard let contact = try? document.data(as : Contact.self),
+            for doc in documents {
+                guard let contact = try? doc.data(as : Contact.self),
                       let userId = contact.userId else { continue }
                 newContacts[userId] = contact
             }
@@ -65,8 +64,8 @@ extension FirestoreViewModel{
             guard let documents = snapshot?.documents,
                   let strongSelf = self else { return }
             var newContacts:OrderedDictionary<INITIAL,[Contact]> = [:]
-            for document in documents {
-                guard let contact = try? document.data(as : Contact.self) else { continue }
+            for doc in documents {
+                guard let contact = try? doc.data(as : Contact.self) else { continue }
                 let initial = contact.initial
                 guard let _ = newContacts["\(initial)"] else{
                     newContacts["\(initial)"] = [contact]
@@ -86,14 +85,11 @@ extension FirestoreViewModel{
             let listenerMessageGroups = col.addSnapshotListener(){ [weak self] (snapshot, err) in
                 guard let documents = snapshot?.documents,
                       let strongSelf = self else { return }
-                for document in documents {
-                    guard let group = try? document.data(as : MessageGroup.self),
+                for doc in documents {
+                    guard let group = try? doc.data(as : MessageGroup.self),
                           let groupId = group.groupId
                     else{ continue }
                     strongSelf.getThreadDocumentsFromGroup(groupId)
-                    /*if groupIds.contains(where: {$0 == groupId}){
-                        strongSelf.getThreadDocumentsFromGroup(groupId)
-                    }*/
                 }
             }
             self.addNewListener(listenerMessageGroups,type:FirestoreListener.LISTENER_MESSAGE_GROUPS)
@@ -104,14 +100,13 @@ extension FirestoreViewModel{
          if let groupId = groupId{
              let col = repo.messageGroupThreadCollection(groupId)
              let listenerMessages = col.order(by: "date",descending: false).addSnapshotListener{ [weak self] (snapshot, error) in
-                guard let documents = snapshot?.documents,
+                 guard let documents = snapshot?.documents,
                       let strongSelf = self else{ return }
-                var newMessages:[Message] = []
-                
-                for document in documents{
-                    guard let message = try? document.data(as : Message.self)
-                    else{ continue }
-                    newMessages.append(message)
+                 var newMessages:[Message] = []
+                 for doc in documents{
+                     guard let message = try? doc.data(as : Message.self)
+                     else{ continue }
+                     newMessages.append(message)
                 }
                 strongSelf.contactMessages = newMessages
             }

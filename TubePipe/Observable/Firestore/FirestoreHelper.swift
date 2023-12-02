@@ -189,23 +189,23 @@ extension FirestoreViewModel{
 
 //MARK: -- INITIALIZE LISTENER
 extension FirestoreViewModel{
-    func initializeListenerContactRequestsIfUserIsPublic(){
-        if isCurrentUserPublic{
-            releaseContactRequests()
-            initializeListenerContactRequests()
-        }
-        else{
-            releaseContactRequests()
-            closeListenerContactRequests()
-        }
-    }
-    
-    func initializeListenerContactRequests(){
+    func initializeListenerContactRequests(_ listeners:[FirestoreListener]){
         guard let userId = FirebaseAuth.userId else { return }
-        listenForRequestRecievedContacts(userId)
-        listenForRequestPendingContacts(userId)
-        listenForRequestConfirmedContacts(userId)
+        if isCurrentUserPublic{
+            for listener in listeners{
+                switch listener{
+                case .LISTENER_CONTACT_REQUESTS_RECIEVED:
+                    listenForRequestRecievedContacts(userId)
+                case .LISTENER_CONTACT_REQUESTS_PENDING:
+                    listenForRequestPendingContacts(userId)
+                case .LISTENER_CONTACT_REQUESTS_CONFIRMED:
+                    listenForRequestConfirmedContacts(userId)
+                default:continue
+                }
+            }
+        }
     }
+     
 }
 
 
@@ -233,6 +233,12 @@ extension FirestoreListener{
     static func messages() -> [FirestoreListener]{
         return [.LISTENER_MESSAGES,
                 .LISTENER_MESSAGE_GROUPS]
+    }
+    
+    static func contacts() -> [FirestoreListener]{
+        return [.LISTENER_CONTACT_REQUESTS_PENDING,
+                .LISTENER_CONTACT_REQUESTS_RECIEVED,
+                .LISTENER_CONTACT_REQUESTS_CONFIRMED]
     }
 }
 extension FirestoreViewModel{

@@ -102,7 +102,7 @@ extension TextField{
     
     func preferedSearchField() -> some View{
         self.removePredictiveSuggestions(keyBoardType: .asciiCapable)
-            .font(Font(UIFont.preferredFont(forTextStyle: .title3)))
+            .font(Font(UIFont.preferredFont(forTextStyle: .title2)))
             .accentColor(.black)
             .padding(5.0)
     }

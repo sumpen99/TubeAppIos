@@ -192,7 +192,6 @@ struct MainView: View{
     
     func setupListenerForUserChanges(){
         firestoreViewModel.listenForCurrentUser()
-        firestoreViewModel.listenForMessageGroups()
     }
      
 }

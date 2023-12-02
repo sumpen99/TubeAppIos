@@ -10,7 +10,7 @@ import SwiftUI
 struct AnonymousProfileView:View{
     
     var footerText:String = """
-                                As a memebr you will be able to::
+                                As a member you gain access to ex:
                                 \(pointTab)Save and store tubes on device.
                                 \(pointTab)Share tubes with other TubePipe users.
                             """
@@ -37,7 +37,7 @@ struct AnonymousProfileView:View{
         NavigationStack{
             AppBackgroundStack(content: {
                 personalPage
-            })
+            },title: "Register")
         }
     }
     
@@ -46,7 +46,7 @@ struct AnonymousProfileView:View{
         NavigationLink(destination:LazyDestination(destination: {
             SignupView()
         })){
-            Text("Register").foregroundColor(Color.systemBlue).hCenter()
+            Text("Sign up").foregroundColor(Color.systemBlue).hCenter()
         }
     }
     

@@ -14,6 +14,7 @@ enum RequestsAwaitingheader:String,CaseIterable{
 
 struct ContactRequestView:View{
     @Namespace var animation
+    @Environment(\.dismiss) private var dismiss
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
     @State var cVar = ContactVar()
     @State var requestHeader:RequestsAwaitingheader = .REQUEST_SENT
@@ -30,13 +31,6 @@ struct ContactRequestView:View{
         .hCenter()
     }
     
-    var recievedLabel:some View{
-        Image("Recieved")
-        .resizable()
-        .vCenter()
-        .hCenter()
-    }
-    
     var requestHeaderMenuList:  some View{
         VStack{
             LazyHStack(alignment: .top, spacing: 30, pinnedViews: [.sectionHeaders]){
@@ -44,11 +38,11 @@ struct ContactRequestView:View{
                     requestHeaderCell(header)
                }
             }
-            .hCenter()
-            .scrollIndicators(.never)
-            .frame(height:35.0)
-            Divider()
+            .hLeading()
+            .padding(.horizontal)
+             Divider()
         }
+        .frame(height:35.0)
         .background{
             Color.lightText
         }
@@ -63,8 +57,7 @@ struct ContactRequestView:View{
     
     func requestHeaderCell(_ request:RequestsAwaitingheader) -> some View{
         return Text(request.rawValue)
-        .font(.title3)
-        .frame(height: 35.0)
+        .font(.headline)
         .bold()
         .foregroundColor(request == requestHeader ? .black : Color.tertiaryLabel )
         .background(
@@ -92,31 +85,25 @@ struct ContactRequestView:View{
     }
     
     var recievedContactRequestSection:some View{
-        ZStack{
-            recievedLabel
-            ScrollView{
-                LazyVStack(){
-                    if firestoreViewModel.recievedContacts.keys.count > 0{
-                        ForEach(firestoreViewModel.recievedContacts.keys,id:\.self){ key in
-                            let contact = firestoreViewModel.recievedContacts[key]
-                            contactDescription(contact)
-                        }
+        ScrollView{
+            LazyVStack(){
+                if firestoreViewModel.recievedContacts.keys.count > 0{
+                    ForEach(firestoreViewModel.recievedContacts.keys,id:\.self){ key in
+                        let contact = firestoreViewModel.recievedContacts[key]
+                        contactDescription(contact)
                     }
                 }
             }
         }
-    }
+     }
     
     var pendingContactRequestSection:some View{
-        ZStack{
-            sentLabel
-            ScrollView{
-                LazyVStack(){
-                    if firestoreViewModel.pendingContacts.keys.count > 0{
-                        ForEach(firestoreViewModel.pendingContacts.keys,id:\.self){ key in
-                            let contact = firestoreViewModel.pendingContacts[key]
-                            contactDescription(contact)
-                        }
+        ScrollView{
+            LazyVStack(){
+                if firestoreViewModel.pendingContacts.keys.count > 0{
+                    ForEach(firestoreViewModel.pendingContacts.keys,id:\.self){ key in
+                        let contact = firestoreViewModel.pendingContacts[key]
+                        contactDescription(contact)
                     }
                 }
             }
@@ -132,26 +119,22 @@ struct ContactRequestView:View{
     }
     
     var mainpage:some View{
-        VStack(spacing:0){
-            requestHeaderMenuList
-            getCurrentPage(requestHeader)
+        ZStack{
+            sentLabel
+            VStack(spacing:0){
+                TopMenu(title: "Requests", actionCloseButton: closeView)
+                requestHeaderMenuList
+                getCurrentPage(requestHeader)
+            }
         }
-    }
+   }
     
     var body: some View{
-        AppBackgroundStack(content: {
-            mainpage
-        },title: "Requests")
+        mainpage
+        .modifier(HalfSheetModifier())
         .onAppear{
             requestHeader = headerOnEnter
         }
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                BackButton(title: "Contacts")
-                .toolbarFontAndPadding()
-            }
-         }
-        .navigationBarBackButtonHidden()
         .alert(isPresented: $cVar.isSelectedContact, content: {
                     onAlertWithOkAction(actionPrimary: {
                         switch cVar.alertAction{
@@ -244,6 +227,10 @@ struct ContactRequestView:View{
                 // else show some info
             }
         }
-        //cVar.currentContact = nil
+        cVar.currentContact = nil
+    }
+    
+    func closeView(){
+        dismiss()
     }
 }

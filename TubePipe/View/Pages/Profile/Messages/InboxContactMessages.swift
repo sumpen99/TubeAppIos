@@ -34,8 +34,6 @@ struct InboxContactMessages:View{
             messageLabel
             contactList
         }
-        //if firestoreViewModel.messageGroups.isEmpty{ messageLabel }
-        //else{ contactList }
     }
    
     var body: some View{
@@ -43,6 +41,7 @@ struct InboxContactMessages:View{
             messagesBody
         },title: "Messages")
         .hiddenBackButtonWithCustomTitle("Profile")
+    
     }
     
 }

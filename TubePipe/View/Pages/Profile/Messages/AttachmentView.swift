@@ -48,28 +48,32 @@ struct AttachmentView:View{
     
     var saveButton:some View{
         Button(action: saveSharedTubeToDevice ){
-            LabelButton(title: "Save", imgLabel: "arrow.down.doc")
+            buttonAsNavigationLink(title: "Save to storage",
+                                   systemImage: "arrow.down.doc",
+                                   lblColor: notAllowedToSave ? Color.black.opacity(0.3) : Color.systemBlue)
         }
+        .buttonStyle(ButtonStyleFillListRow())
         .disabled(notAllowedToSave)
-        .buttonStyle(ButtonStyleFillListRow(
-            lblColor: notAllowedToSave ? Color.black.opacity(0.3) : Color.systemBlue))
     }
     
     var loadButton:some View{
         Button(action: loadViewModelWithSharedTube ){
-            LabelButton(title: "Load tube", imgLabel: "arrow.up.circle")
+            buttonAsNavigationLink(title: "Load tubemodel",
+                                   systemImage: "arrow.up.circle",
+                                   lblColor: .systemBlue)
        }
-        .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemBlue))
+        .buttonStyle(ButtonStyleFillListRow())
     }
     
     var deleteButton:some View{
         Button(action: { aVar.showConfirmationDialog.toggle() } ){
-            LabelButton(title: "Delete message", imgLabel: "minus.circle")
+            buttonAsNavigationLink(title: "Delete message",
+                                   systemImage: "minus.circle",
+                                   lblColor: allowedToDelete ? Color.systemRed : Color.systemRed.opacity(0.3))
         }
+        .buttonStyle(ButtonStyleFillListRow())
         .disabled(!allowedToDelete)
-        .buttonStyle(ButtonStyleFillListRow(
-            lblColor: allowedToDelete ? Color.systemRed : Color.systemRed.opacity(0.3)))
-    }
+   }
     
     var buttons:some View{
         return Section(content:{

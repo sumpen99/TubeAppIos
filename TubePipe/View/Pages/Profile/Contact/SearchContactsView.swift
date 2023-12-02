@@ -85,21 +85,24 @@ struct SearchContactsView: View{
             TextField("",text:$sVar.searchText.max(MAX_TEXTFIELD_LEN))
                 .preferedSearchField()
                 .focused($focusField,equals: .FIND_USER)
-                .placeholder("find user",
+                .placeholder("ex. email or username",
                              when: (focusField != .FIND_USER) && (sVar.searchText.isEmpty))
                 .hLeading()
                 .onSubmit { startSearch() }
                 .submitLabel(.search)
-             Button("Cancel",action:closeView)
-            .padding(.trailing)
-            .foregroundColor(Color.systemBlue)
+            if !firestoreViewModel.contactSuggestions.isEmpty{
+                Button("Clear",action: clearSearchSuggestions)
+               .padding(.trailing)
+               .foregroundColor(Color.systemBlue)
+            }
+            
         }
         .overlay(
             RoundedRectangle(cornerRadius: 5)
                 .stroke(lineWidth: 1)
         )
         .foregroundColor(.black)
-        .padding()
+        .padding(.horizontal)
     }
     
      var searchResult:some View{
@@ -113,6 +116,7 @@ struct SearchContactsView: View{
                 }
             }
         }
+        .vTop()
         
     }
     
@@ -124,13 +128,13 @@ struct SearchContactsView: View{
     }
     
     var body:some View{
-        VStack{
+        VStack(spacing:0){
+            TopMenu(title: "Search for friends", actionCloseButton: closeView)
             searchField
             searchResult
         }
-        .onAppear{
-            //focusField = .FIND_USER
-            firestoreViewModel.releaseData([.DATA_CONTACT_SUGGESTION])
+        .onDisappear{
+            clearSearchSuggestions()
         }
         .modifier(HalfSheetModifier())
         .confirmationDialog(sVar.currentContact?.displayName ?? "",
@@ -152,6 +156,11 @@ struct SearchContactsView: View{
         dismiss()
     }
     
+    func clearSearchSuggestions(){
+        sVar.searchText = ""
+        firestoreViewModel.releaseData([.DATA_CONTACT_SUGGESTION])
+    }
+    
     func startSearch(){
         let txt = sVar.searchText.trimmingCharacters(in: .whitespaces)
         if txt.isEmpty{ return }
@@ -169,13 +178,12 @@ struct SearchContactsView: View{
     }
     
     func fireSentRequestAlert(isSuccess:Bool,message:String,displayInfo:String){
-        firestoreViewModel.releaseData([.DATA_CONTACT_SUGGESTION])
+        clearSearchSuggestions()
         if !isSuccess{
              ALERT_TITLE = "Attention"
             ALERT_MESSAGE = message
             sVar.isRequestSent.toggle()
         }
-        sVar.clearSearch()
     }
     
 }

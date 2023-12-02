@@ -316,6 +316,10 @@ struct ProfileView: View{
             AppBackgroundStack(content: {
                 personalPage
             },title:firestoreViewModel.currentUser?.displayName ?? "")
+            .onChange(of: userHasAllowedSharing){ has in
+                if has{ startListening() }
+                else{ releaseListener() }
+            }
             .navigationDestination(for: Contact.self){  contact in
                 ContactMessagesView(contact: contact,backButtonLabel: "Messages")
             }
@@ -358,14 +362,14 @@ struct ProfileView: View{
             }
         }
         .onAppear{ setupCurrentUser() }
-        .onDisappear{ releaseMessageDataAndListener() }
+        .onDisappear{ releaseListener() }
     }
     
     //MARK: HELPER FUNCTIONS
     func setupCurrentUser(){
         updateLocalUserFromFirebase()
         setIfCurrentUserIsInPublicMode()
-        startListeningForMessages()
+        startListening()
     }
     
     func updateLocalUserFromFirebase(){
@@ -519,13 +523,21 @@ extension ProfileView{
 
 //MARK: FIRESTORE LISTENER FUNCTIONS
 extension ProfileView{
-    func releaseMessageDataAndListener(){
-        firestoreViewModel.closeListenerMessages()
-        firestoreViewModel.releaseData([.DATA_CONTACT_MESSAGE_GROUPS,.DATA_CONTACT_MESSAGES])
+    
+    func startListening(){
+        if userHasAllowedSharing{
+            firestoreViewModel.initializeListenerContactRequests(FirestoreListener.contacts())
+            firestoreViewModel.listenForMessageGroups()
+        }
     }
     
-    func startListeningForMessages(){
-        firestoreViewModel.listenForMessageGroups()
+    func releaseListener(){
+        firestoreViewModel.closeListenerMessages()
+        firestoreViewModel.closeListenerContactRequests()
+        firestoreViewModel.releaseData([.DATA_CONTACT_MESSAGE_GROUPS,
+                                        .DATA_CONTACT_MESSAGES,
+                                        .DATA_CONTACT_REQUEST,
+                                        .DATA_CONTACT_SUGGESTION])
     }
 }
 

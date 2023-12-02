@@ -26,16 +26,20 @@ struct SelectedTubeView: View{
     
     var loadButton:some View{
         Button(action: { loadViewModelWithTubeModel(tubeModel);closeView() }){
-            LabelButton(title: "Load tube", imgLabel: "arrow.up.circle")
+            buttonAsNavigationLink(title: "Load tubemodel",
+                                   systemImage: "arrow.up.circle",
+                                   lblColor: .systemBlue)
         }
-        .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemBlue))
+        .buttonStyle(ButtonStyleFillListRow())
     }
     
     var deleteButton:some View{
         Button(action: removeTubeAlert ){
-            LabelButton(title: "Delete file", imgLabel: "minus.circle")
+            buttonAsNavigationLink(title: "Delete file",
+                                   systemImage: "minus.circle",
+                                   lblColor: Color.systemRed)
         }
-        .buttonStyle(ButtonStyleFillListRow(lblColor: Color.systemRed))
+        .buttonStyle(ButtonStyleFillListRow())
     }
     
     var buttons:some View{

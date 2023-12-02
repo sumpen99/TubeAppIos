@@ -7,9 +7,19 @@
 
 import SwiftUI
 
+enum ActiveContactSheet: Identifiable {
+    case OPEN_SEARCH
+    case OPEN_CONTACT_REQUESTS
+     
+    var id: Int {
+        hashValue
+    }
+}
+
 struct ContactView:View{
     @Namespace var animation
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
+    @State var activeContactSheet: ActiveContactSheet?
     @State var cVar = ContactVar()
     @State var isMoveToMessages:Bool = false
     
@@ -48,32 +58,13 @@ struct ContactView:View{
         .badge(value: "\(possibleBadgeCount)")
     }
     
-    var unBadgedContactRequestButton:some View{
-        NavigationLink(destination:LazyDestination(destination: {
-            ContactRequestView()
-            
-        })){
-            Image(systemName: "person.badge.plus")
-        }
-    }
-    
-    
-    
     @ViewBuilder
     var mainpage:some View{
         ZStack{
             contactsLabel
             confirmedContactRequestSection.padding(.top)
         }
-        /*if firestoreViewModel.confirmedContacts.isEmpty{
-            contactsLabel
-        }
-        else{
-            confirmedContactRequestSection
-            .padding([.leading,.trailing,.top])
-        }*/
-        
-   }
+    }
     
     var body: some View{
         AppBackgroundStack(content: {
@@ -82,24 +73,39 @@ struct ContactView:View{
         .hiddenBackButtonWithCustomTitle("Profile")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { cVar.isSearchOption.toggle() }){
-                        Label("Search", systemImage: "magnifyingglass")
-                        .toolbarFontAndPadding()
-                    }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                if possibleBadgeCount > 0 {
-                    badgedContactRequestButton
+                Button(action: { activeContactSheet = .OPEN_SEARCH }){
+                    Label("Search", systemImage: "magnifyingglass")
                     .toolbarFontAndPadding()
                 }
             }
-        }
-        .onChange(of: cVar.isSearchOption){ item in
-            SheetPresentView(style: .sheet){
-                SearchContactsView()
-                .environmentObject(firestoreViewModel)
+            ToolbarItem(placement: .navigationBarTrailing) {
+                if possibleBadgeCount > 0 {
+                    Button(action: { activeContactSheet = .OPEN_CONTACT_REQUESTS }){
+                        Image(systemName: "person.badge.plus")
+                        .badge(value: "\(possibleBadgeCount)")
+                        .toolbarFontAndPadding(.title3)
+                    }
+                 }
             }
-            .makeUIView()
+        }
+        .onChange(of: activeContactSheet){ item in
+            if let item{
+                activeContactSheet = nil
+                switch item{
+                case .OPEN_SEARCH:
+                    SheetPresentView(style: .sheet){
+                        SearchContactsView()
+                        .environmentObject(firestoreViewModel)
+                    }
+                    .makeUIView()
+                case .OPEN_CONTACT_REQUESTS:
+                    SheetPresentView(style: .sheet){
+                        ContactRequestView()
+                        .environmentObject(firestoreViewModel)
+                    }
+                    .makeUIView()
+                }
+            }
         }
         .alert(isPresented: $cVar.isSelectedContact, content: {
             onAlertWithOkAction(actionPrimary: {

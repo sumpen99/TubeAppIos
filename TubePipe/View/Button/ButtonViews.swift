@@ -77,8 +77,8 @@ struct LabelButton:View{
         HStack{
             Image(systemName: imgLabel)
                 .font(.title2)
-            Text(title).hCenter()
-                .font(.title2)
+            //Text(title).hCenter()
+                //.font(.title2)
         }
     }
 }
