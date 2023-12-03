@@ -79,8 +79,4 @@ class FirestoreViewModel: ObservableObject{
         currentUser = nil
     }
     
-    deinit{
-        debugLog(object: "deinit firestoreviewmodel")
-    }
-  
 }

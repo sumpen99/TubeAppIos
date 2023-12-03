@@ -21,8 +21,8 @@ struct ContentView: View {
             case .NOT_LOGGED_IN:    
                 WelcomeView()
             case .ANONYMOUS_USER:   
-                MainView()
-            case .REGISTERED_USER:  
+                MainAnonymousView()
+            case .REGISTERED_USER:
                 MainView()
             case .ADMIN_USER:       
                 MainView()

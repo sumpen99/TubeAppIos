@@ -108,5 +108,9 @@ class FirebaseAuth:ObservableObject{
         let credential = EmailAuthProvider.credential(withEmail: email, password: password)
         authUser.link(with: credential,completion:completion)
     }
+    
+    func deleteAnonymousUser(){
+        auth.currentUser?.delete()
+    }
 }
 

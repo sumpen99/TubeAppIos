@@ -28,7 +28,6 @@ import SwiftUI
  */
 
 struct MainView: View{
-    @EnvironmentObject var firebaseAuth: FirebaseAuth
     @StateObject private var firestoreViewModel: FirestoreViewModel
     @StateObject var tubeViewModel = TubeViewModel()
     @StateObject var globalDialogPresentation = GlobalLoadingPresentation()
@@ -36,41 +35,12 @@ struct MainView: View{
     
     init() {
         self._firestoreViewModel = StateObject(wrappedValue: FirestoreViewModel())
+        self._tubeViewModel = StateObject(wrappedValue: TubeViewModel())
+        self._globalDialogPresentation = StateObject(wrappedValue: GlobalLoadingPresentation())
+        self._navigationViewModel = StateObject(wrappedValue: NavigationViewModel())
     }
     
-    // MARK: TAB MENU DEFAULT
-    @ViewBuilder
-    var mainContentTabView:some View{
-        if firebaseAuth.loggedInAs == .ANONYMOUS_USER{
-            tabMenuAnonymous
-        }
-        else{
-            tabMenuRegistred
-            .onAppear{ setUserDataIfNeededData() }
-        }
-    }
-    
-    var tabMenuAnonymous: some View {
-        TabView(selection:$navigationViewModel.selectedTab) {
-            AnonymousModel2DView()
-            .tabItem {
-                Label("Model", systemImage: "rotate.3d")
-            }
-            .tag(MainTabItem.MODEL_2D_ANONYMOUS)
-            CustomCalendarView()
-            .tabItem {
-                Label("Calendar", systemImage: "calendar")
-            }
-            .tag(MainTabItem.CALENDAR)
-            AnonymousProfileView()
-            .tabItem {
-                Label("Register", systemImage: "person.fill")
-            }
-            .tag(MainTabItem.PROFILE_ANONYMOUS)
-        }
-    }
-    
-    var tabMenuRegistred: some View {
+    var tabMenu: some View {
         TabView(selection:$navigationViewModel.selectedTab) {
             Model2DView()
             .tabItem {
@@ -91,7 +61,8 @@ struct MainView: View{
     }
         
     var body: some View{
-        mainContentTabView
+        tabMenu
+        .onAppear{ setUpNewUser() }
         .onDisappear{ releaseData() }
         .globalLoadingDialog(presentationManager: globalDialogPresentation)
         .environmentObject(tubeViewModel)

@@ -43,9 +43,7 @@ struct CustomCalendarView: View {
     typealias MONTH = String
     typealias DAY = String
     @EnvironmentObject var tubeViewModel: TubeViewModel
-    @EnvironmentObject var firestoreViewModel: FirestoreViewModel
     @EnvironmentObject var navigationViewModel: NavigationViewModel
-    @EnvironmentObject var firebaseAuth: FirebaseAuth
     @State var selected:Selected = Selected()
     @State var yearOfTubes: [YEAR:[MONTH:[DAY:Int]]] = [:]
   

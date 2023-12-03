@@ -21,12 +21,17 @@ struct AnonymousProfileView:View{
     @State var profileAlertAction: AnonymousProfileAlertAction?
     var footerText:String = """
                                 Create a free account and gain access to:
-                                \(pointTab)Model in 3D.
-                                \(pointTab)Model up to 100 segments.
-                                \(pointTab)Save and store tubemodels on device.
                                 \(pointTab)Connect with other TubePipe users.
                                 \(pointTab)Share tubemodels with other TubePipe users.
-                                \(pointTab)And more...
+                            
+                            If that`s not something you desire their`s really
+                            no need for signing up.
+                            Guest mode keeps you logged in forever and you`re already set. If you at any point feel
+                            like ,yeah maybe I give it a go, then come back to this place and we take it from here.
+                            
+                            Keep it king!
+                            
+                            // TubePipe
                             """
     
     var accountSection:some View{
@@ -63,7 +68,7 @@ struct AnonymousProfileView:View{
     //MARK: ACTIONSHEET
     var actionSheetLogout:ActionSheet{
         ActionSheet(title: Text("Create Account"), message: Text("This action will take you back to the mainpage where you can create an account."), buttons: [
-            .default(Text("OK, lets go!")) { firebaseAuth.signOut() },
+            .default(Text("OK, lets go!")) { firebaseAuth.deleteAnonymousUser() },
             .cancel()
         ])
     }
