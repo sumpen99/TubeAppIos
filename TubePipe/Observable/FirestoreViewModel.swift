@@ -78,5 +78,9 @@ class FirestoreViewModel: ObservableObject{
         listenerContainer.removeAll()
         currentUser = nil
     }
+    
+    deinit{
+        debugLog(object: "deinit firestoreviewmodel")
+    }
   
 }

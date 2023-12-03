@@ -11,15 +11,16 @@ struct ButtonStyleSheet: ButtonStyle {
         configuration.label
             .padding([.leading,.trailing],10)
             .padding([.bottom,.top],20)
-            .background( appButtonGradient )
+            .background( Color.lightText )
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
                     .stroke(Color.black, lineWidth: 1)
             )
             .opacity(configuration.isPressed ? 0.5 : 1.0)
-            .foregroundColor(Color.white)
+            .foregroundColor(Color.black)
             .cornerRadius(16)
             .fontWeight(.semibold)
+          
     }
 
 }

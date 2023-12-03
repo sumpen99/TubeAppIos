@@ -119,15 +119,15 @@ struct LoginView : View {
       
     var body: some View {
         AppBackgroundStack(content: {
-            ZStack{
-                loginFields
-                if lVar.timeOut{
-                    ZStack{
-                        Color.white.opacity(0.2)
-                    }
+            loginFields
+        })
+        .overlay{
+            if lVar.timeOut{
+                ZStack{
+                    Color.lightText
                 }
             }
-        })
+        }
         .hiddenBackButtonWithCustomTitle(color:Color.black)
    }
     

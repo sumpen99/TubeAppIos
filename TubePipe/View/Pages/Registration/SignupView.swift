@@ -29,6 +29,7 @@ struct SignupView : View {
     @EnvironmentObject var firebaseAuth: FirebaseAuth
     @FocusState var focusField: Field?
     @State var sVar = SignupVariables()
+    var CONVERT_ANONYMOUS:Bool
     
     var errorMessage:some View{
         ZStack{
@@ -175,24 +176,48 @@ struct SignupView : View {
     
     var body: some View {
         AppBackgroundStack(content: {
-            ZStack{
-                signupFields
-                if sVar.timeOut{
-                    ZStack{
-                        Color.white.opacity(0.2)
-                    }
+            signupFields
+        })
+        .overlay{
+            if sVar.timeOut{
+                ZStack{
+                    Color.lightText
                 }
             }
-        })
+        }
         .hiddenBackButtonWithCustomTitle(color:.black)
     }
     
     func signUserUp(){
         if buttonIsDisabled||sVar.timeOut { return }
         sVar.timeOut = true
+        if CONVERT_ANONYMOUS{ convertAnonymousUser()}
+        else{ createNewUser() }
+    }
+    
+    func createNewUser(){
         firebaseAuth.signupWithEmail(sVar.passwordHelper.emailText,
                                      password: sVar.passwordHelper.password){ (result,error) in
             guard let nsError = error as NSError? else {
+                sVar.timeOut = false
+                return
+            }
+            sVar.errorMessage = nsError.localizedDescription
+            toggleFailedSignupAttemptWithValue(true)
+        }
+    }
+    
+    func convertAnonymousUser(){
+        firebaseAuth.convertAnonymousWithEmail(sVar.passwordHelper.emailText,
+                                     password: sVar.passwordHelper.password){ [weak firebaseAuth] (result,error) in
+            guard let nsError = error as NSError? else {
+                firebaseAuth?.signOut()
+                firebaseAuth?.loginWithEmail(sVar.passwordHelper.emailText,
+                                            password: sVar.passwordHelper.password){ (result,error) in
+                    guard let error = error else { sVar.timeOut = false;return}
+                    sVar.errorMessage = error.localizedDescription
+                    toggleFailedSignupAttemptWithValue(true)
+                }
                 sVar.timeOut = false
                 return
             }

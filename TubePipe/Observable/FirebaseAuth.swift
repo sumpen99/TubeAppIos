@@ -102,5 +102,11 @@ class FirebaseAuth:ObservableObject{
     func signupWithEmail(_ email:String,password:String,completion:((AuthDataResult?,Error?)->Void)?){
         auth.createUser(withEmail: email, password: password,completion: completion)
     }
+    
+    func convertAnonymousWithEmail(_ email:String,password:String,completion:((AuthDataResult?,Error?)->Void)?){
+        guard let authUser = auth.currentUser else { completion?(nil,FirebaseError.MISSING_USER_ID);return }
+        let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+        authUser.link(with: credential,completion:completion)
+    }
 }
 

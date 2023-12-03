@@ -10,6 +10,7 @@ import SwiftUI
 struct WelcomVariables{
     var userPressedNext:Bool = false
     var isSignupResult:Bool = false
+    var isAnonymousAttempt:Bool = false
 }
 
 struct WelcomeView : View {
@@ -20,24 +21,21 @@ struct WelcomeView : View {
     var appLogoImage:some View{
         GeometryReader{ reader in
             Image("tpIcon")
-                .resizable()
-                .frame(width: reader.size.width/2.0, height:reader.size.width/2.0)
-              .hCenter()
-              .vCenter()
-              .padding()
+            .resizable()
+            .scaledToFit()
+            .hCenter()
+            .vCenter()
+            .padding()
         }
         
     }
     
     var welcomeButton: some View{
         Button(action:{ wVar.userPressedNext.toggle() },label: {
-            HStack(){
-                Text("Enter").font(.largeTitle)
-            }
+            Text("Enter").font(.largeTitle)
             .hCenter()
-            
         })
-        .buttonStyle(ButtonStyleDocument(color: Color.backgroundButton))
+        .buttonStyle(ButtonStyleSheet())
         .padding()
         .vBottom()
     }
@@ -49,6 +47,13 @@ struct WelcomeView : View {
                 welcomeButton
                 dialog
             })
+            .overlay{
+                if wVar.isAnonymousAttempt{
+                    ZStack{
+                        Color.lightText
+                    }
+                }
+            }
             .alert(isPresented: $wVar.isSignupResult, content: {
                 onResultAlert()
             })
@@ -73,22 +78,22 @@ struct WelcomeView : View {
     }
     
     var dialogContent: some View{
-       VStack(alignment: .leading) {
-           dialogText
-           dialogButtons
-       }
-       .padding(.horizontal, 16)
-       .padding(.bottom, 42)
-       .transition(.move(edge: .bottom))
-       .background(
-            Color.white
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.black, lineWidth: 2)
-            )
-       )
-       .cornerRadius(16, corners: [.topLeft, .topRight])
-       .foregroundColor(.black)
+        VStack(alignment: .leading) {
+            dialogText
+            dialogButtons
+        }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 42)
+        .transition(.move(edge: .bottom))
+        .background(
+             Color.lightText
+             .overlay(
+                 RoundedRectangle(cornerRadius: 16)
+                 .stroke(Color.black, lineWidth: 2)
+             )
+        )
+        .cornerRadius(16, corners: [.topLeft, .topRight])
+        .foregroundColor(.black)
    }
     
     var dialogText: some View{
@@ -114,7 +119,7 @@ struct WelcomeView : View {
     var dialogButtons: some View{
         VStack{
             NavigationLink(destination:LazyDestination(destination: {
-                SignupView()
+                SignupView(CONVERT_ANONYMOUS: false)
             })){
                 buttonAsNavigationLink(title: "I would like to create an account",
                                        systemImage: "person.crop.circle.badge.plus",
@@ -139,8 +144,13 @@ struct WelcomeView : View {
     }
     
    func proceedAsAnonymous(){
+       if wVar.isAnonymousAttempt{ return }
+       wVar.isAnonymousAttempt = true
        firebaseAuth.loginAsAnonymous(){ (result,error) in
-           guard let error = error else { return }
+           guard let error = error else {
+               wVar.isAnonymousAttempt = false
+               return
+           }
            activateFailedSiginAnonymousAlert(error:error)
            
        }
@@ -150,6 +160,7 @@ struct WelcomeView : View {
         ALERT_TITLE = "Login failed"
         ALERT_MESSAGE = error.localizedDescription
         wVar.isSignupResult.toggle()
+        wVar.isAnonymousAttempt = false
     }
     
 }
