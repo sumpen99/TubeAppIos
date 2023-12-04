@@ -13,25 +13,25 @@ struct RotateImageView:View{
     @State var isAnimating = false
     
     var singleAnimation: Animation {
-        Animation.linear(duration: 0.7)
+        Animation.linear(duration: 0.3)
     }
 
     var body: some View {
-        Image(systemName: name)
+        Image(name)
+        .resizable()
         .foregroundColor(isActive ? Color.accentColor : Color.systemGray)
         .rotationEffect(Angle.degrees(isAnimating ? 360 : 0))
         .onChange(of: isActive){ active in
-            if(active){ startAnimation()}
-            else{ isAnimating = false }
-        }
-        .onAppear {
-            if(isActive){ startAnimation() }
+            startAnimation()
         }
     }
     
     func startAnimation() {
         withAnimation(singleAnimation) {
             isAnimating = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
+                isAnimating = false
+            }
         }
     }
    

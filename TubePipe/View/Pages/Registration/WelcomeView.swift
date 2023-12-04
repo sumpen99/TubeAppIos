@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
-
+  
 struct WelcomVariables{
     var userPressedNext:Bool = false
     var isSignupResult:Bool = false
     var isAnonymousAttempt:Bool = false
+    var isRotating:Bool = false
+    
 }
 
 struct WelcomeView : View {
@@ -19,18 +21,26 @@ struct WelcomeView : View {
    
     var appLogoImage:some View{
         GeometryReader{ reader in
-            Image("tpIcon")
-            .resizable()
-            .scaledToFit()
+            RotateImageView(isActive: $wVar.isRotating, name: "tpIcon3")
+            .frame(width: reader.size.width/2,height: reader.size.width/2)
             .hCenter()
             .vCenter()
             .padding()
         }
-        
+    }
+    
+    var welcomeLabel:some View{
+        Text("TubePipe")
+        .underline(true)
+        .font(.largeTitle)
+        .bold()
+        .foregroundColor(.black)
+        .vTop()
+        .hCenter()
     }
     
     var welcomeButton: some View{
-        Button(action:{ wVar.userPressedNext.toggle() },label: {
+        Button(action:{ wVar.userPressedNext.toggle();wVar.isRotating.toggle() },label: {
             Text("Enter").font(.largeTitle)
             .hCenter()
         })
@@ -42,6 +52,7 @@ struct WelcomeView : View {
     var body: some View {
         NavigationStack{
             AppBackgroundStackWithoutBottomPadding(content: {
+                welcomeLabel
                 appLogoImage
                 welcomeButton
                 dialog
@@ -85,7 +96,7 @@ struct WelcomeView : View {
         .padding(.bottom, 42)
         .transition(.move(edge: .bottom))
         .background(
-             Color.lightText
+             Color.white
              .overlay(
                  RoundedRectangle(cornerRadius: 16)
                  .stroke(Color.black, lineWidth: 2)
@@ -98,7 +109,7 @@ struct WelcomeView : View {
     var dialogText: some View{
         VStack{
             HStack {
-                Text("Welcome to tubepipe")
+                Text("Welcome to TubePipe")
                     .foregroundColor(.black)
                     .font(.system(size: 20, weight: .bold))
                 
@@ -107,7 +118,8 @@ struct WelcomeView : View {
             .padding(.top, 16)
             .padding(.bottom, 4)
             
-            Text("Enter the world of creating segmented tubes effortless.")
+            Text("You are now one step away from entering the world of segmented pipes.")
+                .hLeading()
                 .font(.system(size: 16, weight: .bold))
                 .foregroundColor(.black)
                 .padding(.bottom, 24)
@@ -120,11 +132,11 @@ struct WelcomeView : View {
             NavigationLink(destination:LazyDestination(destination: {
                 SignupView(CONVERT_ANONYMOUS: false)
             })){
-                buttonAsNavigationLink(title: "I would like to create an account",
+                buttonAsNavigationLink(title: "Ok! I would like to create an account",
                                        systemImage: "person.crop.circle.badge.plus",
                                        lblColor: .black,imgColor: .black)
             }
-            .buttonStyle(ButtonStyleDocument(color: Color(hex: 0xF3BC54)))
+            .buttonStyle(ButtonStyleDocument(color: Color(hex: 0xDBA63F)))
             NavigationLink(destination:LazyDestination(destination: {
                 LoginView()
             })){
@@ -132,7 +144,7 @@ struct WelcomeView : View {
                                        systemImage: "person.crop.circle.badge.checkmark",
                                        lblColor: .black,imgColor: .black)
             }
-            .buttonStyle(ButtonStyleDocument(color: Color(hex: 0xDBA63F)))
+            .buttonStyle(ButtonStyleDocument(color: Color(hex: 0xF3BC54)))
             Button(action: proceedAsAnonymous ,label: {
                 buttonAsNavigationLink(title: "Take a peek first? Enter as guest",
                                        systemImage: "person.crop.circle.badge.questionmark",

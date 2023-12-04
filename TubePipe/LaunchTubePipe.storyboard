@@ -16,11 +16,10 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" layoutMarginsFollowReadableWidth="YES" insetsLayoutMarginsFromSafeArea="NO" image="tpIcon" translatesAutoresizingMaskIntoConstraints="NO" id="qe0-8c-lYi">
-                                <rect key="frame" x="-233" y="260" width="881" height="388"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <imageView clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" layoutMarginsFollowReadableWidth="YES" insetsLayoutMarginsFromSafeArea="NO" image="tpIcon" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qe0-8c-lYi">
+                                <rect key="frame" x="10" y="170" width="373" height="512"/>
                                 <accessibility key="accessibilityConfiguration">
-                                    <accessibilityTraits key="traits" image="YES" notEnabled="YES" adjustable="YES"/>
+                                    <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
                                 </accessibility>
                                 <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
                                 <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="default"/>
@@ -28,6 +27,11 @@
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="WCr-2F-l41"/>
                         <color key="backgroundColor" red="0.92941176470588238" green="0.92941176470588238" blue="0.92941176470588238" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="qe0-8c-lYi" firstAttribute="trailing" secondItem="WCr-2F-l41" secondAttribute="trailing" constant="-10" id="btQ-bf-3z4"/>
+                            <constraint firstItem="qe0-8c-lYi" firstAttribute="leading" secondItem="WCr-2F-l41" secondAttribute="leading" constant="10" id="dkS-hZ-2DT"/>
+                            <constraint firstItem="qe0-8c-lYi" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="gJH-qH-hx0"/>
+                        </constraints>
                         <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
                     </view>
                 </viewController>
