@@ -29,7 +29,7 @@ extension View{
         .lineLimit(1)
         .hLeading()
     }
-    func sectionTextSecondary(color:Color = Color.GHOSTWHITE) -> some View{
+    func sectionTextSecondary(color:Color) -> some View{
         self
         .foregroundColor(color)
         .font(.body)
@@ -238,6 +238,10 @@ extension View{
         DispatchQueue.main.asyncAfter(deadline: .now() + TOAST_DURATION){
             action?()
         }
+    }
+    
+    func showToast(isSuccess:Bool,msg:String,toast:inout Toast?){
+        toast = Toast(style: .success, message: msg)
     }
     
     

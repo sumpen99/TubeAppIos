@@ -19,14 +19,3 @@ struct ButtonStyleList: ButtonStyle {
     }
 
 }
-
-struct ButtonStyleSearchContact: ButtonStyle {
-    public func makeBody(configuration: ButtonStyle.Configuration) -> some View {
-        configuration.label
-            .background( Color.clear )
-            .opacity(configuration.isPressed ? 0.5 : 1.0)
-            .foregroundColor(Color.systemBlue)
-            .fontWeight(.semibold)
-    }
-
-}

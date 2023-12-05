@@ -62,7 +62,7 @@ struct MainView: View{
         
     var body: some View{
         tabMenu
-        .onAppear{ setUpNewUser() }
+        .onAppear{ setUserDataIfNeededData() }
         .onDisappear{ releaseData() }
         .globalLoadingDialog(presentationManager: globalDialogPresentation)
         .environmentObject(tubeViewModel)

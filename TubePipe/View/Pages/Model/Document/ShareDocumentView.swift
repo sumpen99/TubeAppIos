@@ -34,31 +34,31 @@ struct ShareDocumentView:View{
     @ViewBuilder
     var toogleContactsButton:some View{
         Image(systemName: sclVar.isSuggestionShowing ? "chevron.down" : "chevron.right")
-        .hTrailing()
     }
     
     var clearButton: some View{
-        Button(action:{ docContent.message = ""},label: {
+        Button(action:{ docContent.message = "";},label: {
             Image(systemName: "xmark.square.fill")
         })
-        .disabled(buttonClearIsDisabled)
-        .opacity(buttonClearIsDisabled ? 0.2 : 1.0)
-        .foregroundColor(buttonClearIsDisabled ? .black : .red)
+        .foregroundColor(buttonIsDisabled ? Color.tertiaryLabel : .red)
         .font(.title2)
         .bold()
     }
     
     var shareButton: some View{
         Button(action:startSendingMessageProcess,label: {
-            Image(systemName: "paperplane.fill")
+            Text("Send")
+            .font(.headline)
+            .padding(.horizontal,10)
+            .padding(.vertical,3)
+            .overlay(
+                Rectangle()
+                    .stroke(buttonIsDisabled ? Color.tertiaryLabel : Color.systemBlue, lineWidth: 1)
+            )
+            
         })
-        .disabled(buttonIsDisabled)
-        .opacity(buttonIsDisabled ? 0.2 : 1.0)
-        .foregroundColor(buttonIsDisabled ? .black : .systemBlue)
-        .font(.title2)
-        .bold()
+        .foregroundColor(buttonIsDisabled ? Color.tertiaryLabel : .systemBlue)
     }
-    
     
     var suggestionsList: some View{
         SortedContactsList(currentContact:$sclVar.currentContact,
@@ -75,8 +75,10 @@ struct ShareDocumentView:View{
     @ViewBuilder
     var contactField:some View{
         HStack{
-            Label("Send to: ",systemImage: "person.crop.square")
-             toogleContactsButton
+            Label("Send to: \(sclVar.currentContact?.displayName ?? "")",systemImage: "person.crop.square").hLeading()
+            Spacer()
+            clearContactField
+            toogleContactsButton
             
         }
         .hLeading()
@@ -96,27 +98,17 @@ struct ShareDocumentView:View{
     @ViewBuilder
     var clearContactField:some View{
         if sclVar.currentContact != nil{
-            HStack{
-                //let initial = sclVar.currentContact?.initial ?? ""
-                Label(sclVar.currentContact?.displayName ?? "",
-                      systemImage: "person")
-                .font(.title3)
-                .foregroundColor(.black)
-                .hLeading()
-                Button(action: { withAnimation{ sclVar.currentContact = nil } }){
-                    Image(systemName: "xmark")
-                    .foregroundColor(.red)
-                }
+            Button(action: { withAnimation{ sclVar.currentContact = nil } }){
+                Image(systemName: "xmark")
+                .foregroundColor(.red)
             }
-            .hLeading()
-            .padding(.top)
-        }
+       }
     }
     
     var reciever: some View{
         VStack(spacing: 5.0){
             contactField
-            clearContactField
+            //clearContactField
         }
         .roundedBorder()
     }
@@ -127,7 +119,7 @@ struct ShareDocumentView:View{
             BaseTubeTextField(docContent: $docContent,
                               focusField: _focusField,
                               placeHolder:"Add a message or subject to share with friend")
-            .padding(.horizontal)
+            .padding()
         }
     }
     
@@ -144,7 +136,6 @@ struct ShareDocumentView:View{
                     shareButton.padding(.trailing)
                 }
             }
-            
         }
         .alert("Tube error!", isPresented: $invalidTube){
             Button("OK", role: .cancel,action: { closeView() })

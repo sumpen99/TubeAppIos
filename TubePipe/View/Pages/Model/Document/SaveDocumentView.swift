@@ -23,22 +23,24 @@ struct SaveDocumentView:View{
         Button(action:{ docContent.message = ""},label: {
             Image(systemName: "xmark.square.fill")
         })
-        .disabled(buttonIsDisabled)
-        .opacity(buttonIsDisabled ? 0.2 : 1.0)
-        .foregroundColor(buttonIsDisabled ? .black : .red)
+        .foregroundColor(buttonIsDisabled ? Color.tertiaryLabel : .red)
         .font(.title2)
         .bold()
     }
     
     var saveButton: some View{
         Button(action:saveNewTube,label: {
-            Image(systemName: "arrow.down.doc.fill")
+            Text("Save")
+            .font(.headline)
+            .padding(.horizontal,10)
+            .padding(.vertical,3)
+            .overlay(
+                Rectangle()
+                    .stroke(buttonIsDisabled ? Color.tertiaryLabel : Color.systemBlue, lineWidth: 1)
+            )
+            
         })
-        .disabled(buttonIsDisabled)
-        .opacity(buttonIsDisabled ? 0.2 : 1.0)
-        .foregroundColor(buttonIsDisabled ? .black : .systemBlue)
-        .font(.title2)
-        .bold()
+        .foregroundColor(buttonIsDisabled ? Color.tertiaryLabel : .systemBlue)
     }
     
     var body: some View{
@@ -55,11 +57,9 @@ struct SaveDocumentView:View{
                     Text(Date().formattedString()).sectionTextSecondary(color:.black).hLeading().padding(.leading)
                     clearButton.padding(.trailing)
                     saveButton.padding(.trailing)
-                }
-            } footer:{
-                
+                 }
             }
-        }
+         }
         .alert("Tube error!", isPresented: $invalidTube){
             Button("OK", role: .cancel,action: { closeView() })
         } message: {
@@ -88,7 +88,7 @@ struct SaveDocumentView:View{
     
     func saveNewTube(){
         docContent.trim()
-        if buttonIsDisabled { return }
+        if buttonIsDisabled{ return }
         docContent.isSaving = true
         let managedObjectContext = PersistenceController.shared.container.viewContext
         let model = TubeModel(context:managedObjectContext)
