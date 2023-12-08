@@ -31,9 +31,8 @@ struct ShareDocumentView:View{
         docContent.message.isEmpty
     }
     
-    @ViewBuilder
     var toogleContactsButton:some View{
-        Image(systemName: sclVar.isSuggestionShowing ? "chevron.down" : "chevron.right")
+        Image(systemName: "chevron.up.chevron.down" )
     }
     
     var clearButton: some View{
@@ -48,11 +47,11 @@ struct ShareDocumentView:View{
     var shareButton: some View{
         Button(action:startSendingMessageProcess,label: {
             Text("Send")
-            .font(.headline)
+            .font(.title3)
             .padding(.horizontal,10)
             .padding(.vertical,3)
             .overlay(
-                Rectangle()
+                RoundedRectangle(cornerRadius:10.0)
                     .stroke(buttonIsDisabled ? Color.tertiaryLabel : Color.systemBlue, lineWidth: 1)
             )
             
@@ -72,7 +71,6 @@ struct ShareDocumentView:View{
                maxHeight: 100 * CGFloat(min(3,firestoreViewModel.confirmedContacts.count)))
     }
     
-    @ViewBuilder
     var contactField:some View{
         HStack{
             Label("Send to: \(sclVar.currentContact?.displayName ?? "")",systemImage: "person.crop.square").hLeading()
@@ -85,13 +83,7 @@ struct ShareDocumentView:View{
         .contentShape(Rectangle())
         .onTapGesture {
             endTextEditing()
-            withAnimation{
-                sclVar.isSuggestionShowing.toggle()
-            }
-        }
-        Divider()
-        if sclVar.isSuggestionShowing{
-            suggestionsList
+            withAnimation{ sclVar.isSuggestionShowing.toggle() }
         }
     }
     
@@ -108,7 +100,10 @@ struct ShareDocumentView:View{
     var reciever: some View{
         VStack(spacing: 5.0){
             contactField
-            //clearContactField
+            Divider()
+            if sclVar.isSuggestionShowing{
+                suggestionsList
+            }
         }
         .roundedBorder()
     }
@@ -182,7 +177,6 @@ struct ShareDocumentView:View{
               let senderId = firestoreViewModel.currentUserID,
               let groupId = firestoreViewModel.getGroupIdFromOtherUserId(contact.userId)
         else { return }
-        
         let messageId = docContent.documentId
         let storageId = docContent.storageId
         

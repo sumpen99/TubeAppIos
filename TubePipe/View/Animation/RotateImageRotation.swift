@@ -19,18 +19,17 @@ struct RotateImageView:View{
     var body: some View {
         Image(name)
         .resizable()
-        .foregroundColor(isActive ? Color.accentColor : Color.systemGray)
         .rotationEffect(Angle.degrees(isAnimating ? 360 : 0))
         .onChange(of: isActive){ active in
-            startAnimation()
+            toggleAnimation()
         }
+        
     }
     
-    func startAnimation() {
+    func toggleAnimation() {
         withAnimation(singleAnimation) {
-            isAnimating = true
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0){
-                isAnimating = false
+            if isActive{
+                isAnimating.toggle()
             }
         }
     }

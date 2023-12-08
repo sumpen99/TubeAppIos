@@ -8,20 +8,12 @@
 import SwiftUI
 
 struct SignupVariables{
-    var timeOut:Bool = false
+    var isTimeOut:Bool = false
     var isFailedSignupAttempt:Bool = false
-    var isMissingCredentials:Bool = false
     var passwordHelper = PasswordHelper()
-    var errorMessage:String = ""
     
-    var isTimeOut:Bool{ isFailedSignupAttempt || isMissingCredentials }
     var hideButton:Bool{
-        (passwordHelper.passwordsIsAMatch == .NOT_ACCEPTED) || passwordHelper.emailText.isEmpty
-    }
-    
-    var missingInfoMSG:String{
-        if passwordHelper.emailText.isEmpty{ return "Missing email!"}
-        return "Password dont match"
+        (passwordHelper.passwordsIsAMatch == .NOT_ACCEPTED)||passwordHelper.emailText.isEmpty
     }
 }
 
@@ -29,32 +21,8 @@ struct SignupView : View {
     @EnvironmentObject var firebaseAuth: FirebaseAuth
     @FocusState var focusField: Field?
     @State var sVar = SignupVariables()
-    var CONVERT_ANONYMOUS:Bool
     
-    var errorMessage:some View{
-        ZStack{
-            illegalCredentials
-            missingInfo
-        }
-        .hCenter()
-        .font(.callout)
-        .foregroundColor(Color.systemRed)
-        .listRowBackground(Color.clear)
-    }
-    
-    var buttonIsDisabled:Bool{
-        sVar.hideButton
-    }
-    
-    var illegalCredentials:some View{
-        Text(sVar.errorMessage)
-        .opacity(sVar.isFailedSignupAttempt ? 1.0 : 0.0)
-    }
-    
-    var missingInfo:some View{
-        Text(sVar.missingInfoMSG)
-        .opacity(sVar.isMissingCredentials ? 1.0 : 0.0)
-    }
+    var buttonIsDisabled:Bool{sVar.hideButton}
     
     var signupLabel:some View{
         VStack{
@@ -165,7 +133,6 @@ struct SignupView : View {
             List{
                 emailSection
                 passwordSection
-                errorMessage
                 signupButton
             }
             .scrollDisabled(true)
@@ -178,64 +145,30 @@ struct SignupView : View {
         AppBackgroundStack(content: {
             signupFields
         })
-        .overlay{
-            if sVar.timeOut{
-                ZStack{
-                    Color.lightText
-                }
-            }
-        }
+        .overlay{if sVar.isTimeOut{waitingForResult}}
+        .alert(isPresented: $sVar.isFailedSignupAttempt, content: {onResultAlert()})
         .hiddenBackButtonWithCustomTitle(color:.black)
     }
     
     func signUserUp(){
-        if buttonIsDisabled||sVar.timeOut { return }
-        sVar.timeOut = true
-        if CONVERT_ANONYMOUS{ convertAnonymousUser()}
-        else{ createNewUser() }
+        if sVar.hideButton||sVar.isTimeOut { return }
+        sVar.isTimeOut = true
+        createNewUser()
     }
     
     func createNewUser(){
         firebaseAuth.signupWithEmail(sVar.passwordHelper.emailText,
                                      password: sVar.passwordHelper.password){ (result,error) in
-            guard let nsError = error as NSError? else {
-                sVar.timeOut = false
-                return
-            }
-            sVar.errorMessage = nsError.localizedDescription
-            toggleFailedSignupAttemptWithValue(true)
+            sVar.isTimeOut = false
+            guard let nsError = error as NSError? else { return }
+            toggleFailedSignupAttemptWithValue(nsError)
         }
     }
     
-    func convertAnonymousUser(){
-        firebaseAuth.convertAnonymousWithEmail(sVar.passwordHelper.emailText,
-                                     password: sVar.passwordHelper.password){ [weak firebaseAuth] (result,error) in
-            guard let nsError = error as NSError? else {
-                firebaseAuth?.signOut()
-                firebaseAuth?.loginWithEmail(sVar.passwordHelper.emailText,
-                                            password: sVar.passwordHelper.password){ (result,error) in
-                    guard let error = error else { sVar.timeOut = false;return}
-                    sVar.errorMessage = error.localizedDescription
-                    toggleFailedSignupAttemptWithValue(true)
-                }
-                sVar.timeOut = false
-                return
-            }
-            sVar.errorMessage = nsError.localizedDescription
-            toggleFailedSignupAttemptWithValue(true)
-        }
-    }
-    
-    func toggleFailedSignupAttemptWithValue(_ value:Bool){
-        withAnimation{
-            sVar.isFailedSignupAttempt = value
-        }
-        if value{
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0){
-                self.toggleFailedSignupAttemptWithValue(false)
-                self.sVar.timeOut = false
-            }
-        }
+    func toggleFailedSignupAttemptWithValue(_ error:Error){
+        ALERT_TITLE = "Signup failed"
+        ALERT_MESSAGE = error.localizedDescription
+        sVar.isFailedSignupAttempt.toggle()
     }
     
 }

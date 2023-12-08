@@ -318,6 +318,10 @@ var clearSpaceAtBottom: some View{
     .frame(height:MENU_HEIGHT)
 }
 
+var waitingForResult:some View{
+    ZStack{ Color.lightText.opacity(0.3) }
+}
+
 func actionSheetWithCancel(_ dat:(title:String,message:String,cancel:String)) -> ActionSheet{
     return ActionSheet(title: Text(dat.title),
                        message: Text(dat.message),

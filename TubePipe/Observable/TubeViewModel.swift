@@ -936,6 +936,7 @@ extension TubeViewModel{
             initViewFromTubeDefaultValues(preferredSetting.tubeDefault)
             userDefaultSettingsVar.showPreferredSettings()
             return true
+            
         }
         userDefaultSettingsVar.preferredSetting = userSettings
         initViewFromTubeDefaultValues(userSettings.tubeDefault)

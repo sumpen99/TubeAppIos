@@ -168,11 +168,7 @@ struct ExtendedTubeDocFileView:View{
             if !userWillEditTubes{
                 onSelected(tube)
             }
-            else{
-                withAnimation{
-                    onToggleListWithId(tube.id)
-                }
-            }
+            else{ onToggleListWithId(tube.id) }
         }
     }
 }

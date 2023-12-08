@@ -29,16 +29,15 @@ struct FeatureView:View{
     
     var featureHeader:some View{
         Text("Feature Request")
-        .font(.title)
+        .font(.title2)
         .bold()
         .foregroundColor(Color.black)
         .hLeading()
-        .padding(.top)
     }
     
     var featureFooter:some View{
         Text("Fill out the following form to submit a new feature request.")
-            .listSectionFooter(color:.black)
+        .listSectionFooter()
         .hLeading()
     }
     
@@ -47,7 +46,7 @@ struct FeatureView:View{
             featureHeader
             featureFooter
         }
-        .padding([.leading,.trailing])
+  
     }
     
     var optionalText:some View{
@@ -132,34 +131,21 @@ struct FeatureView:View{
     }
            
     var infoBody:some View{
-        VStack(spacing:0){
+        List{
             featureTopHeader
-            List{
-                inputTitle.listRowBackground(Color.lightText)
-                inputDescription.listRowBackground(Color.lightText)
-                inputEmail.listRowBackground(Color.lightText)
-                //inputScreenshot
-            }
-            .scrollContentBackground(.hidden)
-            .listStyle(.insetGrouped)
-        }
+            inputTitle
+            inputDescription
+            inputEmail
+       }
+       .listStyle(.plain)
         
     }
     
     var body:some View{
         AppBackgroundStack(content: {
             infoBody
-            //.onSubmit { submitFeatureRequest() }
-            //.submitLabel(.send)
         },title: "")
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                shareButton
-            }
-        }
-        /*.onTapGesture {
-            endTextEditing()
-        }*/
+        .toolbar { ToolbarItem(placement: .navigationBarTrailing) { shareButton }}
         .modifier(NavigationViewModifier(title: ""))
         .hiddenBackButtonWithCustomTitle("Profile")
         .alert("Feature request sent",

@@ -31,11 +31,11 @@ struct SaveDocumentView:View{
     var saveButton: some View{
         Button(action:saveNewTube,label: {
             Text("Save")
-            .font(.headline)
+            .font(.title3)
             .padding(.horizontal,10)
             .padding(.vertical,3)
             .overlay(
-                Rectangle()
+                RoundedRectangle(cornerRadius:10.0)
                     .stroke(buttonIsDisabled ? Color.tertiaryLabel : Color.systemBlue, lineWidth: 1)
             )
             

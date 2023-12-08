@@ -133,7 +133,7 @@ struct UserSettingsView:View{
     
     var content:some View{
         VStack{
-            tubeWindow.padding([.leading,.trailing])
+            tubeWindow.padding([.leading,.trailing,.top])
             settingsFooter.padding([.leading,.trailing,.bottom])
             ScrollView{
                 VStack(spacing:0){

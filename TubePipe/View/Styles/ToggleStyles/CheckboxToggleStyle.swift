@@ -20,9 +20,7 @@ struct CheckboxStyle: ToggleStyle {
                     .foregroundColor(Color.black)
                     .font(.system(size: 20, weight: .bold, design: .default))
                     .onTapGesture {
-                        withAnimation{
-                            configuration.isOn.toggle()
-                        }
+                        configuration.isOn.toggle()
                     }
             }
         }
@@ -34,9 +32,7 @@ struct CheckboxStyle: ToggleStyle {
                     .foregroundColor(Color.black)
                     .font(.system(size: 20, weight: .bold, design: .default))
                     .onTapGesture {
-                        withAnimation{
-                            configuration.isOn.toggle()
-                        }
+                        configuration.isOn.toggle()
                     }
                 configuration.label.foregroundColor(configuration.isOn ? labelIsOnColor : Color.systemGray).font(.caption)
             }

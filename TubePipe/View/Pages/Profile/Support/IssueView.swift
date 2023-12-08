@@ -39,52 +39,42 @@ struct IssueView:View{
     
     var issueHeader:some View{
         Text("Issue Report")
-        .font(.title)
+        .font(.title2)
         .bold()
         .foregroundColor(Color.black)
         .hLeading()
-        .padding(.top)
     }
     
     
     var footerLabelToggle:some View{
         ZStack{
-            if collapseFooter{
-                issueFooterShort
-            }
-            else{
-                issueFooterLong
-            }
+            if collapseFooter{ issueFooterShort }
+            else{ issueFooterLong }
         }
-        .onTapGesture {
-            withAnimation{
-                collapseFooter.toggle()
-            }
-        }
+        .onTapGesture { withAnimation{ collapseFooter.toggle() } }
     }
     
     var issueFooterLong:some View{
-        ScrollView{
-            Text("\(issueString)")
-            .listSectionFooter(color: .black)
-            .lineLimit(nil)
-            .hLeading()
-        }
+        Text("\(issueString)")
+        .listSectionFooter()
+        .lineLimit(nil)
+        .hLeading()
     }
     
     var issueFooterShort:some View{
         Text(issueString)
-        .listSectionFooter(color: .black)
-        .lineLimit(/*@START_MENU_TOKEN@*/2/*@END_MENU_TOKEN@*/)
+        .listSectionFooter()
+        .lineLimit(3)
         .hLeading()
     }
     
     var issueTopHeader:some View{
-        VStack{
-            issueHeader
-            footerLabelToggle
+        ScrollView{
+            VStack{
+                issueHeader
+                footerLabelToggle
+            }
         }
-        .padding([.leading,.trailing])
     }
     
     var optionalText:some View{
@@ -170,34 +160,21 @@ struct IssueView:View{
     }
     
     var infoBody:some View{
-        VStack(spacing:0){
+        List{
             issueTopHeader
-            List{
-                inputTitle.listRowBackground(Color.lightText)
-                inputDescription.listRowBackground(Color.lightText)
-                inputEmail.listRowBackground(Color.lightText)
-                //inputScreenshot
-            }
-            .scrollContentBackground(.hidden)
-            .listStyle(.insetGrouped)
+            inputTitle
+            inputDescription
+            inputEmail
         }
+        .listStyle(.plain)
     }
     
     var body:some View{
         AppBackgroundStack(content: {
             infoBody
-            //.onSubmit { submitIssueReport() }
-            //.submitLabel(.send)
         },title:"")
-        .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                shareButton
-            }
-        }
-        /*.onTapGesture {
-            endTextEditing()
-        }*/
-        .modifier(NavigationViewModifier(title: ""))
+        .toolbar {ToolbarItem(placement: .navigationBarTrailing) {shareButton}}
+       .modifier(NavigationViewModifier(title: ""))
         .hiddenBackButtonWithCustomTitle("Profile")
         .alert("Report submitted",
                isPresented: $submitHasBeenMade,

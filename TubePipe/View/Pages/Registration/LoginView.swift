@@ -11,7 +11,7 @@ struct LoginVariables{
     var isFailedLoginAttempt:Bool = false
     var email:String = ""
     var password:String = ""
-    var timeOut:Bool = false
+    var isTimeOut:Bool = false
 }
 
 struct LoginView : View {
@@ -61,9 +61,7 @@ struct LoginView : View {
             .background{
                 Rectangle().stroke(lineWidth: 2.0).foregroundColor(Color.black)
             }
-            illegalCredentials
         }
-        
     }
     
     var loginPasswordTextfield:some View{
@@ -80,9 +78,7 @@ struct LoginView : View {
             .background{
                 Rectangle().stroke(lineWidth: 2.0).foregroundColor(Color.black)
             }
-            illegalCredentials
         }
-        
     }
     
     var loginTextfields: some View{
@@ -121,38 +117,25 @@ struct LoginView : View {
         AppBackgroundStack(content: {
             loginFields
         })
-        .overlay{
-            if lVar.timeOut{
-                ZStack{
-                    Color.lightText
-                }
-            }
-        }
+        .overlay{if lVar.isTimeOut{waitingForResult}}
+        .alert(isPresented: $lVar.isFailedLoginAttempt, content: {onResultAlert()})
         .hiddenBackButtonWithCustomTitle(color:Color.black)
    }
     
     func logUserIn(){
-        if buttonIsDisabled||lVar.timeOut{ return }
-        lVar.timeOut = true
+        if buttonIsDisabled||lVar.isTimeOut{ return }
+        lVar.isTimeOut = true
         firebaseAuth.loginWithEmail(lVar.email,password: lVar.password){ (result,error) in
-            guard let _ = error else {
-                lVar.timeOut = false
-                return
-            }
-            toggleFailedLoginAttemptWithValue(true)
+            lVar.isTimeOut = false
+            guard let nsError = error as NSError? else { return }
+            toggleFailedLoginAttemptWithValue(nsError)
         }
     }
     
-    func toggleFailedLoginAttemptWithValue(_ value:Bool){
-        withAnimation{
-            lVar.isFailedLoginAttempt = value
-        }
-        if value{
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0){
-                self.lVar.timeOut = false
-                self.toggleFailedLoginAttemptWithValue(false)
-            }
-        }
+    func toggleFailedLoginAttemptWithValue(_ error:Error){
+        ALERT_TITLE = "Login failed"
+        ALERT_MESSAGE = error.localizedDescription
+        lVar.isFailedLoginAttempt.toggle()
     }
     
 }

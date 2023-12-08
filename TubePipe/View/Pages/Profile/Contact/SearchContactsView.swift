@@ -180,7 +180,7 @@ struct SearchContactsView: View{
     func fireSentRequestAlert(isSuccess:Bool,message:String,displayInfo:String){
         clearSearchSuggestions()
         if !isSuccess{
-             ALERT_TITLE = "Attention"
+            ALERT_TITLE = "Attention"
             ALERT_MESSAGE = message
             sVar.isRequestSent.toggle()
         }

@@ -150,16 +150,15 @@ class UserPreferredSetting: NSObject, NSCoding ,NSSecureCoding,Encodable,Decodab
 
 class SharedPreference {
     static let userDefault = UserDefaults.standard
-   
+       
     static func writeNewUserSettingsToStorage(_ key: String,userSetting: UserPreferredSetting){
         do{
             if let encodedSettings = try JSONSerialization.jsonObject(with: JSONEncoder().encode(userSetting)) as? [String: Any]{
                 let encodedData: Data = try NSKeyedArchiver.archivedData(
                     withRootObject: encodedSettings,
                     requiringSecureCoding: false)
-                userDefault.set(encodedData, forKey: key)
+               userDefault.set(encodedData, forKey: key)
             }
-            
         }
         catch{
             debugLog(object: error)
