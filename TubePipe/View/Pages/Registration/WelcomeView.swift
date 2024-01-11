@@ -50,6 +50,20 @@ struct WelcomeView : View {
         .vBottom()
     }
     
+    var disabledAnonymousButton:some View{
+        ZStack{
+            if wVar.isTimeOut{
+                ProgressView().hCenter()
+            }
+            else{
+                buttonAsNavigationLink(title: "Take a peek first? Enter as guest",
+                                       systemImage: "person.crop.circle.badge.questionmark",
+                                       lblColor: .black,imgColor: .black)
+            }
+        }
+     
+    }
+    
     var body: some View {
         NavigationStack{
             AppBackgroundStackWithoutBottomPadding(content: {
@@ -79,7 +93,6 @@ struct WelcomeView : View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
         .ignoresSafeArea()
         .animation(.easeInOut, value: wVar.userPressedNext)
-        .overlay{if wVar.isTimeOut{waitingForResult}}
     }
     
     var dialogContent: some View{
@@ -132,6 +145,7 @@ struct WelcomeView : View {
                                        lblColor: .black,imgColor: .black)
             }
             .buttonStyle(ButtonStyleDocument(color: Color(hex: 0xDBA63F)))
+            .disabled(wVar.isTimeOut)
             NavigationLink(destination:LazyDestination(destination: {
                 LoginView().onAppear{ wVar.userPressedNext = false }
             })){
@@ -140,11 +154,9 @@ struct WelcomeView : View {
                                        lblColor: .black,imgColor: .black)
             }
             .buttonStyle(ButtonStyleDocument(color: Color(hex: 0xF3BC54)))
-            Button(action: proceedAsAnonymous ,label: {
-                buttonAsNavigationLink(title: "Take a peek first? Enter as guest",
-                                       systemImage: "person.crop.circle.badge.questionmark",
-                                       lblColor: .black,imgColor: .black)
-            })
+            .disabled(wVar.isTimeOut)
+            Button(action: proceedAsAnonymous ,label: {disabledAnonymousButton} )
+            .disabled(wVar.isTimeOut)
             .buttonStyle(ButtonStyleDocument(color: Color(hex: 0xFFD26A)))
         }
     }

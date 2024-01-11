@@ -19,3 +19,10 @@ func debugLog(object: Any, functionName: String = #function, fileName: String = 
     print("<\(className)> \(functionName) [#\(lineNumber)]| \(object)\n")
   #endif
 }
+
+func fakePauseWith(delay waitInSec:DispatchTime,action:@escaping ()->Void){
+    //.now() + 4
+    DispatchQueue.main.asyncAfter(deadline: waitInSec, execute: {
+        action()
+    })
+}

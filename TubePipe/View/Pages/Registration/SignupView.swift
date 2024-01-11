@@ -13,7 +13,7 @@ struct SignupVariables{
     var passwordHelper = PasswordHelper()
     
     var hideButton:Bool{
-        (passwordHelper.passwordsIsAMatch == .NOT_ACCEPTED)||passwordHelper.emailText.isEmpty
+        (passwordHelper.passwordsIsAMatch == .NOT_ACCEPTED)||passwordHelper.emailText.isEmpty||isTimeOut
     }
 }
 
@@ -115,10 +115,7 @@ struct SignupView : View {
     }
     
     var signupButton: some View{
-        Button(action:signUserUp,label: {
-            Text("Create account")
-            .hCenter()
-        })
+        SpinnerButton(isTimeout: $sVar.isTimeOut, action: signUserUp, label: "Create Account")
         .disabled(buttonIsDisabled)
         .buttonStyle(ButtonStyleDisabledable(lblColor: .white,
                                              borderColor: .black,
@@ -145,13 +142,12 @@ struct SignupView : View {
         AppBackgroundStack(content: {
             signupFields
         })
-        .overlay{if sVar.isTimeOut{waitingForResult}}
         .alert(isPresented: $sVar.isFailedSignupAttempt, content: {onResultAlert()})
         .hiddenBackButtonWithCustomTitle(color:.black)
     }
     
     func signUserUp(){
-        if sVar.hideButton||sVar.isTimeOut { return }
+        if buttonIsDisabled { return }
         sVar.isTimeOut = true
         createNewUser()
     }

@@ -82,3 +82,20 @@ struct LabelButton:View{
         }
     }
 }
+
+struct SpinnerButton:View {
+    @Binding var isTimeout:Bool
+    let action: () -> Void
+    let label:String
+    
+    var body: some View {
+        Button(action:action,label: {
+            if isTimeout{
+                ProgressView().hCenter()
+            }
+            else{
+                Text(label).hCenter()
+            }
+        })
+    }
+}

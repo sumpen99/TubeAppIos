@@ -38,7 +38,7 @@ struct LoginView : View {
     }
     
     var buttonIsDisabled:Bool{
-        lVar.email.isEmpty||lVar.password.isEmpty
+        lVar.email.isEmpty||lVar.password.isEmpty||lVar.isTimeOut
     }
     
     var accountLabel:some View{
@@ -92,15 +92,11 @@ struct LoginView : View {
     
    
     var loginButton: some View{
-        HStack{
-            Button(action:logUserIn,label: {
-                Text("Log in").hCenter()
-            })
-            .disabled(buttonIsDisabled)
-            .buttonStyle(ButtonStyleDisabledable(lblColor: .white,
-                                                 borderColor: .black,
-                                                 backgroundColor: .systemBlue))
-        }
+        SpinnerButton(isTimeout: $lVar.isTimeOut, action: logUserIn, label: "Log In")
+        .disabled(buttonIsDisabled)
+        .buttonStyle(ButtonStyleDisabledable(lblColor: .white,
+                                             borderColor: .black,
+                                             backgroundColor: .systemBlue))
         .padding()
     }
     
@@ -117,13 +113,12 @@ struct LoginView : View {
         AppBackgroundStack(content: {
             loginFields
         })
-        .overlay{if lVar.isTimeOut{waitingForResult}}
         .alert(isPresented: $lVar.isFailedLoginAttempt, content: {onResultAlert()})
         .hiddenBackButtonWithCustomTitle(color:Color.black)
    }
     
     func logUserIn(){
-        if buttonIsDisabled||lVar.isTimeOut{ return }
+        if buttonIsDisabled{ return }
         lVar.isTimeOut = true
         firebaseAuth.loginWithEmail(lVar.email,password: lVar.password){ (result,error) in
             lVar.isTimeOut = false
