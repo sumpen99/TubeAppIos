@@ -31,7 +31,7 @@ struct ButtonStyleDisabledable: ButtonStyle {
             configuration.label
                 .padding([.leading,.trailing],10)
                 .padding([.bottom,.top],20)
-                .foregroundColor(lblColor)
+                .foregroundStyle(lblColor)
                 .opacity(isEnabled ? 1.0 : 0.6)
                 .background(backgroundColor)
                 .overlay(

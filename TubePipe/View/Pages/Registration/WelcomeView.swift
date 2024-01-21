@@ -35,7 +35,7 @@ struct WelcomeView : View {
         .underline(true)
         .font(.largeTitle)
         .bold()
-        .foregroundColor(.black)
+        .foregroundStyle(.black)
         .vTop()
         .hCenter()
     }
@@ -111,14 +111,14 @@ struct WelcomeView : View {
              )
         )
         .cornerRadius(16, corners: [.topLeft, .topRight])
-        .foregroundColor(.black)
+        .foregroundStyle(.black)
    }
     
     var dialogText: some View{
         VStack{
             HStack {
                 Text("Welcome to TubePipe")
-                    .foregroundColor(.black)
+                    .foregroundStyle(.black)
                     .font(.system(size: 20, weight: .bold))
                 
                 Spacer()
@@ -129,7 +129,7 @@ struct WelcomeView : View {
             Text("You are now one step away from entering the world of segmented pipes.")
                 .hLeading()
                 .font(.system(size: 16, weight: .bold))
-                .foregroundColor(.black)
+                .foregroundStyle(.black)
                 .padding(.bottom, 24)
         }
         

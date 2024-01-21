@@ -43,7 +43,7 @@ struct FilterSearchMenu:View{
     
     func getCategorieCell(_ categorie:SearchCategorie) -> some View{
         Toggle(isOn:self.$iVar.searchOption[SearchCategorie.indexOf(op: categorie)]){
-            Text(categorie.rawValue).font(.body).lineLimit(0).foregroundColor(.black)
+            Text(categorie.rawValue).font(.body).lineLimit(0).foregroundStyle(.black)
         }
         .onChange(of: self.iVar.searchOption[SearchCategorie.indexOf(op: categorie)]){ value in
             withAnimation{
@@ -75,7 +75,7 @@ struct FilterSearchMenu:View{
             Text("Filter")
             .sectionText(font: .subheadline,color: Color.black)
             Spacer()
-            toggleCategoriesButton.foregroundColor(Color.black)
+            toggleCategoriesButton.foregroundStyle(Color.black)
         }
         .padding([.leading,.trailing,.top])
         .contentShape(Rectangle())
@@ -120,14 +120,14 @@ extension FilterSearchMenu{
             resetCurrentSearch()
         })
         .padding(.trailing)
-        .foregroundColor(Color.systemBlue)
+        .foregroundStyle(Color.systemBlue)
         .hTrailing()
     }
     
     var textField:some View{
         TextField("",text:$iVar.searchText.max(MAX_TEXTFIELD_LEN))
             .preferedSearchField()
-            .placeholder(when: focusField != .FIND_STORED_TUBE && iVar.searchText.isEmpty){ Text("search").foregroundColor(.black)}
+            .placeholder(when: focusField != .FIND_STORED_TUBE && iVar.searchText.isEmpty){ Text("search").foregroundStyle(.black)}
             .focused($focusField,equals: .FIND_STORED_TUBE)
             .hLeading()
             .onSubmit {
@@ -146,7 +146,7 @@ extension FilterSearchMenu{
             
         }
         .filledRoundedBackgroundWithBorder(border:.black)
-        .foregroundColor(.black)
+        .foregroundStyle(.black)
         .padding([.leading,.trailing])
     }
     

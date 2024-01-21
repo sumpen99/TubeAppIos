@@ -11,6 +11,6 @@ struct SectionHeaderModifier: ViewModifier{
     func body(content: Content) -> some View{
         content
             .font(.system(size: 20,weight: .black).monospacedDigit())
-            .foregroundColor(.white)
+            .foregroundStyle(.white)
     }
 }

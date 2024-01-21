@@ -12,7 +12,7 @@ extension Text{
     func largeTitle(color:Color = Color.black) -> some View{
         self.font(.largeTitle)
             .bold()
-            .foregroundColor(color)
+            .foregroundStyle(color)
             .hLeading()
     }
     
@@ -22,13 +22,13 @@ extension Text{
             .background{
                 Circle().fill(Color[initial])
             }
-            .foregroundColor(.white)
+            .foregroundStyle(.white)
     }
     
     func noDataBackground() -> some View{
         self.hLeading()
         .padding()
-        .foregroundColor(Color.placeholderText)
+        .foregroundStyle(Color.placeholderText)
         .background(
             ZStack{
                 RoundedRectangle(cornerRadius: 8).fill(Color.white)
@@ -40,38 +40,38 @@ extension Text{
     func noDataBackgroundNoPadding() -> some View{
         self.hCenter()
         .padding()
-        .foregroundColor(Color.darkGray)
+        .foregroundStyle(Color.darkGray)
     }
     
     func lightCaption() -> some View{
-        self.font(.caption).fontWeight(.light).foregroundColor(.gray)
+        self.font(.caption).fontWeight(.light).foregroundStyle(.gray)
     }
     
     func preferedBody() -> some View{
-        self.font(Font(UIFont.preferredFont(forTextStyle: .body))).foregroundColor(Color.systemGray)
+        self.font(Font(UIFont.preferredFont(forTextStyle: .body))).foregroundStyle(Color.systemGray)
     }
     
     func settingsText() -> some View{
         self.multilineTextAlignment(.center)
         .keyboardType(UIKeyboardType.numberPad)
-        .foregroundColor(Color.black)
+        .foregroundStyle(Color.black)
         .textFieldStyle(RoundedBorderTextFieldStyle())
     }
     
     func listSectionHeader(color:Color = .black) -> some View{
-        self.foregroundColor(color).bold()
+        self.foregroundStyle(color).bold()
     }
     
     func profileSectionHeader() -> some View{
-        self.foregroundColor(.black).bold().font(.headline)
+        self.foregroundStyle(.black).bold().font(.headline)
     }
     
     func listSectionFooter(color:Color = .systemGray) -> some View{
-        self.foregroundColor(color).italic()
+        self.foregroundStyle(color).italic()
     }
     
     func leadingSectionHeader(color:Color = .black) -> some View{
-        self.foregroundColor(color).bold().hLeading()
+        self.foregroundStyle(color).bold().hLeading()
     }
     
     func bubbleText() -> some View{
@@ -79,7 +79,7 @@ extension Text{
         .lineLimit(nil)
         .multilineTextAlignment(.leading)
         .font(.callout)
-        .foregroundColor(Color.white)
+        .foregroundStyle(Color.white)
     }
     
 }
@@ -95,7 +95,7 @@ extension TextField{
     func preferedEmailField(textColor:Color) -> some View{
         self.removePredictiveSuggestions(keyBoardType: .asciiCapable)
             .font(Font(UIFont.preferredFont(forTextStyle: .headline)))
-            .foregroundColor(textColor)
+            .foregroundStyle(textColor)
             .padding([.bottom,.top],10)
             .accentColor(.black)
     }
@@ -116,7 +116,7 @@ extension TextField{
                 RoundedRectangle(cornerRadius: 5)
                     .stroke(lineWidth: 1)
             )
-            .foregroundColor(Color.GHOSTWHITE)
+            .foregroundStyle(Color.GHOSTWHITE)
             .accentColor(.black)
     }
     
@@ -126,7 +126,7 @@ extension TextField{
             .lineLimit(1)
             .padding(5)
             .overlay(
-                Rectangle().frame(height: 1.0).vBottom().foregroundColor(Color.tertiaryLabel)
+                Rectangle().frame(height: 1.0).vBottom().foregroundStyle(Color.tertiaryLabel)
             )
             .accentColor(.black)
             
@@ -136,7 +136,7 @@ extension TextField{
         self.removePredictiveSuggestions(keyBoardType: .asciiCapable)
             .multilineTextAlignment(.leading)
             .font(Font(UIFont.preferredFont(forTextStyle: .body)))
-            .foregroundColor(Color.black)
+            .foregroundStyle(Color.black)
             .accentColor(.black)
             .hLeading()
     }
@@ -150,7 +150,7 @@ extension TextField{
                 RoundedRectangle(cornerRadius: 5)
                     .stroke(lineWidth: 1)
             )
-            .foregroundColor(Color.black)
+            .foregroundStyle(Color.black)
             .accentColor(.black)
     }
    
@@ -163,7 +163,7 @@ extension SecureField{
             .font(Font(UIFont.preferredFont(forTextStyle: .headline)))
             .disableAutocorrection(true)
             .autocapitalization(.none)
-            .foregroundColor(Color.black)
+            .foregroundStyle(Color.black)
             .padding([.top,.bottom],10)
             .accentColor(.black)
     }

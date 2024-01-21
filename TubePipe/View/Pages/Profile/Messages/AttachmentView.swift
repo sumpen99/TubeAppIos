@@ -41,7 +41,7 @@ struct AttachmentView:View{
         Text(title)
         .font(.callout)
         .bold()
-        .foregroundColor(.black)
+        .foregroundStyle(.black)
         .hLeading()
         .padding([.leading])
     }

@@ -41,7 +41,7 @@ struct IssueView:View{
         Text("Issue Report")
         .font(.title2)
         .bold()
-        .foregroundColor(Color.black)
+        .foregroundStyle(Color.black)
         .hLeading()
     }
     
@@ -78,7 +78,7 @@ struct IssueView:View{
     }
     
     var optionalText:some View{
-        Text("optional").italic().foregroundColor(.tertiaryLabel)
+        Text("optional").italic().foregroundStyle(Color.tertiaryLabel)
     }
     
     var optionalImage:some View{
@@ -87,7 +87,7 @@ struct IssueView:View{
             Image(systemName: "photo.on.rectangle.angled")
         }
         .italic()
-        .foregroundColor(.tertiaryLabel)
+        .foregroundStyle(Color.tertiaryLabel)
         
     }
     
@@ -116,7 +116,7 @@ struct IssueView:View{
                 .hLeading()
                 Text("\(MAX_TEXTFIELD_LEN*4-docContent.message.count)")
                 .font(.caption)
-                .foregroundColor(Color.systemGray)
+                .foregroundStyle(Color.systemGray)
                 .frame(width:33.0)
                 .hTrailing()
                 .vBottom()
@@ -154,7 +154,7 @@ struct IssueView:View{
         })
         .disabled(buttonIsDisabled)
         .opacity(buttonIsDisabled ? 0.2 : 1.0)
-        .foregroundColor(buttonIsDisabled ? .black :.systemBlue)
+        .foregroundStyle(buttonIsDisabled ? Color.black : Color.systemBlue)
         .toolbarFontAndPadding()
         .bold()
     }

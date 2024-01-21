@@ -59,7 +59,7 @@ struct ContactRequestView:View{
         return Text(request.rawValue)
         .font(.headline)
         .bold()
-        .foregroundColor(request == requestHeader ? .black : Color.tertiaryLabel )
+        .foregroundStyle(request == requestHeader ? Color.black : Color.tertiaryLabel )
         .background(
              ZStack{
                  if request == requestHeader{

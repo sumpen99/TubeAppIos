@@ -19,7 +19,7 @@ struct BouncingText:View{
 
     var body: some View {
         Text(text)
-        .foregroundColor(color)
+        .foregroundStyle(color)
         .scaleEffect(isAnimating ? 1.2 : 1)
         .onAppear {
             startAnimation()

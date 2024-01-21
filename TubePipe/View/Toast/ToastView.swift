@@ -15,11 +15,11 @@ struct ToastView: View {
     HStack(alignment: .center, spacing: 12) {
       Image(systemName: style.iconFileName)
       .font(.title)
-      .foregroundColor(style.themeColor)
+      .foregroundStyle(style.themeColor)
       Text(message)
       .font(.callout)
       .italic()
-      .foregroundColor(Color.black)
+      .foregroundStyle(Color.black)
     }
     .padding()
     .background(

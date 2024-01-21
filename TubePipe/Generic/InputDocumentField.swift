@@ -15,7 +15,7 @@ struct InputDocumentField<LabelText: View,Content: View>: View {
         VStack{
             ZStack{
                 Text("Description").hidden().hLeading()
-                label.bold().foregroundColor(Color.black).hLeading()
+                label.bold().foregroundStyle(Color.black).hLeading()
             }
             content
         }

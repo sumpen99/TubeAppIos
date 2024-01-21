@@ -31,7 +31,7 @@ struct Model3DSettingsView:View{
                             allowToggle:Bool) -> some View{
         HStack{
             listDotWithImage(imageName)
-            Text(header).font(.body).foregroundColor(.black)
+            Text(header).font(.body).foregroundStyle(.black)
             Spacer()
             Toggle(isOn: self.$tubeViewModel.userDefaultSettingsVar.drawOptions[index]){}
                 .toggleStyle(CheckboxStyle(alignLabelLeft: true,labelIsOnColor:.black))

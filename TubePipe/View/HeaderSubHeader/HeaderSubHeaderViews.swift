@@ -18,12 +18,12 @@ struct HeaderSubHeaderWithClearOption:View{
             Text(subHeader).font(.body)
             Spacer()
             Button(action: { action?() },label: {
-                //Text("Rensa").foregroundColor(Color.systemBlue)
+                //Text("Rensa").foregroundStyle(Color.systemBlue)
                 Image(systemName: "xmark.circle")
             })
             .padding(.trailing)
         }
-        .foregroundColor(Color.systemGray)
+        .foregroundStyle(Color.systemGray)
         .hLeading()
     }
     
@@ -41,7 +41,7 @@ struct VertHeaderMessage:View{
             Text(message).font(.body).hLeading()
             //Spacer()
        }
-        .foregroundColor(Color.systemGray)
+        .foregroundStyle(Color.systemGray)
         .hLeading()
         .padding([.leading,.bottom],5)
     }
@@ -60,7 +60,7 @@ struct HeaderSubHeader:View{
             Text(subHeader).font(.caption).lineLimit(1)
             Spacer()
         }
-        .foregroundColor(lblColor)
+        .foregroundStyle(lblColor)
         .hLeading()
     }
     

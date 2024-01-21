@@ -63,7 +63,7 @@ struct CustomCalendarView: View {
         Text("Stored files")
         .font(.largeTitle)
         .bold()
-        .foregroundColor(.black)
+        .foregroundStyle(.black)
         .listRowBackground(Color.clear)
      
      }
@@ -182,7 +182,7 @@ extension CustomCalendarView{
             }
         }
         .bold(month == selected.month)
-        .foregroundColor(.black)
+        .foregroundStyle(.black)
         .onTapGesture {
             withAnimation{
                 selected.month = month
@@ -194,7 +194,7 @@ extension CustomCalendarView{
     var weekdaysName: some View{
         LazyVGrid(columns: layout, spacing: 20.0,pinnedViews: [.sectionHeaders]) {
             ForEach(selected.days, id: \.self) { item in
-                Text("\(item)").foregroundColor(Color.black).font(.subheadline).bold()
+                Text("\(item)").foregroundStyle(Color.black).font(.subheadline).bold()
            }
         }
         .padding([.horizontal,.top])
@@ -232,7 +232,7 @@ extension CustomCalendarView{
                      }
                 )
                 .bold(newDay == selected.day)
-                .foregroundColor(.black)
+                .foregroundStyle(.black)
                 .onTapGesture {
                     withAnimation{
                         selected.day = day - PAD_CALENDAR
@@ -297,7 +297,7 @@ extension CustomCalendarView{
             }
         },label: {
             Text("\(Image(systemName: "chevron.left"))")
-                .foregroundColor(.calendarButton)
+                .foregroundStyle(Color.calendarButton)
                 .toolbarFontAndPadding(.headline)
         })
     }
@@ -307,7 +307,7 @@ extension CustomCalendarView{
             selected.year += 1
         },label: {
             Text("\(Image(systemName: "chevron.right"))")
-                .foregroundColor(.calendarButton)
+                .foregroundStyle(Color.calendarButton)
                 .toolbarFontAndPadding(.headline)
         })
     }

@@ -83,8 +83,12 @@ struct AnonymousModel2DView: View{
             Model3DView()
         })){
             ZStack{
-                Image(systemName: "arrow.triangle.2.circlepath").font(.title).foregroundColor(.systemBlue)
-                Image(systemName: "view.3d").imageScale(.small).foregroundColor(.systemBlue)
+                Image(systemName: "arrow.triangle.2.circlepath")
+                    .font(.title)
+                    .foregroundStyle(Color.systemBlue)
+                Image(systemName: "view.3d")
+                    .imageScale(.small)
+                    .foregroundStyle(Color.systemBlue)
             }
         }
         .toolbarFontAndPadding()

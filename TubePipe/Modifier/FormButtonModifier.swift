@@ -13,7 +13,7 @@ struct FormButtonModifier: ViewModifier{
     func body(content: Content) -> some View{
         content
             .font(.headline)
-            .foregroundColor(.white)
+            .foregroundStyle(.white)
             .padding()
             .frame(width: width, height: 50)
             .background(backgroundColor)

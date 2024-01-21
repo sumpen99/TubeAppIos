@@ -42,7 +42,7 @@ struct UserSettingsView:View{
                 Text("Invalid tubevalues!")
                 .font(.title)
                 .bold()
-                .foregroundColor(.red)
+                .foregroundStyle(.red)
             }
             .vTop()
             .hLeading()
@@ -70,7 +70,7 @@ struct UserSettingsView:View{
                           maxValue: SLIDER_MAX_OVERLAP,
                           textEnding: "mm")
         } header: {
-            Text("Overlap length").foregroundColor(Color.black)
+            Text("Overlap length").foregroundStyle(Color.black)
         }
         
     }
@@ -115,7 +115,7 @@ struct UserSettingsView:View{
                               textEnding: "mm")
             }
         } header: {
-            Text(item.rawValue).foregroundColor(Color.black)
+            Text(item.rawValue).foregroundStyle(Color.black)
         }
     }
     
@@ -148,7 +148,7 @@ struct UserSettingsView:View{
     var leadingButton:some View{
         if changesHasHappend{
             Button(action: loadDefaultValues) {
-                Text("Reset").foregroundColor(.systemRed).bold()
+                Text("Reset").foregroundStyle(Color.systemRed).bold()
             }
             .toolbarFontAndPadding(.headline)
         }
@@ -160,7 +160,7 @@ struct UserSettingsView:View{
     
     var trailingButton:some View{
         Button(action: saveNewDefaultValues) {
-            Text("Save").foregroundColor(.systemBlue).bold()
+            Text("Save").foregroundStyle(Color.systemBlue).bold()
         }
         .toolbarFontAndPadding(.headline)
         .opacity(valuesCanBeUpdated ? 1.0 : 0.0)

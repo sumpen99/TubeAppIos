@@ -13,11 +13,11 @@ struct CheckboxStyle: ToggleStyle {
     func makeBody(configuration: Self.Configuration) -> some View {
         if alignLabelLeft{
             HStack{
-                configuration.label.foregroundColor(Color.black).font(.caption)
+                configuration.label.foregroundStyle(Color.black).font(.caption)
                 Image(systemName: configuration.isOn ? "checkmark.circle.fill" : "circle")
                     .resizable()
                     .frame(width: 24, height: 24)
-                    .foregroundColor(Color.black)
+                    .foregroundStyle(Color.black)
                     .font(.system(size: 20, weight: .bold, design: .default))
                     .onTapGesture {
                         configuration.isOn.toggle()
@@ -29,12 +29,12 @@ struct CheckboxStyle: ToggleStyle {
                 Image(systemName: configuration.isOn ? "checkmark.circle.fill" : "circle")
                     .resizable()
                     .frame(width: 24, height: 24)
-                    .foregroundColor(Color.black)
+                    .foregroundStyle(Color.black)
                     .font(.system(size: 20, weight: .bold, design: .default))
                     .onTapGesture {
                         configuration.isOn.toggle()
                     }
-                configuration.label.foregroundColor(configuration.isOn ? labelIsOnColor : Color.systemGray).font(.caption)
+                configuration.label.foregroundStyle(configuration.isOn ? labelIsOnColor : Color.systemGray).font(.caption)
             }
         }
     }
@@ -96,11 +96,11 @@ struct XMarkCheckboxStyle: ToggleStyle {
     func makeBody(configuration: Self.Configuration) -> some View {
         if alignLabelLeft{
             HStack{
-                configuration.label.foregroundColor(configuration.isOn ? Color.backgroundPrimary : Color.tertiaryLabel).font(.caption)
+                configuration.label.foregroundStyle(configuration.isOn ? Color.backgroundPrimary : Color.tertiaryLabel).font(.caption)
                 Image(systemName: configuration.isOn ? "xmark.circle.fill" : "circle")
                     .resizable()
                     .frame(width: 24, height: 24)
-                    .foregroundColor(configuration.isOn ? Color.systemRed : .gray)
+                    .foregroundStyle(configuration.isOn ? Color.systemRed : .gray)
                     .font(.system(size: 20, weight: .bold, design: .default))
                     .onTapGesture {
                         withAnimation{
@@ -114,14 +114,14 @@ struct XMarkCheckboxStyle: ToggleStyle {
                 Image(systemName: configuration.isOn ? "xmark.circle.fill" : "circle")
                     .resizable()
                     .frame(width: 24, height: 24)
-                    .foregroundColor(configuration.isOn ? Color.systemRed : .gray)
+                    .foregroundStyle(configuration.isOn ? Color.systemRed : .gray)
                     .font(.system(size: 20, weight: .bold, design: .default))
                     .onTapGesture {
                         withAnimation{
                             configuration.isOn.toggle()
                         }
                     }
-                configuration.label.foregroundColor(configuration.isOn ? Color.backgroundPrimary : Color.tertiaryLabel).font(.caption)
+                configuration.label.foregroundStyle(configuration.isOn ? Color.backgroundPrimary : Color.tertiaryLabel).font(.caption)
             }
         }
        

@@ -216,7 +216,7 @@ extension InboxSavedTubesView{
                 Text(txt)
                 .font(.body)
                 .bold()
-                .foregroundColor(.black)
+                .foregroundStyle(.black)
                 .hLeading()
             }
        }

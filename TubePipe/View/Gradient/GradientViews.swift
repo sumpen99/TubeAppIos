@@ -40,7 +40,7 @@ struct HalfCircleGradient: View {
                 .trim(from: 0.0, to: 1.0)
                 .stroke(style: StrokeStyle(lineWidth: LINE_WIDTH, lineCap: .round, lineJoin: .round))
                 .opacity(0.3)
-                .foregroundColor(Color.backgroundPrimary)
+                .foregroundStyle(Color.backgroundPrimary)
                 .rotationEffect(.degrees(90.0))
             Circle()
                 .trim(from: 0.0, to: progress)

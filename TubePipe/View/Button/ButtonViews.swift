@@ -19,7 +19,7 @@ struct TapAndHoldButton: View{
             Image(systemName: imageName)
             .font(.title)
             .bold()
-            .foregroundColor(.white)
+            .foregroundStyle(.white)
             .padding()
             .background(color)
             .frame(width: 36,height:36)
@@ -63,7 +63,7 @@ struct BackButton:View{
                     Image(systemName: imgLabel).font(.headline)
                     //Text(title)
                 }
-                .foregroundColor(color)
+                .foregroundStyle(color)
             }
         }
     }

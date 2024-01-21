@@ -20,7 +20,7 @@ struct DocFileImage:View{
             RoundedRectangle(cornerRadius: 8).fill(Color.systemYellow.opacity(0.7))
         )
         .overlay{
-            RoundedRectangle(cornerRadius: 8).stroke(lineWidth: 2.0).foregroundColor(.black)
+            RoundedRectangle(cornerRadius: 8).stroke(lineWidth: 2.0).foregroundStyle(.black)
             if showStaroFill{
                 Image(systemName: "staroflife.fill")
                 .resizable()
@@ -46,7 +46,7 @@ struct TubeDocFileView:View{
         if let date = tube.date{
             Text(date.shortTime())
             .font(.footnote)
-            .foregroundColor(.black)
+            .foregroundStyle(.black)
         }
     }
     
@@ -57,7 +57,7 @@ struct TubeDocFileView:View{
             .font(.subheadline)
             .bold()
             .lineLimit(1)
-            .foregroundColor(.black)
+            .foregroundStyle(.black)
         }
      }
     
@@ -107,7 +107,7 @@ struct ExtendedTubeDocFileView:View{
         .background{
             Circle().fill(Color.black).frame(width: 26, height: 26)
         }
-        .foregroundColor(Color.white)
+        .foregroundStyle(Color.white)
     }
     
     @ViewBuilder
@@ -127,7 +127,7 @@ struct ExtendedTubeDocFileView:View{
         if let date = tube.date{
             Text(date.iosShortMessageFormat())
             .font(.footnote)
-            .foregroundColor(.black)
+            .foregroundStyle(.black)
         }
     }
     
@@ -138,7 +138,7 @@ struct ExtendedTubeDocFileView:View{
             .font(.subheadline)
             .bold()
             .lineLimit(1)
-            .foregroundColor(.black)
+            .foregroundStyle(.black)
         }
      }
     

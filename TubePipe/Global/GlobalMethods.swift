@@ -26,3 +26,10 @@ func fakePauseWith(delay waitInSec:DispatchTime,action:@escaping ()->Void){
         action()
     })
 }
+
+func canOpenSettingsUrl() -> Bool{
+    if let url = URL(string: UIApplication.openSettingsURLString){
+        return UIApplication.shared.canOpenURL(url)
+    }
+    return false
+}

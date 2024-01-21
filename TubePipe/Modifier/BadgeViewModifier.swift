@@ -16,7 +16,7 @@ struct BadgeViewModifier: ViewModifier {
                     Text(value)
                         .fixedSize(horizontal: true, vertical: false)
                         .font(.system(size: 14, weight: .semibold))
-                        .foregroundColor(Color.white)
+                        .foregroundStyle(Color.white)
                         .padding(.horizontal, value.count == 1 ? 2 : 6)
                         .padding(.vertical, 2)
                         .background(

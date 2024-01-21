@@ -17,7 +17,7 @@ struct ButtonStyleSheet: ButtonStyle {
                     .stroke(Color.black, lineWidth: 1)
             )
             .opacity(configuration.isPressed ? 0.5 : 1.0)
-            .foregroundColor(Color.black)
+            .foregroundStyle(Color.black)
             .cornerRadius(16)
             .fontWeight(.semibold)
           

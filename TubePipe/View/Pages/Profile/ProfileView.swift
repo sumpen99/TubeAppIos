@@ -153,7 +153,7 @@ struct ProfileView: View{
         .placeholder(when: showPlaceholderText){
             placeHolderText
         }
-        .foregroundColor(userAllowSharing ? .black : .darkGray)
+        .foregroundStyle(userAllowSharing ? .black : .darkGray)
         .hLeading()
         .disabled(!userAllowSharing)
         .onChange(of: focusField,perform: replaceDisplaynameIfEmpty)
@@ -161,7 +161,7 @@ struct ProfileView: View{
     
     var usernameText:some View{
         HStack{
-            Text(pVar.userNameText).foregroundColor(.darkGray).italic().hLeading()
+            Text(pVar.userNameText).foregroundStyle(Color.darkGray).italic().hLeading()
             Button(action: {
                 pVar.isEditUsername.toggle()
                 focusField = .PROFILE_DISPLAY_NAME
@@ -176,11 +176,11 @@ struct ProfileView: View{
     var placeHolderText:some View{
         if userAllowSharing{
             Text(" username")
-            .foregroundColor(.systemRed)
+                .foregroundStyle(Color.systemRed)
         }
         else{
             Text(" username")
-            .foregroundColor(.systemGray)
+                .foregroundStyle(Color.systemGray)
         }
     }
     
@@ -190,7 +190,7 @@ struct ProfileView: View{
             Text("Username: ")
             .lineLimit(1)
             .italic()
-            .foregroundColor(.black)
+            .foregroundStyle(.black)
             if pVar.isEditUsername{ usernameTextfield }
             else{ usernameText }
             
@@ -203,12 +203,12 @@ struct ProfileView: View{
             Text("Email: ")
                 .lineLimit(1)
                 .italic()
-                .foregroundColor(.black)
+                .foregroundStyle(.black)
             Text(firestoreViewModel.currentUser?.email ?? "")
                 .lineLimit(1)
                 .hLeading()
                 .italic()
-                .foregroundColor(.darkGray)
+                .foregroundStyle(Color.darkGray)
         }
         .profileListRow()
     }
@@ -217,11 +217,11 @@ struct ProfileView: View{
         Button(action: { pVar.profileAlertAction = .ALERT_LOGOUT }){
             HStack{
                 Label("Sign out",systemImage: "arrow.right.square")
-                .foregroundColor(.blue)
+                .foregroundStyle(.blue)
                 .hLeading()
                 Image(systemName: "chevron.right")
                 .font(.footnote)
-                .foregroundColor(.tertiaryLabel)
+                .foregroundStyle(Color.tertiaryLabel)
            }
         }
         .profileListRow()
@@ -231,11 +231,11 @@ struct ProfileView: View{
         Button(action: { pVar.isDeleteAccount.toggle() }){
             HStack{
                 Label("Delete account",systemImage: "person.badge.minus")
-                .foregroundColor(.red)
+                .foregroundStyle(.red)
                 .hLeading()
                 Image(systemName: "chevron.right")
                 .font(.footnote)
-                .foregroundColor(.tertiaryLabel)
+                .foregroundStyle(Color.tertiaryLabel)
            }
         }
         .profileListRow()
@@ -243,7 +243,7 @@ struct ProfileView: View{
     
     var togglePublicMode:some View{
         Toggle(isOn: self.$tubeViewModel.userDefaultSettingsVar.drawOptions[DrawOption.indexOf(op: .ALLOW_SHARING)]){
-            Label("Public mode",systemImage: "globe").foregroundColor(.black)
+            Label("Public mode",systemImage: "globe").foregroundStyle(.black)
         }
         .toggleStyle(CapsuleCheckboxStyle(alignLabelLeft: true))
         .profileListRow()
@@ -336,7 +336,7 @@ struct ProfileView: View{
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: dismissUserChanges ) {
-                        Text("Dismiss").foregroundColor(.systemRed).bold().font(.headline)
+                        Text("Dismiss").foregroundStyle(Color.systemRed).bold().font(.headline)
                     }
                     .toolbarFontAndPadding()
                     .opacity(changesHasHappend ? 1.0 : 0.0)
@@ -344,7 +344,7 @@ struct ProfileView: View{
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: saveUserChanges ) {
-                        Text("Save").foregroundColor(.systemBlue).bold().font(.headline)
+                        Text("Save").foregroundStyle(Color.systemBlue).bold().font(.headline)
                     }
                     .toolbarFontAndPadding()
                     .opacity(changesHasHappend ? 1.0 : 0.0)

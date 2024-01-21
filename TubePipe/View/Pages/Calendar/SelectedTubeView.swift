@@ -19,7 +19,7 @@ struct SelectedTubeView: View{
         Text(tubeModel.date?.formattedString() ?? "")
         .font(.callout)
         .bold()
-        .foregroundColor(.black)
+        .foregroundStyle(.black)
         .hLeading()
         .padding([.leading])
     }

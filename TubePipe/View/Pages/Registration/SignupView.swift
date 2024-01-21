@@ -30,12 +30,12 @@ struct SignupView : View {
             Text("It`s free & and always will be!").font(.body).hLeading()
             
         }
-        .foregroundColor(Color.black)
+        .foregroundStyle(Color.black)
         .padding()
     }
     
     var accountLabel:some View{
-        Text("Accountinformation").font(.headline).hLeading().foregroundColor(Color.black)
+        Text("Accountinformation").font(.headline).hLeading().foregroundStyle(Color.black)
     }
     
     var signupEmailTextfield:some View{
@@ -44,14 +44,14 @@ struct SignupView : View {
             TextField("",text:$sVar.passwordHelper.emailText)
                 .preferedEmailField(textColor: Color.black)
                 .placeholder(when: focusField != .SIGNUP_EMAIL && sVar.passwordHelper.emailText.isEmpty){
-                    Text("email").foregroundColor(.black)
+                    Text("email").foregroundStyle(.black)
                 }
                 .focused($focusField,equals: .SIGNUP_EMAIL)
                 .hLeading()
         }
         .padding([.leading,.trailing])
         .background{
-            Rectangle().stroke(lineWidth: 2.0).foregroundColor(Color.black)
+            Rectangle().stroke(lineWidth: 2.0).foregroundStyle(Color.black)
         }
     }
     
@@ -61,14 +61,14 @@ struct SignupView : View {
             SecureField("",text:$sVar.passwordHelper.password)
                 .preferedSecureField()
                 .placeholder(when: focusField != .SIGNUP_SECURE_PASSWORD && sVar.passwordHelper.password.isEmpty){
-                    Text("password").foregroundColor(.black)
+                    Text("password").foregroundStyle(.black)
                 }
                 .focused($focusField,equals: .SIGNUP_SECURE_PASSWORD)
                 .hLeading()
         }
         .padding([.leading,.trailing])
         .background{
-            Rectangle().stroke(lineWidth: 2.0).foregroundColor(Color.black)
+            Rectangle().stroke(lineWidth: 2.0).foregroundStyle(Color.black)
         }
         
     }
@@ -79,14 +79,14 @@ struct SignupView : View {
             SecureField("",text:$sVar.passwordHelper.confirmedPassword)
                 .preferedSecureField()
                 .placeholder(when: focusField != .SIGNUP_RETYPE_SECURE_PASSWORD && sVar.passwordHelper.confirmedPassword.isEmpty){
-                    Text("verify password").foregroundColor(.black)
+                    Text("verify password").foregroundStyle(.black)
                 }
                 .focused($focusField,equals: .SIGNUP_RETYPE_SECURE_PASSWORD)
                 .hLeading()
         }
         .padding([.leading,.trailing])
         .background{
-            Rectangle().stroke(lineWidth: 2.0).foregroundColor(Color.black)
+            Rectangle().stroke(lineWidth: 2.0).foregroundStyle(Color.black)
         }
         
     }

@@ -39,7 +39,7 @@ struct ShareDocumentView:View{
         Button(action:{ docContent.message = "";},label: {
             Image(systemName: "xmark.square.fill")
         })
-        .foregroundColor(buttonIsDisabled ? Color.tertiaryLabel : .red)
+        .foregroundStyle(buttonIsDisabled ? Color.tertiaryLabel : .red)
         .font(.title2)
         .bold()
     }
@@ -56,7 +56,7 @@ struct ShareDocumentView:View{
             )
             
         })
-        .foregroundColor(buttonIsDisabled ? Color.tertiaryLabel : .systemBlue)
+        .foregroundStyle(buttonIsDisabled ? Color.tertiaryLabel : .systemBlue)
     }
     
     var suggestionsList: some View{
@@ -92,7 +92,7 @@ struct ShareDocumentView:View{
         if sclVar.currentContact != nil{
             Button(action: { withAnimation{ sclVar.currentContact = nil } }){
                 Image(systemName: "xmark")
-                .foregroundColor(.red)
+                .foregroundStyle(.red)
             }
        }
     }

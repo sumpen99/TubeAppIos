@@ -33,7 +33,7 @@ struct ImagePickerSwiftUi<LabelText:View>: View {
             if image != nil{
                 Button("\(Image(systemName: "xmark"))", action: clearData )
                 .font(.headline)
-                .foregroundColor(.red)
+                .foregroundStyle(.red)
             }
             else{
                 label
@@ -66,7 +66,7 @@ struct ImagePickerSwiftUi<LabelText:View>: View {
                     imageLabel
                     fetchedImage
                 }
-                .foregroundColor(Color.black)
+                .foregroundStyle(Color.black)
             }
             .onChange(of: selectedItem) { newItem in
                 Task {
@@ -101,7 +101,7 @@ struct UserImage: View{
                 .resizable()
                 .scaledToFit()
                 .frame(height: 100)
-                .foregroundColor(.backgroundPrimary)
+                .foregroundStyle(Color.backgroundPrimary)
                 .onTapGesture {
                     activeImagePicker = .ORIGINAL_PICKER
                     photoGalleryPermissionHandler.checkPermission()

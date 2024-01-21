@@ -23,7 +23,7 @@ extension View{
     
     func sectionText(font:Font = .body,color:Color = Color.black) -> some View{
         self
-        .foregroundColor(color)
+        .foregroundStyle(color)
         .font(font)
         .fontWeight(.bold)
         .lineLimit(1)
@@ -31,7 +31,7 @@ extension View{
     }
     func sectionTextSecondary(color:Color) -> some View{
         self
-        .foregroundColor(color)
+        .foregroundStyle(color)
         .font(.body)
         .hLeading()
     }
@@ -44,7 +44,7 @@ extension View{
         .overlay(
             RoundedRectangle(cornerRadius: 5)
             .stroke(lineWidth: 2)
-            .foregroundColor(border)
+            .foregroundStyle(border)
         )
     }
     
@@ -163,6 +163,18 @@ extension View{
         }
     }
     
+    
+    /*
+    func onPrivacyAlert(title:String,
+                        message:String) -> Alert{
+        return Alert(
+                title: Text(title),
+                message: Text(message),
+                primaryButton: .destructive(Text("Ok"), action: openPrivacySettings),
+                secondaryButton: .cancel(Text("Cancel"))
+        )
+    }*/
+    
     func endTextEditing() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
                                         to: nil, from: nil, for: nil)
@@ -186,8 +198,18 @@ extension View{
     func roundedBorder() -> some View{
         self.padding()
             .background{
-                RoundedRectangle(cornerRadius: 5).stroke(Color.black)
-            }  
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(Color.black)
+           }
+    }
+    
+    func roundedBorderWithShadow() -> some View{
+        self.padding()
+            .background{
+                RoundedRectangle(cornerRadius: 5)
+                    .stroke(Color.gray)
+                    .shadow(color: .black, radius: 5, x: 0, y: 2)
+            }
     }
     
     func profileListRow() -> some View{
@@ -253,8 +275,8 @@ func buttonAsNavigationLink(title:String,
                             lblColor:Color = .black,
                             imgColor:Color = .tertiaryLabel) -> some View{
     return HStack{
-        Label(title, systemImage: systemImage).foregroundColor(lblColor).hLeading()
-        Image(systemName: "chevron.right").foregroundColor(imgColor).font(.subheadline).bold()
+        Label(title, systemImage: systemImage).foregroundStyle(lblColor).hLeading()
+        Image(systemName: "chevron.right").foregroundStyle(imgColor).font(.subheadline).bold()
     }
 }
 
@@ -265,7 +287,7 @@ func backButton(title:String = "Back",action:@escaping ()->Void) -> some View{
                 Image(systemName: "chevron.left").bold()
                 Text(title)
             }
-            .foregroundColor(Color.systemBlue)
+            .foregroundStyle(Color.systemBlue)
         }
     }
 }
@@ -332,4 +354,13 @@ func actionSheetDefault() -> ActionSheet{
     return ActionSheet(title: Text("Ooops!"), message: Text("Sorry for the inconvenience but we experienced an unexpected error..."), buttons: [
         .cancel(Text("Ok"))
     ])
+}
+
+func openPrivacySettings(){
+    guard let url = URL(string: UIApplication.openSettingsURLString),
+            UIApplication.shared.canOpenURL(url) else {
+                //assertionFailure("Not able to open App privacy settings")
+                return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
 }

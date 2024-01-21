@@ -16,7 +16,7 @@ struct ButtonStyleNavigationLink: ButtonStyle {
                     .stroke(Color.tertiaryLabel, lineWidth: 1)
             )
             .opacity(configuration.isPressed ? 0.5 : 1.0)
-            .foregroundColor(Color.white)
+            .foregroundStyle(Color.white)
             .cornerRadius(16)
             .fontWeight(.semibold)
             .padding()

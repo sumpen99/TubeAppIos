@@ -46,7 +46,7 @@ struct RotateImageViewDefault:View{
 
     var body: some View {
         Image(systemName: name)
-        .foregroundColor(Color.accentColor)
+        .foregroundStyle(Color.accentColor)
         .rotationEffect(Angle.degrees(isAnimating ? 360 : 0))
         .onAppear {
             startAnimation()

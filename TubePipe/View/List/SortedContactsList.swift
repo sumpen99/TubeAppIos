@@ -34,7 +34,7 @@ struct SortedContactsList: View{
         Image(systemName: "face.smiling.inverse")
             .resizable()
             .frame(width: 40,height: 40)
-            .foregroundColor(contactAvatarColor)
+            .foregroundStyle(contactAvatarColor)
     }
     
     func contactAvatar(c:String) -> some View{
@@ -53,7 +53,7 @@ struct SortedContactsList: View{
                 .font(.subheadline)
                 .hLeading()
         }
-        .foregroundColor(contactInfoColor)
+        .foregroundStyle(contactInfoColor)
     }
     
     func contactRowMessage(contact:Contact) -> some View{
@@ -67,12 +67,12 @@ struct SortedContactsList: View{
                 .getLatestMessageDetail(contact.groupId,
                                         messageDetail: .MESSAGE_MESSAGE) as? String ?? "")
                 .lineLimit(1)
-                .foregroundColor(contactInfoColor)
+                .foregroundStyle(contactInfoColor)
                 .font(.caption)
                 .hLeading()
         }
         .vTop()
-        .foregroundColor(contactInfoColor)
+        .foregroundStyle(contactInfoColor)
     }
     
     func navigationChevron(contact:Contact) -> some View{
@@ -80,10 +80,10 @@ struct SortedContactsList: View{
             if let date = firestoreViewModel.getLatestMessageDetail(contact.groupId,messageDetail: .MESSAGE_DATE) as? Date{
                 Text(date.iosShortMessageFormat())
                     .font(.callout)
-                    .foregroundColor(Color.systemGray)
+                    .foregroundStyle(Color.systemGray)
             }
             Image(systemName: "chevron.right")
-            .foregroundColor(Color.systemGray)
+            .foregroundStyle(Color.systemGray)
         }
         .hTrailing()
         .vTop()

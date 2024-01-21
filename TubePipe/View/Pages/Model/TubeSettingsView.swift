@@ -143,7 +143,7 @@ struct TubeSettingsView:View{
         .font(.headline)
         .bold()
         .frame(height: 33)
-        .foregroundColor(setting == tsVar.settingsHeader ? Color.black : Color.tertiaryLabel )
+        .foregroundStyle(setting == tsVar.settingsHeader ? Color.black : Color.tertiaryLabel )
         .background(
              ZStack{
                  if setting == tsVar.settingsHeader{
@@ -175,7 +175,7 @@ struct TubeSettingsView:View{
              }
         )
         .bold(setting == tsVar.settingsOption)
-        .foregroundColor(setting == tsVar.settingsOption ? .black : .tertiaryLabel)
+        .foregroundStyle(setting == tsVar.settingsOption ? .black : .tertiaryLabel)
         .onTapGesture {
             withAnimation{
                 tsVar.settingsOption = setting
@@ -224,7 +224,7 @@ struct TubeSettingsView:View{
                               textEnding: "mm")
             }
         } header: {
-            Text(item.rawValue).foregroundColor(Color.systemGray)
+            Text(item.rawValue).foregroundStyle(Color.systemGray)
         }
     }
     
@@ -234,7 +234,7 @@ struct TubeSettingsView:View{
         VStack{
             HStack{
                 listDotWithImage(imageName)
-                Text(header).font(.body).foregroundColor(.black)
+                Text(header).font(.body).foregroundStyle(.black)
                 Spacer()
                 Toggle(isOn: self.$tubeViewModel.userDefaultSettingsVar.drawOptions[index]){}
                     .toggleStyle(CheckboxStyle(alignLabelLeft: true,labelIsOnColor:.black))
@@ -267,7 +267,7 @@ struct TubeSettingsView:View{
                 .padding([.leading,.trailing])
             }
         } header: {
-            Text("Cut Angles").foregroundColor(Color.systemGray)
+            Text("Cut Angles").foregroundStyle(Color.systemGray)
         }
         .opacity(tubeViewModel.settingsVar.tube.segment < 2 ? 0.2 : 1.0)
     }
@@ -296,7 +296,7 @@ struct TubeSettingsView:View{
                     .padding([.leading,.trailing])
                 }
            } header: {
-               Text("Automatic Align").foregroundColor(Color.systemGray)
+               Text("Automatic Align").foregroundStyle(Color.systemGray)
            }
         }
         else{
@@ -314,7 +314,7 @@ struct TubeSettingsView:View{
                             self.tubeViewModel.rebuild()
                         }
                     }){
-                        Text("Automatic align").foregroundColor(Color.systemBlue)
+                        Text("Automatic align").foregroundStyle(Color.systemBlue)
                     }
                 }
                 .hCenter()
@@ -344,7 +344,7 @@ struct TubeSettingsView:View{
                 .padding([.leading,.trailing])
             }
         } header: {
-            Text("Overlap").foregroundColor(Color.systemGray)
+            Text("Overlap").foregroundStyle(Color.systemGray)
         }
         
     }

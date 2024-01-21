@@ -51,14 +51,14 @@ struct SearchContactsView: View{
                 sVar.currentContact = contact
                 sVar.showingOptions.toggle()
             }, label: {
-                Text("\(Image(systemName: "person.badge.plus"))").font(.title).foregroundColor(.systemBlue)
+                Text("\(Image(systemName: "person.badge.plus"))").font(.title).foregroundStyle(Color.systemBlue)
             })
         default:
             Text(contact.status?.searchResultLabel() ?? "")
                 .font(.caption)
                 .italic()
                 .lineLimit(1)
-                .foregroundColor(.tertiaryLabel)
+                .foregroundStyle(Color.tertiaryLabel)
         }
     }
     
@@ -93,7 +93,7 @@ struct SearchContactsView: View{
             if !firestoreViewModel.contactSuggestions.isEmpty{
                 Button("Clear",action: clearSearchSuggestions)
                .padding(.trailing)
-               .foregroundColor(Color.systemBlue)
+               .foregroundStyle(Color.systemBlue)
             }
             
         }
@@ -101,7 +101,7 @@ struct SearchContactsView: View{
             RoundedRectangle(cornerRadius: 5)
                 .stroke(lineWidth: 1)
         )
-        .foregroundColor(.black)
+        .foregroundStyle(.black)
         .padding(.horizontal)
     }
     

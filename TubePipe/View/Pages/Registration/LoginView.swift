@@ -23,7 +23,7 @@ struct LoginView : View {
         Text("Username or password is incorrect")
             .font(.callout)
             .hLeading()
-            .foregroundColor(Color.systemRed)
+            .foregroundStyle(Color.systemRed)
             .opacity(lVar.isFailedLoginAttempt ? 1.0 : 0.0)
     }
     
@@ -33,7 +33,7 @@ struct LoginView : View {
             Text("Happy to see you back, member!").font(.body).hLeading()
             
         }
-        .foregroundColor(.black)
+        .foregroundStyle(.black)
         .padding()
     }
     
@@ -42,7 +42,7 @@ struct LoginView : View {
     }
     
     var accountLabel:some View{
-        Text("Accountinformation").font(.headline).hLeading().foregroundColor(.black)
+        Text("Accountinformation").font(.headline).hLeading().foregroundStyle(.black)
     }
     
     var loginEmailTextfield:some View{
@@ -52,14 +52,14 @@ struct LoginView : View {
                 TextField("",text:$lVar.email)
                 .preferedEmailField(textColor: Color.black)
                 .placeholder(when: focusField != .LOGIN_EMAIL && lVar.email.isEmpty){ 
-                    Text("email").foregroundColor(.black)
+                    Text("email").foregroundStyle(.black)
                 }
                 .focused($focusField,equals: .LOGIN_EMAIL)
                 .hLeading()
             }
             .padding([.leading,.trailing])
             .background{
-                Rectangle().stroke(lineWidth: 2.0).foregroundColor(Color.black)
+                Rectangle().stroke(lineWidth: 2.0).foregroundStyle(Color.black)
             }
         }
     }
@@ -70,13 +70,13 @@ struct LoginView : View {
                 Image(systemName: "lock")
                 SecureField("",text:$lVar.password)
                 .preferedSecureField()
-                .placeholder(when: focusField != .LOGIN_SECURE_PASSWORD && lVar.password.isEmpty){ Text("password").foregroundColor(.black)}
+                .placeholder(when: focusField != .LOGIN_SECURE_PASSWORD && lVar.password.isEmpty){ Text("password").foregroundStyle(.black)}
                 .focused($focusField,equals: .LOGIN_SECURE_PASSWORD)
                 .hLeading()
             }
             .padding([.leading,.trailing])
             .background{
-                Rectangle().stroke(lineWidth: 2.0).foregroundColor(Color.black)
+                Rectangle().stroke(lineWidth: 2.0).foregroundStyle(Color.black)
             }
         }
     }

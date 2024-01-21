@@ -21,7 +21,7 @@ struct TopMenu:View{
                     Image(systemName: "arrow.down")
                 }
                 .font(.headline)
-                //.foregroundColor(Color.sheetCloseButton)
+                //.foregroundStyle(Color.sheetCloseButton)
                 .hTrailing()
             }
             Divider()

@@ -18,7 +18,7 @@ struct ButtonStyleDocument: ButtonStyle {
                     .stroke(Color.black, lineWidth: 2)
             )
             .opacity(configuration.isPressed ? 0.5 : 1.0)
-            .foregroundColor(Color.black)
+            .foregroundStyle(Color.black)
             .fontWeight(.semibold)
     }
 

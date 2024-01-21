@@ -23,7 +23,7 @@ struct SaveDocumentView:View{
         Button(action:{ docContent.message = ""},label: {
             Image(systemName: "xmark.square.fill")
         })
-        .foregroundColor(buttonIsDisabled ? Color.tertiaryLabel : .red)
+        .foregroundStyle(buttonIsDisabled ? Color.tertiaryLabel : Color.red)
         .font(.title2)
         .bold()
     }
@@ -40,7 +40,7 @@ struct SaveDocumentView:View{
             )
             
         })
-        .foregroundColor(buttonIsDisabled ? Color.tertiaryLabel : .systemBlue)
+        .foregroundStyle(buttonIsDisabled ? Color.tertiaryLabel : Color.systemBlue)
     }
     
     var body: some View{

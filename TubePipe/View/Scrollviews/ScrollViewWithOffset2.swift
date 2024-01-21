@@ -31,7 +31,7 @@ struct ScrollViewWithOffset2:View{
                     .padding(5)
                     
                     Text("Current page: \(currentId)")
-                        .foregroundColor(.white)
+                        .foregroundStyle(.white)
                 }
 
                 // 4. pass proxy to the bottom button
@@ -48,7 +48,7 @@ struct ScrollViewWithOffset2:View{
             currentId = 0
         }, label: {
             Image(systemName: "arrow.up")
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
         })
         .padding(.horizontal)
     }
@@ -61,7 +61,7 @@ struct ScrollViewWithOffset2:View{
             currentId = lastItemId
         }, label: {
             Image(systemName: "arrow.down")
-                .foregroundColor(.white)
+                .foregroundStyle(.white)
         })
         .padding(.horizontal)
     }
@@ -73,7 +73,7 @@ struct ScrollViewWithOffset2:View{
                 ScrollView(.vertical) {
                     LazyVStack {
                         ForEach(viewModel.contentItems) { item in
-                            Text("\(item.id)").foregroundColor(Color.white).font(.largeTitle).padding()
+                            Text("\(item.id)").foregroundStyle(Color.white).font(.largeTitle).padding()
                             .id(item.id)
                         }
                     }

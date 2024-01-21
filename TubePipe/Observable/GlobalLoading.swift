@@ -79,7 +79,7 @@ struct GlobalLoadingDialog:ViewModifier{
         ZStack {
             content
             if presentationManager.isPresented {
-                Rectangle().foregroundColor(Color.black.opacity(0.3))
+                Rectangle().foregroundStyle(Color.black.opacity(0.3))
                 .edgesIgnoringSafeArea(.all)
                 presentationManager.dialogContent
                 .padding()
@@ -188,7 +188,7 @@ struct GlobalRingSpinner : View {
                 .trim(from: 0.0, to: 1.0)
                 .stroke(style: StrokeStyle(lineWidth: LINE_WIDTH_ANIMATED, lineCap: .round, lineJoin: .round))
                 .opacity(0.3)
-                .foregroundColor(globalLoadingPresentation.loadingIsSuccess ? Color.green : Color.red)
+                .foregroundStyle(globalLoadingPresentation.loadingIsSuccess ? Color.green : Color.red)
                 .rotationEffect(.degrees(90.0))
             GlobalInnerRing(stopAnimating: stopAnimating,pct: pct)
             .stroke(globalLoadingPresentation.loadingIsSuccess ? Color.green : Color.red, lineWidth: LINE_WIDTH_ANIMATED)
@@ -196,7 +196,7 @@ struct GlobalRingSpinner : View {
                 Image(systemName: globalLoadingPresentation.loadingIsSuccess ? "checkmark" : "exclamationmark.triangle")
                 .resizable()
                 .frame(width: size*0.3,height: size*0.3)
-                .foregroundColor(globalLoadingPresentation.loadingIsSuccess ? Color.green : Color.red)
+                .foregroundStyle(globalLoadingPresentation.loadingIsSuccess ? Color.green : Color.red)
                 
             }
         }
@@ -222,7 +222,7 @@ struct GlobalRingSpinner : View {
             .lineLimit(nil)
             .padding()
             .font(.footnote)
-            .foregroundColor(ok ? Color.green : Color.red)
+            .foregroundStyle(ok ? Color.green : Color.red)
        }
         
     }

@@ -70,8 +70,12 @@ struct Model2DView: View{
                 ToolbarItem(placement: .navigationBarLeading) {
                     navOpenTubeSettingsButton
                 }
-                ToolbarItem(placement: .principal) {
-                    navModel3DButton
+                ToolbarItemGroup(placement: .principal){
+                    HStack{
+                        navModel3DButton
+                        navARButton
+                        
+                    }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu{
@@ -94,8 +98,24 @@ struct Model2DView: View{
             Model3DView()
         })){
             ZStack{
-                Image(systemName: "arrow.triangle.2.circlepath").font(.title).foregroundColor(.systemBlue)
-                Image(systemName: "view.3d").imageScale(.small).foregroundColor(.systemBlue)
+                Image(systemName: "arrow.triangle.2.circlepath").font(.title).foregroundStyle(Color.systemBlue)
+                Image(systemName: "view.3d").imageScale(.small).foregroundStyle(Color.systemBlue)
+            }
+        }
+        .toolbarFontAndPadding()
+    }
+    
+    var navARButton:some View{
+        NavigationLink(destination:LazyDestination(destination: {
+            AugmnentedRealityView()
+        })){
+            ZStack{
+                Image(systemName: "arrow.triangle.2.circlepath")
+                    .font(.title)
+                    .foregroundStyle(Color.systemBlue)
+                Image(systemName: "camera.aperture")
+                    .imageScale(.small)
+                    .foregroundStyle(Color.systemBlue)
             }
         }
         .toolbarFontAndPadding()

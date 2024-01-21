@@ -13,7 +13,7 @@ struct ButtonStyleList: ButtonStyle {
         configuration.label
             .background( Color.clear )
             .opacity(configuration.isPressed ? 0.5 : 1.0)
-            .foregroundColor(color)
+            .foregroundStyle(color)
             .toolbarFontAndPadding(.headline)
             .fontWeight(.bold)
     }
