@@ -31,7 +31,7 @@ struct AugmnentedRealityView: View{
         self._arCoordinator = StateObject(wrappedValue: ARCoordinator())
      }
     
-    var modelPage: some View {
+    var arModel: some View {
         //TubeARView(scene:arSceneViewModel.scnScene)
         TubeARView(arCoordinator: arCoordinator)
         .ignoresSafeArea(.all)
@@ -77,11 +77,52 @@ struct AugmnentedRealityView: View{
         dismiss()
     }
     
-    @ViewBuilder
-    var body:some View{
+    var clearTextButton:some View{
+        Button("Clear text", action: {
+            self.arCoordinator.infoDistance = ""
+            self.arCoordinator.infoAngle = ""
+        })
+        .hTrailing()
+        .font(.title3)
+        .foregroundStyle(Color.white)
+        .buttonStyle(.borderedProminent)
+        .tint(Color.systemRed)
+    }
+    
+    var clearNodeButton:some View{
+        Button("Clear node", action: { self.arCoordinator.clearNodeList() })
+        .hLeading()
+        .font(.title3)
+        .foregroundStyle(Color.white)
+        .buttonStyle(.borderedProminent)
+        .tint(Color.systemRed)
+    }
+    
+    var debugText:some View{
+        VStack(spacing: V_SPACING_REG){
+            Text(arCoordinator.infoStatus ).foregroundStyle(Color.white)
+            Text(arCoordinator.infoDistance ).foregroundStyle(Color.white)
+            Text(arCoordinator.infoAngle ).foregroundStyle(Color.white)
+        }
+    }
+    
+    var debugFrame:some View{
+        HStack{
+            clearNodeButton
+            debugText
+            clearTextButton
+        }
+        .vBottom()
+        .padding()
+    }
+    
+    var modelPage:some View{
         ZStack{
             if cameraManager.permission.isAuthorized{
-                modelPage
+                ZStack{
+                    arModel
+                    debugFrame
+                }
             }
             else if cameraManager.permission.status != .notDetermined && canOpenSettingsUrl(){
                 missingPermissionView
@@ -92,7 +133,7 @@ struct AugmnentedRealityView: View{
         }
     }
         
-    var body1:some View{
+    var body:some View{
         AppBackgroundStack(content: {
             modelPage
         })

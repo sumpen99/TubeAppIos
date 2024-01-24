@@ -111,6 +111,7 @@ class ARPlane: SCNNode {
 struct TubeARView: UIViewRepresentable {
     typealias UIViewType = ARSCNView
     typealias Context = UIViewRepresentableContext<TubeARView>
+    typealias Coordinator = ARCoordinator
     let arCoordinator:ARCoordinator
     
     func makeUIView(context: Context) -> UIViewType {
@@ -123,204 +124,15 @@ struct TubeARView: UIViewRepresentable {
         debugLog(object: "updateARView: \(arSCNView.debugDescription)")
     }
     
-    static func dismantleUIView(_ arSCNView: ARSCNView, coordinator: ARCoordinator) {
+    static func dismantleUIView(_ arSCNView: ARSCNView, coordinator: Coordinator) {
         coordinator.pauseSession()
         debugLog(object: "dismantleARView: \(arSCNView.debugDescription)")
     }
     
-    func makeCoordinator() -> ARCoordinator {
+    func makeCoordinator() -> Coordinator {
         return arCoordinator
     }
     
-}
-
-class ARCoordinator: NSObject, ARSCNViewDelegate,ObservableObject {
-    var arSCNView: ARSCNView?
-    var nodeList:[SCNNode] = []
-    
-    func setARView(_ arSCNView: ARSCNView) {
-        self.arSCNView = arSCNView
-        
-        let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = [.horizontal,.vertical]
-        configuration.isLightEstimationEnabled = true
-      
-        arSCNView.autoenablesDefaultLighting = true
-        arSCNView.session.run(configuration,options: [.resetTracking, .removeExistingAnchors])
-        
-        arSCNView.delegate = self
-        arSCNView.scene = SCNScene()
-        addTapGesture()
-    }
-   
-    func addTapGesture(){
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didRecieveTapGesture(_:)))
-        arSCNView?.addGestureRecognizer(tapGestureRecognizer)
-    }
-     
-    func pauseSession(){
-        self.arSCNView?.session.pause()
-    }
-
-    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        debugLog(object: "Rootnode childrens: \(self.arSCNView?.scene.rootNode.childNodes.count)")
-        if let planeAnchor = anchor as? ARPlaneAnchor{
-            debugLog(object: "<-- FOUND PLANE -->")
-            //let plane = ARPlane(anchor:planeAnchor,in: arSCNView)
-            //node.addChildNode(plane)
-        } else {
-            debugLog(object: "<-- TOUCH NODE -->")
-            //let sphereNode = generateSphereNode()
-            //node.addChildNode(sphereNode)
-            //clearNodeList()
-            //nodeList.append(node)
-            //calculateDistanceBetweenTwoNodes()
-        }
-        //let plane = ARPlane(anchor:planeAnchor,in: arSCNView)
-        //node.addChildNode(plane)
-        //guard !(anchor is ARPlaneAnchor) else { return }
-        //let sphereNode = generateSphereNode()
-        /*DispatchQueue.main.async {
-            node.addChildNode(sphereNode)
-            debugLog(object: "Rootnode childrens: \(self.arSCNView.scene.rootNode.childNodes.count)")
-       }*/
-    }
-
-    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        //debugLog(object: "renderer 2")
-        // do some node transform stuff
-        //...
-        //trackDistance()
-    }
-    
-    
-    @objc
-    func didRecieveTapGesture(_ sender: UITapGestureRecognizer) {
-        let location = sender.location(in: arSCNView)
-        if let query = arSCNView?.raycastQuery(from: location,
-                                              allowing: .estimatedPlane,
-                                              alignment: .any),
-              let hitTestResult = arSCNView?.session.raycast(query).first{
-                   
-                    addCircle(raycastResult: hitTestResult)
-                  //let anchor = ARAnchor(transform: hitTestResult.worldTransform)
-                  //arSCNView.session.add(anchor: anchor)
-        }
-    }
-    
-    func addCircle(raycastResult: ARRaycastResult) {
-        let circleNode = createCircle(fromRaycastResult: raycastResult)
-        clearNodeList()
-        arSCNView?.scene.rootNode.addChildNode(circleNode)
-        nodeList.append(circleNode)
-        calculateDistanceBetweenTwoNodes()
-     }
-    
-    func createCircle(fromRaycastResult result:ARRaycastResult) -> SCNNode {
-        let circleGeometry = SCNSphere(radius: 0.005)
-        
-        let material = SCNMaterial()
-        material.diffuse.contents = UIColor.systemBlue
-        
-        circleGeometry.materials = [material]
-        
-        let circleNode = SCNNode(geometry: circleGeometry)
-        circleNode.simdWorldTransform = result.worldTransform
-        
-        return circleNode
-    }
-            
-    func calculateDistanceBetweenTwoNodes(){
-        if(nodeList.count < 2){ return }
-        let distance = calculateDistance(firstNode: nodeList[0], secondNode: nodeList[1])
-        debugLog(object: "distance " + String(format: "%.2f cm", distance))
-    }
-    
-    func clearNodeList(){
-        if(nodeList.count < 2){ return }
-        for node in nodeList {
-            node.removeFromParentNode()
-        }
-        nodeList.removeAll()
-    }
-    
-    func calculateDistance(firstNode: SCNNode, secondNode:SCNNode) -> Float {
-        let firstPosition = firstNode.position
-        let secondPosition = secondNode.position
-        var distance:Float = sqrt(
-            pow(secondPosition.x - firstPosition.x, 2) +
-                pow(secondPosition.y - firstPosition.y, 2) +
-                pow(secondPosition.z - firstPosition.z, 2)
-        )
-        
-        distance *= 100 // convert in cm
-        return abs(distance)
-    }
-    
-    func generateSphereNode() -> SCNNode {
-        let dot = SCNBox(width: 0.01, height: 0.01, length: 0.01, chamferRadius: 0.01)
-        dot.firstMaterial?.diffuse.contents = UIColor.blue.withAlphaComponent(1.0)
-        let node = SCNNode(geometry: dot)
-        
-        return node
-    }
-   
-    func sessionWasInterrupted(_ session: ARSession) {}
-    func sessionInterruptionEnded(_ session: ARSession) {}
-    //func sessionShouldAttemptRelocalization(_ session: ARSession) -> Bool {}
-    func session(_ session: ARSession, didFailWithError error: Error){}
-    func session(_ session: ARSession, cameraDidChangeTrackingStatecamera: ARCamera) {}
-    func session(_ session: ARSession, didChange geoTrackingStatus: ARGeoTrackingStatus) {}
-    func session(_ session: ARSession, didOutputCollaborationData data: ARSession.CollaborationData) {}
-    func session(_ session: ARSession, didOutputAudioSampleBuffer audioSampleBuffer: CMSampleBuffer) {}
-    func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {}
-}
-extension SCNVector3 {
-    func distance(to destination: SCNVector3) -> CGFloat {
-        let dx = destination.x - x
-        let dy = destination.y - y
-        let dz = destination.z - z
-        return CGFloat(sqrt(dx*dx + dy*dy + dz*dz))
-    }
-}
-
-@available(iOS 12.0, *)
-extension ARPlaneAnchor.Classification {
-    var description: String {
-        switch self {
-        case .wall:
-            return "Wall"
-        case .floor:
-            return "Floor"
-        case .ceiling:
-            return "Ceiling"
-        case .table:
-            return "Table"
-        case .seat:
-            return "Seat"
-        case .none(.unknown):
-            return "Unknown"
-        default:
-            return ""
-        }
-    }
-}
-
-extension SCNNode {
-    func centerAlign() {
-        let (min, max) = boundingBox
-        let extents = SIMD3<Float>(max) - SIMD3<Float>(min)
-        simdPivot = float4x4(translation: ((extents / 2) + SIMD3<Float>(min)))
-    }
-}
-
-extension float4x4 {
-    init(translation vector: SIMD3<Float>) {
-        self.init(SIMD4<Float>(1, 0, 0, 0),
-                  SIMD4<Float>(0, 1, 0, 0),
-                  SIMD4<Float>(0, 0, 1, 0),
-                  SIMD4<Float>(vector.x, vector.y, vector.z, 1))
-    }
 }
 
 /*
