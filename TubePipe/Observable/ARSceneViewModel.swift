@@ -25,7 +25,7 @@ class ARSceneViewModel: ObservableObject {
         if(!muffShouldBeVisible){ return }
         guard let path = buildVerticesPath(points) else { return }
         renderNode = .NODE_MUFF
-        let circle = buildCircleBySteps(CIRCLE_SECTORS, radius: dimension/2.0)
+        let circle = buildCircleBySteps(CIRCLE_SECTORS, radius: (dimension/2.0)/10000.0)
         let pipe = Pipe(pathPoints: path, contourPoints: circle)
         if pipe.abort { return }
         collectVertexPoints(pipe,buildEndCapCircles:false)
@@ -53,7 +53,7 @@ class ARSceneViewModel: ObservableObject {
         if points.count < 2 { return nil }
         var vertices:[SCNVector3] = []
         for p in points{
-            vertices.append(SCNVector3(x: SCNFloat(p.x), y: 0.0, z: SCNFloat(p.y)))
+            vertices.append(SCNVector3(x: SCNFloat(p.x)/10000.0, y: 0.0, z: SCNFloat(p.y)/10000.0))
         }
         return vertices
     }

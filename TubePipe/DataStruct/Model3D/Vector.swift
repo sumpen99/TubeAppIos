@@ -8,6 +8,13 @@
 import SwiftUI
 import SceneKit
 
+enum ScnVectorDistance:SCNFloat{
+    case DEFAULT = 1.0
+    case CENTIMETER = 100.0
+    case METER = 1000.0
+}
+
+
 extension SCNVector3{
     
     var length: SCNFloat{ sqrt(SCNVector3.dotProduct(v1:self,v2:self)) }
@@ -67,6 +74,10 @@ extension SCNVector3{
         return x * v2.x + y * v2.y + z * v2.z
     }
     
+    func dot() -> SCNFloat{
+        return x*x + y*y + z*z
+     }
+    
     func crossProduct(v2:SCNVector3) -> SCNVector3{
          return SCNVector3(x: y * v2.z - z * v2.y,
                            y: z * v2.x - x * v2.z,
@@ -78,45 +89,41 @@ extension SCNVector3{
                            y: y * a,
                            z: z * a)
     }
-     
+    
+    func distance(to destination: SCNVector3,convert to:ScnVectorDistance = .DEFAULT) -> SCNFloat {
+        let dx = destination.x - x
+        let dy = destination.y - y
+        let dz = destination.z - z
+        var distance = SCNFloat(sqrt(dx*dx + dy*dy + dz*dz))
+        distance *= to.rawValue
+        return abs(distance)
+    }
+    
     static func dotProduct(v1:SCNVector3,v2:SCNVector3) -> SCNFloat{
-        return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
+        return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z
     }
     
-    static func angleBetweenTwoPointsToHorizontalPlane(n1:SCNVector3, n2:SCNVector3) -> Float {
-        let p2Hor = SCNVector3(n2.x, n1.y, n2.z)
-        let p1ToP2Norm = n2.sub(n1).normalise()
-        let p1ToP2HorNorm = p2Hor.sub(n1).normalise()
-        let dotProduct = p1ToP2Norm.dotProduct(v2: p1ToP2HorNorm)
-        return acos(dotProduct)
-        /*
-         We can find angle between 2 vectors according the dot production.
-         angle = arccos ( a * b / |a| * |b| );
-         where:
-         a * b = ax * bx + ay * by + az * bz
-         |a| = sqrt( ax * ax + ay * ay + az * az )
-         |b| = sqrt( bx * bx + by * by + bz * bz )
-         
-         
-         def GetAngle(self, a, b):
-             length = math.sqrt((a.x - b.x)**2 + (a.y - b.y)**2 + (a.z - b.z)**2)
-             rise = b.y - a.y
-             run = math.sqrt((length**2) - (rise**2))
-             angle = math.degrees(math.atan(rise/run))
-             return angle
-         */
+    static func distanceBetweenTwoPoints(n1: SCNVector3, n2:SCNVector3) -> SCNFloat {
+        return n1.distance(to: n2,convert: .CENTIMETER)
     }
     
-    static func angleBetweenThreePointsToHorizontalPlane(n1:SCNVector3, n2:SCNVector3,n3:SCNVector3) -> Float {
+    static func angleBetweenTwoPoints(n1:SCNVector3, n2:SCNVector3) -> SCNFloat {
+        let dp = SCNVector3.dotProduct(v1: n1, v2: n2)
+        let asqrt = sqrt(n1.dot())
+        let bsqrt = sqrt(n2.dot())
+        let theta = (dp/asqrt)*bsqrt
+        let radians = acos(theta)
+        let angle = radians * (180.0/SCNFloat.pi)
+        return angle
+    }
+    
+    static func angleBetweenThreePoints(n1:SCNVector3, n2:SCNVector3,n3:SCNVector3) -> SCNFloat {
         let v1 = SCNVector3(n1.x - n2.x, n1.y - n2.y, n1.z - n2.z)
         let v2 = SCNVector3(n3.x - n2.x, n3.y - n2.y, n3.z - n2.z)
-        
         let dot = SCNVector3.dotProduct(v1: v1.norm(), v2: v2.norm())
-        
-        //N1: SCNVector3(x: -0.17147546, y: -0.40633973, z: 0.026907394)
-        //N2: SCNVector3(x: -0.1569796, y: -0.38139328, z: -0.043307792)
-        //N3: SCNVector3(x: -0.02777277, y: -0.382627, z: -0.022403035)
-        return acos(dot)
+        let radians = acos(dot)
+        let angle = radians * (180.0/SCNFloat.pi)
+        return angle
     }
     
     

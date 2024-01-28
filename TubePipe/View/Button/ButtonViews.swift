@@ -46,6 +46,27 @@ struct TapAndHoldButton: View{
     
 }
 
+struct RoundedButton: View{
+    let action: () -> Void
+    let imageName:String
+    let radius:CGFloat
+    var color:Color = Color.systemBlue
+   
+    var body: some View{
+        Button(action: action ){
+            Image(systemName: imageName)
+            .font(.largeTitle)
+            .bold()
+            .foregroundStyle(.white)
+            .padding()
+            .background(color)
+            .frame(width: radius,height:radius)
+            .clipShape(Circle())
+         }
+    }
+    
+}
+
 struct BackButton:View{
     @Environment(\.dismiss) private var dismiss
     var title:String = "Back"
@@ -80,6 +101,29 @@ struct LabelButton:View{
             //Text(title).hCenter()
                 //.font(.title2)
         }
+    }
+}
+
+struct IsOnButton<T:Equatable>:View,ButtonIsOn{
+    @Binding var isOn:T?
+    let identity:T
+    let imgLabel:String
+    let action:(() ->Void)?
+    
+    var body: some View{
+        Button(action: execAction){
+            Image(systemName: imgLabel)
+                .foregroundStyle(buttonIsOn ? Color.systemBlue : Color.tertiaryLabel)
+        }
+    }
+    
+    var buttonIsOn:Bool{
+        isOn == identity
+    }
+    
+    func execAction(){
+        (isOn != identity) ? (isOn = identity) : (isOn = nil)
+        action?()
     }
 }
 

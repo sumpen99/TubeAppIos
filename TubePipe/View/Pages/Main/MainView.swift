@@ -58,6 +58,9 @@ struct MainView: View{
             }
             .tag(MainTabItem.PROFILE)
         }
+        .onChange(of: navigationViewModel.selectedTab){ route in
+            navigationViewModel.reset()
+        }
     }
         
     var body: some View{
@@ -78,10 +81,10 @@ struct MainView: View{
     }
     
     func setUserDataIfNeededData(){
-        firestoreViewModel.checkIfUserDocumentExists(){ error,documentExists in
+        /*firestoreViewModel.checkIfUserDocumentExists(){ error,documentExists in
             if documentExists{ setupListenerForUserChanges() }
             else { setUpNewUser()}
-        }
+        }*/
     }
     
     func setUpNewUser(){

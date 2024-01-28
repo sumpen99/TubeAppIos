@@ -10,6 +10,7 @@ import SwiftUI
 extension UIColor{
     static let backgroundPrimary = UIColor(red:36,green:36,blue:36)
     static let cardBackgroundPrimary = UIColor(red:46,green:46,blue:46)
+    static let planeColor = UIColor(named: "planeColor") ?? UIColor.blue
     
     convenience init(red:Int,green:Int,blue:Int,a:CGFloat = 1.0) {
         self.init(red:CGFloat(red)/255.0,

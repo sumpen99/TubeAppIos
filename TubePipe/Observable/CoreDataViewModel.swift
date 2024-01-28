@@ -49,8 +49,7 @@ class CoreDataService{
         }
         onResult((totalItems:totalItems,items:[]))
     }
-    
-    //https://stackoverflow.com/questions/60026783/coredata-in-swiftui-how-to-fetch-a-property-distinctly
+        
     func fetchedRequest(fetchOffset:Int,fetchLimit:Int) -> [TubeModel]{
         let fetchRequest: NSFetchRequest<TubeModel> = TubeModel.fetchRequest()
         let sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]

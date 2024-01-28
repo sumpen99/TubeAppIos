@@ -19,16 +19,33 @@ enum ActiveHomeSheet: Identifiable {
     }
 }
 
+enum ModelRoute: Identifiable{
+    case ROUTE_3D
+    case ROUTE_AR
+    
+    var id: Int {
+        hashValue
+    }
+    
+}
+
 struct Model2DView: View{
+    @EnvironmentObject var navigationViewModel: NavigationViewModel
     @EnvironmentObject var tubeViewModel: TubeViewModel
     @EnvironmentObject var firestoreViewModel: FirestoreViewModel
     @State var activeHomeSheet: ActiveHomeSheet?
    
     var body: some View{
-        NavigationStack{
+        NavigationStack(path:$navigationViewModel.pathTo){
             AppBackgroundStack(content: {
                 TubeView(tubeInteraction: .IS_MOVEABLE)
             })
+            .navigationDestination(for: ModelRoute.self){  route in
+                switch route{
+                case .ROUTE_3D:         Model3DView()
+                case .ROUTE_AR:         ModelArView()
+                }
+            }
            .onChange(of: activeHomeSheet){ item in
                 if let item{
                     activeHomeSheet = nil
@@ -73,8 +90,7 @@ struct Model2DView: View{
                 ToolbarItemGroup(placement: .principal){
                     HStack{
                         navModel3DButton
-                        navARButton
-                        
+                        navModelARButton
                     }
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -93,31 +109,23 @@ struct Model2DView: View{
         }
     }
     
+    var navModelARButton:some View{
+        Button(action: { navigationViewModel.switchPathToRoute(ModelRoute.ROUTE_AR)}, label: {
+            ZStack{
+                Image(systemName: "arrow.triangle.2.circlepath").font(.title).foregroundStyle(Color.systemBlue)
+                Image(systemName: "camera.metering.multispot").imageScale(.small).foregroundStyle(Color.systemBlue)
+            }
+        })
+        .toolbarFontAndPadding()
+    }
+    
     var navModel3DButton:some View{
-        NavigationLink(destination:LazyDestination(destination: {
-            Model3DView()
-        })){
+        Button(action: { navigationViewModel.switchPathToRoute(ModelRoute.ROUTE_3D)}, label: {
             ZStack{
                 Image(systemName: "arrow.triangle.2.circlepath").font(.title).foregroundStyle(Color.systemBlue)
                 Image(systemName: "view.3d").imageScale(.small).foregroundStyle(Color.systemBlue)
             }
-        }
-        .toolbarFontAndPadding()
-    }
-    
-    var navARButton:some View{
-        NavigationLink(destination:LazyDestination(destination: {
-            AugmnentedRealityView()
-        })){
-            ZStack{
-                Image(systemName: "arrow.triangle.2.circlepath")
-                    .font(.title)
-                    .foregroundStyle(Color.systemBlue)
-                Image(systemName: "camera.aperture")
-                    .imageScale(.small)
-                    .foregroundStyle(Color.systemBlue)
-            }
-        }
+        })
         .toolbarFontAndPadding()
     }
     

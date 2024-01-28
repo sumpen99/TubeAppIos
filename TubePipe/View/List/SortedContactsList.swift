@@ -231,7 +231,7 @@ extension SortedContactsList{
     
     func contactCardMessagesOnly(_ contact:Contact) -> some View{
         Button(action: {
-            navigationViewModel.appendToPathWithContact(contact)
+            navigationViewModel.appendToPathWith(contact)
         }, label: {
             HStack{
                 let initial = contact.initial

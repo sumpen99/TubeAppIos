@@ -37,17 +37,13 @@ class NavigationViewModel: ObservableObject{
         return selectedTab == tab
     }
     
-    func switchPathToRoute(_ route:ProfileRoute){
+    func switchPathToRoute<T:Hashable>(_ route:T){
         clearPath()
         pathTo.append(route)
     }
     
-    func appendToPathWithContact(_ contact:Contact){
-        pathTo.append(contact)
-    }
-    
-    func appendToPathWithMessage(_ message:Message){
-        pathTo.append(message)
+    func appendToPathWith<T:Hashable>(_ t:T){
+        pathTo.append(t)
     }
     
     func clearPath(){
@@ -56,6 +52,14 @@ class NavigationViewModel: ObservableObject{
     
     func popPath(){
         if notEmptyPath{ pathTo.removeLast() }
+    }
+    
+    func reset(){
+        if notEmptyPath{
+            pathTo.removeLast(pathTo.count)
+            NavigationUtil.popToRootView()
+            
+        }
     }
         
 }
