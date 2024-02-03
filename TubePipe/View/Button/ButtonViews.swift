@@ -50,7 +50,7 @@ struct RoundedButton: View{
     let action: () -> Void
     let imageName:String
     let radius:CGFloat
-    var color:Color = Color.systemBlue
+    let color:Color
    
     var body: some View{
         Button(action: action ){

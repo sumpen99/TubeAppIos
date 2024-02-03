@@ -22,11 +22,9 @@ struct ArInfo{
 }
 
 class ARCoordinator: NSObject, ARSCNViewDelegate,ObservableObject {
-    var firstNode:SCNNode?
-    var lineNode:SCNNode?
+    var currentLine:SCNNode?
     var arSCNView: ARSCNView?
     var nodeList:[SCNNode] = []
-    var planes = [ARPlaneAnchor:ARPlane]()
     @Published var info:ArInfo = ArInfo()
     
      
@@ -34,18 +32,16 @@ class ARCoordinator: NSObject, ARSCNViewDelegate,ObservableObject {
         self.arSCNView = arSCNView
         
         let configuration = ARWorldTrackingConfiguration()
-        configuration.planeDetection = [.horizontal]
+        configuration.planeDetection = [.horizontal,.vertical]
         configuration.isLightEstimationEnabled = true
       
         arSCNView.autoenablesDefaultLighting = true
         arSCNView.automaticallyUpdatesLighting = true
         //arSCNView.showsStatistics = true
-        //arSCNView.debugOptions = [ARSCNDebugOptions .showFeaturePoints,
-        //                          ARSCNDebugOptions.showWorldOrigin]
-        arSCNView.session.run(configuration,options: [.resetTracking, .removeExistingAnchors])
         
+        arSCNView.debugOptions = [ARSCNDebugOptions .showFeaturePoints]
+        arSCNView.session.run(configuration,options: [.resetTracking, .removeExistingAnchors])
         arSCNView.delegate = self
-        //arSCNView.scene = SCNScene()
         //addTapGesture()
     }
     
@@ -107,73 +103,39 @@ class ARCoordinator: NSObject, ARSCNViewDelegate,ObservableObject {
         self.arSCNView?.session.pause()
     }
 
-    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        //let childrens = self.arSCNView?.scene.rootNode.childNodes.count ?? 0
-        //debugLog(object: "Rootnode childrens: \(childrens)")
+    /*func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         DispatchQueue.main.async {
             if let planeAnchor = anchor as? ARPlaneAnchor{
-                let plane = ARPlane(anchor: planeAnchor)
+                debugLog(object: "<-- FOUND PLANE -->")
+                let plane = ARPlane(anchor:planeAnchor,in: arSCNView)
                 node.addChildNode(plane)
-                self.planes[planeAnchor] = plane
+            }
+        }
+    }*/
+
+    //func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {}
+    //func renderer(_ renderer:SCNSceneRenderer,didRemove node: SCNNode,for anchor:ARAnchor){}
+    
+    func renderer(_ renderer:SCNSceneRenderer,updateAtTime time:TimeInterval){
+         DispatchQueue.main.async {
+            if let currentPosition = self.castQueryFromCenterView(),
+               let last = self.nodeList.last{
+                self.currentLine?.removeFromParentNode()
+                let lineNode = self.drawLineBetween(pos1: last.position, pos2: currentPosition)
+                self.currentLine = lineNode
+                self.arSCNView?.scene.rootNode.addChildNode(lineNode)
+                self.calculateDistanceBetweenTwoPoints(pos1:currentPosition,pos2: last.position)
+                
             }
         }
         
-        /*if let planeAnchor = anchor as? ARPlaneAnchor{
-            debugLog(object: "<-- FOUND PLANE -->")
-            //let plane = ARPlane(anchor:planeAnchor,in: arSCNView)
-            //node.addChildNode(plane)
-        } else {
-            debugLog(object: "<-- TOUCH NODE -->")
-            /*let sphereNode = generateSphereNode()
-            DispatchQueue.main.async {
-                node.addChildNode(sphereNode)
-                self.nodeList.append(node)
-                self.calculateDistance()
-                self.calculateAngle()
-           }*/
-        }*/
-        //let plane = ARPlane(anchor:planeAnchor,in: arSCNView)
-        //node.addChildNode(plane)
-        //guard !(anchor is ARPlaneAnchor) else { return }
-        //let sphereNode = generateSphereNode()
-        /*DispatchQueue.main.async {
-            node.addChildNode(sphereNode)
-            debugLog(object: "Rootnode childrens: \(self.arSCNView.scene.rootNode.childNodes.count)")
-       }*/
-    }
-
-    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        DispatchQueue.main.async {
-            if let planeAnchor = anchor as? ARPlaneAnchor,
-               let plane = self.planes[planeAnchor]{
-                plane.updateWith(planeAnchor)
-            }
-        }
-    }
-    
-    func renderer(_ renderer:SCNSceneRenderer,didRemove node: SCNNode,for anchor:ARAnchor){
-        if let planeAnchor = anchor as? ARPlaneAnchor{
-            self.planes.removeValue(forKey: planeAnchor)
-        }
-    }
-    
-    func renderer(_ renderer:SCNSceneRenderer,updateAtTime time:TimeInterval){
-        if let currentPosition = castQueryFromCenterView(),
-           let firstNode = firstNode{
-            self.lineNode?.removeFromParentNode()
-            let lineNode = self.drawLineBetween(pos1: currentPosition, pos2: firstNode.position)
-            self.lineNode = lineNode
-            self.arSCNView?.scene.rootNode.addChildNode(lineNode)
-            calculateDistanceBetweenTwoPoints(pos1:currentPosition,pos2: firstNode.position)
-            
-        }
     }
     
     @objc
     func didRecieveTapGesture(_ sender: UITapGestureRecognizer) {
         let location = sender.location(in: arSCNView)
         if let arSCNView = arSCNView,
-            let query = arSCNView.raycastQuery(from: location,
+           let query = arSCNView.raycastQuery(from: location,
                                               allowing: .estimatedPlane,
                                               alignment: .any),
             let hitTestResult = arSCNView.session.raycast(query).first{
@@ -193,18 +155,16 @@ class ARCoordinator: NSObject, ARSCNViewDelegate,ObservableObject {
                 
             }
             calculateDistance()
-            //let anchor = ARAnchor(transform: hitTestResult.worldTransform)
-            //arSCNView?.session.add(anchor: anchor)
         }
     }
     
     func castQueryFromCenterView() -> SCNVector3?{
         if let arSCNView = arSCNView,
-           let query = arSCNView.raycastQuery(from: .zero,
+           let query = arSCNView.raycastQuery(from: arSCNView.center,
                                              allowing: .estimatedPlane,
                                              alignment: .any),
            let hitTestResult = arSCNView.session.raycast(query).first{
-            return self.transformMatrix(m:hitTestResult.worldTransform)
+            return SCNVector3(translation: hitTestResult.worldTransform)
              
         }
         return nil
@@ -257,13 +217,6 @@ extension ARCoordinator{
     }
 }
 
-//MARK: -- POSITION HELPERS
-extension ARCoordinator{
-    func transformMatrix(m: matrix_float4x4) -> SCNVector3{
-        return SCNVector3Make(m.columns.3.x, m.columns.3.y, m.columns.3.z)
-    }
-}
-
 //MARK: -- ADD NODE HELPERS
 extension ARCoordinator{
     func addCircle(raycastResult: ARRaycastResult) {
@@ -298,13 +251,26 @@ extension ARCoordinator{
         let sphere = SCNSphere(radius: 0.003)
         if let arSCNView = arSCNView,
            let firstMaterial = sphere.firstMaterial{
-            firstMaterial.diffuse.contents = UIColor.blue.withAlphaComponent(1.0)
+            firstMaterial.diffuse.contents = UIColor.white.withAlphaComponent(1.0)
             firstMaterial.lightingModel = .constant
             firstMaterial.isDoubleSided = true
-            
+          
             let node = SCNNode(geometry: sphere)
             node.position = position
+            
+            addFinnishedLine(position)
+            nodeList.append(node)
             arSCNView.scene.rootNode.addChildNode(node)
+        }
+    }
+    
+    func addFinnishedLine(_ position:SCNVector3){
+        if nodeList.count != 0{
+            if let last = nodeList.last,
+               let arSCNView = arSCNView{
+                let lineNode = drawLineBetween(pos1: last.position, pos2: position)
+                arSCNView.scene.rootNode.addChildNode(lineNode)
+            }
         }
     }
              
@@ -313,16 +279,27 @@ extension ARCoordinator{
 //MARK: -- ADD LINE HELPERS
 extension ARCoordinator{
     func drawLineBetween(pos1: SCNVector3,pos2:SCNVector3) -> SCNNode{
-        let lineGeo = lineGeometry(v1:pos1,v2:pos2)
-        return SCNNode(geometry: lineGeo)
+        let height = pos1.distance(to: pos2,convert: .DEFAULT)
+        let z = SCNNode()
+        z.eulerAngles.x = Float(CGFloat.pi / 2)
+        
+        let v2 = SCNNode()
+        v2.position = pos2
+        
+        let cylinder = SCNCylinder(radius: 0.0007, height: CGFloat(height))
+        cylinder.firstMaterial?.diffuse.contents = UIColor.white.withAlphaComponent(1.0)
+        
+        let nodeCylinder = SCNNode(geometry: cylinder )
+        nodeCylinder.position.y = -height/2
+        z.addChildNode(nodeCylinder)
+         
+        let line = SCNNode()
+        line.addChildNode(z)
+        line.constraints = [SCNLookAtConstraint(target: v2)]
+        line.position = pos1
+        return line
     }
-    
-    func lineGeometry(v1:SCNVector3,v2:SCNVector3) -> SCNGeometry{
-        let indices: [Int32] = [0,1]
-        let source = SCNGeometrySource(vertices: [v1,v2])
-        let element = SCNGeometryElement(indices: indices, primitiveType: .line)
-        return SCNGeometry(sources: [source], elements: [element])
-    }
+     
 }
    
     
@@ -330,10 +307,8 @@ extension ARCoordinator{
 //MARK: -- PROPERTY HELPERS
 extension ARCoordinator{
     func reset(){
-        firstNode = nil
-        lineNode = nil
+        currentLine = nil
         clearNodeList()
-        clearStoredPlanes()
         clearText()
         clearScene()
     }
@@ -347,12 +322,6 @@ extension ARCoordinator{
     }
     func clearDistanceText(){ info.clearDistanceText() }
     func clearInfoStatusText(){ info.clearInfoStatusText() }
-    
-    func clearStoredPlanes(){
-        for key in planes.keys{
-            planes.removeValue(forKey: key  )
-        }
-    }
     func clearNodeList(){
         for node in nodeList {
             node.removeFromParentNode()
@@ -370,42 +339,3 @@ extension ARCoordinator{
     }
 }
 
-
-@available(iOS 12.0, *)
-extension ARPlaneAnchor.Classification {
-    var description: String {
-        switch self {
-        case .wall:
-            return "Wall"
-        case .floor:
-            return "Floor"
-        case .ceiling:
-            return "Ceiling"
-        case .table:
-            return "Table"
-        case .seat:
-            return "Seat"
-        case .none(.unknown):
-            return "Unknown"
-        default:
-            return ""
-        }
-    }
-}
-
-extension SCNNode {
-    func centerAlign() {
-        let (min, max) = boundingBox
-        let extents = SIMD3<Float>(max) - SIMD3<Float>(min)
-        simdPivot = float4x4(translation: ((extents / 2) + SIMD3<Float>(min)))
-    }
-}
-
-extension float4x4 {
-    init(translation vector: SIMD3<Float>) {
-        self.init(SIMD4<Float>(1, 0, 0, 0),
-                  SIMD4<Float>(0, 1, 0, 0),
-                  SIMD4<Float>(0, 0, 1, 0),
-                  SIMD4<Float>(vector.x, vector.y, vector.z, 1))
-    }
-}

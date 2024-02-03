@@ -19,6 +19,10 @@ extension SCNVector3{
     
     var length: SCNFloat{ sqrt(SCNVector3.dotProduct(v1:self,v2:self)) }
     
+    init(translation matrix: matrix_float4x4) {
+        self.init(matrix.columns.3.x, matrix.columns.3.y, matrix.columns.3.z)
+    }
+    
     func zero() -> Bool{
         return (x == 0.0 && y == 0.0 && z == 0.0)
     }

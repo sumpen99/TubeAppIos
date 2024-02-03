@@ -758,6 +758,7 @@ extension TubeViewModel{
                 let p2 = HalfLine(p: lastPoint, r: p)
                 pointsList.append(p2.pointOnLine(n:settingsVar.tube.radie)) // bottom of screen
             }
+            debugLog(object: p)
             pointsList.append(p)
         }
         return pointsList

@@ -49,7 +49,9 @@ struct ModelArView: View{
     
     var takeMeasurementMode:some View{
         ZStack{
-            Image("focus")
+            Image("focus").hCenter()
+            addMeasurePointButton
+            
         }
         .task {
             await arCoordinator.pause()
@@ -246,24 +248,38 @@ extension ModelArView{
     var zoomXButton:some View{
         RoundedButton(action: {
             arCoordinator.zoom(direction:0)
-        }, imageName: "x.circle",radius: 62.0)
+        }, imageName: "x.circle",radius: 62.0,color: Color.systemBlue)
     }
     
     var zoomYButton:some View{
         RoundedButton(action: {
             arCoordinator.zoom(direction:1)
-        }, imageName: "y.circle",radius: 62.0)
+        }, imageName: "y.circle",radius: 62.0,color: Color.systemBlue)
     }
     
     var zoomZButton:some View{
         RoundedButton(action: {
             arCoordinator.zoom(direction:2)
-        }, imageName: "z.circle",radius: 62.0)
+        }, imageName: "z.circle",radius: 62.0,color: Color.systemBlue)
+    }
+    
+    var addMeasurePointButton:some View{
+        RoundedButton(action: addMeasurePoint, imageName: "plus",radius: 62.0,color: Color.systemGreen)
+        .scaleEffect(CGSize(width: 1.3, height: 1.3))
+        .vBottom()
+        .hCenter()
+        .padding(.bottom)
     }
 }
 
 //MARK: -- HELPER
 extension ModelArView{
+    
+    func addMeasurePoint(){
+        if let position = arCoordinator.castQueryFromCenterView(){
+            arCoordinator.addSphereNodeAt(position)
+        }
+    }
     
     func closeView(){
         dismiss()
