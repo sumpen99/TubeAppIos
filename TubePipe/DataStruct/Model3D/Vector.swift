@@ -130,5 +130,9 @@ extension SCNVector3{
         return angle
     }
     
+    static func centerOfVector(v1:SCNVector3, v2:SCNVector3) -> SCNVector3{
+        return SCNVector3((v1.x + v2.x) / 2.0, (v1.y + v2.y) / 2.0 , (v1.z + v2.z) / 2.0)
+    }
+    
     
 }
