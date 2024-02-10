@@ -82,6 +82,11 @@ extension SCNVector3{
         return x*x + y*y + z*z
      }
     
+    func directionCosine() -> SCNVector3{
+        let PX = sqrt(pow(x,2) + pow(y,2) + pow(z,2))
+        return SCNVector3(x/PX, y/PX, z/PX)
+     }
+    
     func crossProduct(v2:SCNVector3) -> SCNVector3{
          return SCNVector3(x: y * v2.z - z * v2.y,
                            y: z * v2.x - x * v2.z,
@@ -121,6 +126,22 @@ extension SCNVector3{
         return angle
     }
     
+    static func radiansBetweenTwoPoints(n1:SCNVector3, n2:SCNVector3) -> SCNFloat {
+        let p1 = n1.z > n2.z ? n2 : n1
+        let p2 = n1.z > n2.z ? n1 : n2
+        
+        let x0 = pow(p2.x-p1.x, 2)
+        let y0 = pow(p2.y-p1.y, 2)
+        let run = sqrt(x0+y0)
+        let rise = p2.z-p1.z
+        let slope = rise/run
+        return slope
+    }
+    
+    static func directionRatioBetween(n1:SCNVector3, n2:SCNVector3) -> SCNVector3 {
+        return n2.sub(n1)
+    }
+    
     static func angleBetweenThreePoints(n1:SCNVector3, n2:SCNVector3,n3:SCNVector3) -> SCNFloat {
         let v1 = SCNVector3(n1.x - n2.x, n1.y - n2.y, n1.z - n2.z)
         let v2 = SCNVector3(n3.x - n2.x, n3.y - n2.y, n3.z - n2.z)
@@ -130,9 +151,37 @@ extension SCNVector3{
         return angle
     }
     
+    static func angleOfLine(v1:SCNVector3, v2:SCNVector3) -> SCNFloat{
+      let d = SCNVector3.diff(v1:v1,v2:v2)
+      let theta = atan2(d.z, d.x)
+      return SCNFloat.pi - theta
+    }
+    
     static func centerOfVector(v1:SCNVector3, v2:SCNVector3) -> SCNVector3{
         return SCNVector3((v1.x + v2.x) / 2.0, (v1.y + v2.y) / 2.0 , (v1.z + v2.z) / 2.0)
     }
     
+    static func diff(v1:SCNVector3,v2:SCNVector3) ->SCNVector3{
+        if v1.x > v2.x {
+            return SCNVector3(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z)
+        }
+        else{
+           return SCNVector3(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z)
+        }
+     }
+    
+    static func eulerAngles(v1:SCNVector3, v2:SCNVector3) -> SCNVector3{
+        let w = SCNVector3.diff(v1:v1, v2:v2)
+        let h = hypot(w.x, w.z)
+        return SCNVector3(x: atan2(h, w.y),y: atan2(w.x, w.z),z: 0)
+    }
     
 }
+
+extension SCNFloat {
+    func roundTo(places: Int) -> SCNFloat {
+        let divisor = pow(10.0, SCNFloat(places))
+        return (self * divisor).rounded() / divisor
+    }
+}
+

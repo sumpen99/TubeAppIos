@@ -369,11 +369,10 @@ extension ModelArView{
 extension ModelArView{
     
     func addMeasurePointWith(){
-        arCoordinator.addTextTest()
-        /*if let position = arCoordinator.castQueryFromCenterView(){
+        if let position = arCoordinator.castQueryFromCenterView(){
             arCoordinator.addSphereNodeAt(position)
             
-        }*/
+        }
     }
     
     func closeView(){

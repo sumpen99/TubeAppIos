@@ -171,6 +171,7 @@ extension ARCoordinator{
                 //addLabelBetween(pos1: last.position, pos2: position)
                 let textNode = addTextNodeBetween(pos1: last.position, pos2: position)
                 arSCNView?.scene.rootNode.addChildNode(textNode)
+                
             }
         }
     }
@@ -179,17 +180,15 @@ extension ARCoordinator{
 
 //MARK: -- ADD TEXT HELPERS
 extension ARCoordinator{
-    
-    func nodeRotation(heading: SCNFloat) -> SCNVector4 {
-        return SCNVector4(0, 1, 0, SCNFloat.pi - ((heading * (SCNFloat.pi/180)) - SCNFloat.pi))
-    }
-    
+   
     func addTextNodeBetween(pos1: SCNVector3,pos2:SCNVector3) -> SCNNode {
-         let text = calculateDistanceBetweenTwoPoints(pos1: pos1, pos2: pos2)
+        let text = calculateDistanceBetweenTwoPoints(pos1: pos1, pos2: pos2)
         let textGeometry = SCNText(string: text, extrusionDepth: 1)
         //textGeometry.font = UIFont(name: "Futura", size: 75)
         textGeometry.font = UIFont.boldSystemFont(ofSize: 8)
         //UIFont.boldSystemFont(ofSize: 8)
+        
+        
         
         textGeometry.baseSetting()
         textGeometry.flatness = 0
@@ -205,17 +204,34 @@ extension ARCoordinator{
             min.z + (max.z - min.z)/2
         )
         
-        textNode.simdPivot.columns.3.x = Float((textGeometry.boundingBox.min.x +
-                                                textGeometry.boundingBox.max.x) / 2)
-
-        textNode.simdPivot.columns.3.y = Float((textGeometry.boundingBox.min.y +
-                                                textGeometry.boundingBox.max.y) / 2)
-        
         textNode.simdScale = SIMD3<Float>(repeating:0.0005)
-        
-        textNode.constraints = [SCNBillboardConstraint()]
         textNode.position = SCNVector3.centerOfVector(v1: pos1, v2: pos2)
-        textNode.rotation = nodeRotation(heading: SCNVector3.angleBetweenTwoPoints(n1: pos1, n2: pos2))
+         
+        if let arScnView = arSCNView,
+           let frame = arScnView.session.currentFrame {
+            let eulerAngles = frame.camera.eulerAngles
+            textNode.eulerAngles = SCNVector3(eulerAngles.x, eulerAngles.y, eulerAngles.z + .pi / 2)
+        }
+        
+        let radians = SCNVector3.angleOfLine(v1: pos1, v2: pos2)
+        textNode.rotation = SCNVector4(0, 1, 0, radians)
+        
+        //let radians = SCNVector3.radiansBetweenTwoPoints(n1: pos1, n2: pos2)
+        //debugLog(object: radians)
+        //debugLog(object: radians.radToDeg())
+        //debugLog(object: radians.degToRad())
+        //let loop = SCNAction.rotateBy(x: 0, y: radians, z: 0, duration: 0)
+        //textNode.runAction(loop)
+        //let directionRatio = SCNVector3.directionRatioBetween(n1: pos1, n2: pos2)
+   
+        //textNode.constraints = [SCNBillboardConstraint()]
+        //debugLog(object: radians * (180.0/SCNFloat.pi))
+        //textNode.rotation = nodeRotation(heading: radians)
+        
+        
+        let action = SCNAction.rotateBy(x: -CGFloat(90).degToRad(), y: 0, z: 0, duration: 0)
+        //let action = SCNAction.repeatForever(SCNAction.rotateBy(x: CGFloat(45).degToRad(), y: 0, z: 0, duration: 2.5))
+        textNode.runAction(action)
         return textNode
         
     }
@@ -231,7 +247,7 @@ extension ARCoordinator{
         let v2 = SCNNode()
         v2.position = pos2
         
-        let cylinder = SCNCylinder(radius: 0.0007, height: CGFloat(height))
+        let cylinder = SCNCylinder(radius: 0.0003, height: CGFloat(height))
         cylinder.firstMaterial?.diffuse.contents = UIColor.white.withAlphaComponent(1.0)
         
         let nodeCylinder = SCNNode(geometry: cylinder )
@@ -384,15 +400,3 @@ extension ARCoordinator{
     }
 }
 
-/*if ARWorldTrackingConfiguration.supportsSceneReconstruction(.meshWithClassification) {
-     configuration.sceneReconstruction = .mesh
-} else {
-    debugLog(object: "MESH Is Not Supported")
-}
-
-if (ARConfiguration.isSupported) {
-    debugLog(object: "ARConfiguration Is Supported")
-} else {
-    debugLog(object: "ARConfiguration Is Not Supported")
-    return
-}*/
