@@ -157,6 +157,16 @@ extension SCNVector3{
       return SCNFloat.pi - theta
     }
     
+    static func distanceOfLine(v1: SCNVector3,v2: SCNVector3,convert to:ScnVectorDistance = .DEFAULT) -> SCNFloat {
+        let dx = v1.x - v2.x
+        let dy = v1.y - v2.y
+        let dz = v1.z - v2.z
+        var distance = SCNFloat(sqrt(dx*dx + dy*dy + dz*dz))
+        distance *= to.rawValue
+    
+        return abs(distance)
+    }
+    
     static func centerOfVector(v1:SCNVector3, v2:SCNVector3) -> SCNVector3{
         return SCNVector3((v1.x + v2.x) / 2.0, (v1.y + v2.y) / 2.0 , (v1.z + v2.z) / 2.0)
     }

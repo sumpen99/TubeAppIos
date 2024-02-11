@@ -15,7 +15,7 @@ struct ContentView: View {
         UITabBar.changeAppearance()
         UINavigationBar.changeAppearance()
     }
-    
+  
     var body: some View {
         switch firebaseAuth.loggedInAs{
             case .NOT_LOGGED_IN:    

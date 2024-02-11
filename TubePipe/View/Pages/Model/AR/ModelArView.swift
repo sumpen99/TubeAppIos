@@ -330,12 +330,7 @@ extension ModelArView{
     }
     
     var debugText:some View{
-        VStack(spacing: V_SPACING_REG){
-            Text(arCoordinator.info.status ).foregroundStyle(Color.white)
-            Text(arCoordinator.info.distance ).foregroundStyle(Color.white)
-            Text(arCoordinator.info.angleTwo ).foregroundStyle(Color.white)
-            Text(arCoordinator.info.angleThree ).foregroundStyle(Color.white)
-        }
+        Text(arCoordinator.info.status ).foregroundStyle(Color.white)
     }
     
     var zoomXButton:some View{
@@ -370,7 +365,8 @@ extension ModelArView{
     
     func addMeasurePointWith(){
         if let position = arCoordinator.castQueryFromCenterView(){
-            arCoordinator.addSphereNodeAt(position)
+            arCoordinator.addSphere(position)
+            arCoordinator.addLine()
             
         }
     }
