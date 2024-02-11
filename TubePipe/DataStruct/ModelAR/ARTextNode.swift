@@ -27,20 +27,32 @@ class ARTextNode:SCNNode{
         let textGeometry = SCNText(string: text, extrusionDepth: 1)
         textGeometry.font = UIFont.boldSystemFont(ofSize: 8)
         textGeometry.firstMaterial?.diffuse.contents = UIColor.white.withAlphaComponent(1.0)
-        textGeometry.firstMaterial?.lightingModel = .constant
-        textGeometry.firstMaterial?.isDoubleSided = true
-        textGeometry.flatness = 0
-        
-        self.init(geometry: textGeometry)
+        self.init(textGeometry: textGeometry)
         self.pos1 = pos1
         self.pos2 = pos2
         self.euler = euler
         self.textOrientation = orientation
     }
     
-    init(geometry: SCNGeometry) {
+    convenience init(pos2:SCNVector3,
+                     text:String,
+                     orientation:TextOrientation,
+                     euler:SCNVector3? = nil){
+        let textGeometry = SCNText(string: text, extrusionDepth: 1)
+        textGeometry.font = UIFont.boldSystemFont(ofSize: 8)
+        textGeometry.firstMaterial?.diffuse.contents = UIColor.white.withAlphaComponent(1.0)
+        self.init(textGeometry: textGeometry)
+        self.pos2 = pos2
+        self.euler = euler
+        self.textOrientation = orientation
+    }
+    
+    init(textGeometry: SCNText) {
         super.init()
-        self.geometry = geometry
+        textGeometry.firstMaterial?.lightingModel = .constant
+        textGeometry.firstMaterial?.isDoubleSided = true
+        textGeometry.flatness = 0
+        self.geometry = textGeometry
     }
     
     required init?(coder: NSCoder) {
@@ -94,7 +106,7 @@ class ARTextNode:SCNNode{
            let pos2 = pos2{
             let center = SCNVector3.centerOfVector(v1: pos1, v2: pos2)
             position = center
-            position.z -= 0.002
+            //position.z -= 0.002
         }
     }
     

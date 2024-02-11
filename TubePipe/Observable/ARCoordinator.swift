@@ -7,10 +7,7 @@
 import SwiftUI
 import ARKit
 
-struct ArInfo{
-    var status:String = ""
-    mutating func clearInfoStatusText(){ status = "" }
-}
+
 
 class ARCoordinator: NSObject, ARSCNViewDelegate,ObservableObject {
     var currentPosition:SCNVector3?
@@ -18,9 +15,16 @@ class ARCoordinator: NSObject, ARSCNViewDelegate,ObservableObject {
     var currentText:SCNNode?
     var arSCNView: ARSCNView?
     var nodeList:[SCNVector3] = []
-    @Published var info:ArInfo = ArInfo()
+      
+    var euler:SCNVector3?{
+        if let arScnView = arSCNView,
+           let frame = arScnView.session.currentFrame {
+            let eulerAngles = frame.camera.eulerAngles
+            return SCNVector3(eulerAngles.x, eulerAngles.y, eulerAngles.z + .pi / 2)
+        }
+        return nil
+    }
     
-     
     func setARView(_ arSCNView: ARSCNView) {
         self.arSCNView = arSCNView
         let configuration = ARWorldTrackingConfiguration()
@@ -73,7 +77,7 @@ class ARCoordinator: NSObject, ARSCNViewDelegate,ObservableObject {
             if let last = self.nodeList.last{
                if let currentPosition = self.castQueryFromCenterView(){
                    let lineNode = ARLineNode(pos1: last, pos2: currentPosition)
-                   let textNode = self.orientatedText(pos1: last, pos2: currentPosition, orientation: .POINT)
+                   let textNode = self.orientatedDistanceText(pos1: last, pos2: currentPosition, orientation: .POINT)
                     self.currentText?.removeFromParentNode()
                     self.currentLine?.removeFromParentNode()
                     self.currentText = textNode
@@ -97,10 +101,7 @@ class ARCoordinator: NSObject, ARSCNViewDelegate,ObservableObject {
         return nil
      }
  
-    func sessionWasInterrupted(_ session: ARSession) {}
-    func sessionInterruptionEnded(_ session: ARSession) {}
-    //func sessionShouldAttemptRelocalization(_ session: ARSession) -> Bool {}
-    func session(_ session: ARSession, didFailWithError error: Error){}
+    /*
     func session(_ session: ARSession, cameraDidChangeTrackingState camera: ARCamera) {
         switch camera.trackingState {
         case ARCamera.TrackingState.notAvailable:
@@ -110,38 +111,14 @@ class ARCoordinator: NSObject, ARSCNViewDelegate,ObservableObject {
         case ARCamera.TrackingState.normal:
             info.status = "Ready"
         }
-     }
+     }*/
+    func sessionWasInterrupted(_ session: ARSession) {}
+    func sessionInterruptionEnded(_ session: ARSession) {}
+    func session(_ session: ARSession, didFailWithError error: Error){}
     func session(_ session: ARSession, didChange geoTrackingStatus: ARGeoTrackingStatus) {}
     func session(_ session: ARSession, didOutputCollaborationData data: ARSession.CollaborationData) {}
     func session(_ session: ARSession, didOutputAudioSampleBuffer audioSampleBuffer: CMSampleBuffer) {}
-}
-
-//MARK: -- DISTANCE HELPERS
-extension ARCoordinator{
-    func calculateDistance(){
-        if(nodeList.count <= 1){ return }
-        var distance:SCNFloat = 0.0
-        for i in (0..<nodeList.count-1){
-            let n1 = nodeList[i],n2 = nodeList[i+1]
-            distance += n1.distance(to: n2,convert: .CENTIMETER)
-        }
-        //info.distance = "Distance " + String(format: "%.2f cm", distance)
-    }
-    
-    func calculateDistanceBetweenTwoPoints(pos1:SCNVector3,pos2:SCNVector3) -> String{
-        let distance:SCNFloat = pos1.distance(to: pos2,convert: .CENTIMETER)
-        return String(format: "%.2f cm", distance)
-    }
-    
-    func calculateAngleWithTwo(n1:SCNVector3,n2:SCNVector3){
-        let _ = SCNVector3.angleBetweenTwoPoints(n1: n1, n2: n2)
-        //info.angleTwo = "Angle: " + String(format: "%.2f", angle2)
-    }
-    
-    func calculateAngleWithThree(n1:SCNVector3,n2:SCNVector3,n3:SCNVector3){
-        let _ = SCNVector3.angleBetweenThreePoints(n1: n1, n2: n2, n3: n3)
-        //info.angleThree = "Angle Three: " + String(format: "%.2f", angle3)
-    }
+    //func sessionShouldAttemptRelocalization(_ session: ARSession) -> Bool {}
 }
 
 //MARK: -- ADD NODE HELPERS
@@ -159,12 +136,26 @@ extension ARCoordinator{
             let first = nodeList[count-2]
             let last = nodeList[count-1]
             let lineNode = ARLineNode(pos1: first, pos2: last)
-            let textNode = orientatedText(pos1: first, pos2: last,orientation: .CENTER)
+            let textNode = orientatedDistanceText(pos1: first, pos2: last,orientation: .CENTER)
             lineNode.removeFromParentNode()
             textNode.removeFromParentNode()
             arSCNView?.scene.rootNode.addChildNode(textNode)
             arSCNView?.scene.rootNode.addChildNode(lineNode)
             
+        }
+    }
+    
+    func addAngle(){
+        if nodeList.count > 2{
+            let count = nodeList.count
+            let first = nodeList[count-3]
+            let middle = nodeList[count-2]
+            let last = nodeList[count-1]
+            let angle = SCNVector3.angleBetweenThreePoints(n1: first, n2: middle, n3: last)
+            let text = String(format: "%.2f °", angle)
+            let textNode = orientatedAngleText(pos2: middle, text: text)
+            textNode.removeFromParentNode()
+            arSCNView?.scene.rootNode.addChildNode(textNode)
         }
     }
              
@@ -173,17 +164,20 @@ extension ARCoordinator{
 //MARK: -- ADD TEXT HELPERS
 extension ARCoordinator{
    
-    func orientatedText(pos1: SCNVector3,pos2:SCNVector3,orientation:TextOrientation) -> SCNNode{
-        var euler:SCNVector3?
-        if let arScnView = arSCNView,
-           let frame = arScnView.session.currentFrame {
-            let eulerAngles = frame.camera.eulerAngles
-            euler = SCNVector3(eulerAngles.x, eulerAngles.y, eulerAngles.z + .pi / 2)
-        }
+    func orientatedDistanceText(pos1: SCNVector3,pos2:SCNVector3,orientation:TextOrientation) -> SCNNode{
         let textNode = ARTextNode(pos1: pos1,
                                   pos2: pos2,
                                   orientation: orientation,
                                   euler: euler)
+        textNode.initialize()
+        return textNode
+    }
+    
+    func orientatedAngleText(pos2:SCNVector3,text:String) -> SCNNode{
+        let textNode = ARTextNode(pos2: pos2,
+                                  text: text,
+                                  orientation: .POINT,
+                                  euler: nil)
         textNode.initialize()
         return textNode
     }
@@ -196,12 +190,9 @@ extension ARCoordinator{
         currentLine = nil
         currentText = nil
         clearNodeList()
-        clearText()
         clearScene()
     }
-    func clearText(){
-        info.clearInfoStatusText()
-    }
+    
     func clearNodeList(){
         nodeList.removeAll()
     }
@@ -254,7 +245,7 @@ extension ARCoordinator{
     
     //func renderer(_ renderer:SCNSceneRenderer,didRemove node: SCNNode,for anchor:ARAnchor){}
     
-    func addTapGesture(){
+    /*func addTapGesture(){
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didRecieveTapGesture(_:)))
         arSCNView?.addGestureRecognizer(tapGestureRecognizer)
     }
@@ -270,7 +261,7 @@ extension ARCoordinator{
             let _ = arSCNView.session.raycast(query).first{
             
         }
-    }
+    }*/
     
     
 }

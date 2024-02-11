@@ -47,105 +47,12 @@ struct ModelArView: View{
          .ignoresSafeArea(.all)
     }
     
-    var scannerBox: some View{
-        GeometryReader { geometry in
-            
-        }
-    }
-
-    private func createCornersPath(size:CGSize) -> Path {
-        let centerWidth = size.width/2.0
-        let centerHeight = size.height/2.0
-        var path = Path()
-        let left = centerWidth-25.0
-        let right = centerWidth+25.0
-        let top = centerHeight-25.0
-        let bottom = centerHeight+25.0
-        let width = right - left
-        let radius = width / 20.0 / 2.0
-        let cornerLength = width / 10.0
-
-        path.move(to: CGPoint(x: left, y: top + radius))
-        path.addArc(
-            center: CGPoint(x: left + radius, y: top + radius),
-            radius: radius,
-            startAngle: Angle(degrees: 180.0),
-            endAngle: Angle(degrees: 270.0),
-            clockwise: false
-        )
-
-        path.move(to: CGPoint(x: left + radius, y: top))
-        path.addLine(to: CGPoint(x: left + radius + cornerLength, y: top))
-
-        path.move(to: CGPoint(x: left, y: top + radius))
-        path.addLine(to: CGPoint(x: left, y: top + radius + cornerLength))
-
-        path.move(to: CGPoint(x: right - radius, y: top))
-        path.addArc(
-            center: CGPoint(x: right - radius, y: top + radius),
-            radius: radius,
-            startAngle: Angle(degrees: 270.0),
-            endAngle: Angle(degrees: 360.0),
-            clockwise: false
-        )
-
-        path.move(to: CGPoint(x: right - radius, y: top))
-        path.addLine(to: CGPoint(x: right - radius - cornerLength, y: top))
-
-        path.move(to: CGPoint(x: right, y: top + radius))
-        path.addLine(to: CGPoint(x: right, y: top + radius + cornerLength))
-
-        path.move(to: CGPoint(x: left + radius, y: bottom))
-        path.addArc(
-            center: CGPoint(x: left + radius, y: bottom - radius),
-            radius: radius,
-            startAngle: Angle(degrees: 90.0),
-            endAngle: Angle(degrees: 180.0),
-            clockwise: false
-        )
-        
-        path.move(to: CGPoint(x: left + radius, y: bottom))
-        path.addLine(to: CGPoint(x: left + radius + cornerLength, y: bottom))
-
-        path.move(to: CGPoint(x: left, y: bottom - radius))
-        path.addLine(to: CGPoint(x: left, y: bottom - radius - cornerLength))
-
-        path.move(to: CGPoint(x: right, y: bottom - radius))
-        path.addArc(
-            center: CGPoint(x: right - radius, y: bottom - radius),
-            radius: radius,
-            startAngle: Angle(degrees: 0.0),
-            endAngle: Angle(degrees: 90.0),
-            clockwise: false
-        )
-        
-        path.move(to: CGPoint(x: right - radius, y: bottom))
-        path.addLine(to: CGPoint(x: right - radius - cornerLength, y: bottom))
-
-        path.move(to: CGPoint(x: right, y: bottom - radius))
-        path.addLine(to: CGPoint(x: right, y: bottom - radius - cornerLength))
-
-        return path
-    }
-
-    
     var takeMeasurementMode:some View{
         GeometryReader{ reader in
             ZStack{
-                //Image("focus").hCenter()
-                Path { path in
-                    path.addPath(
-                        createCornersPath(size:reader.size)
-                    )
-                }
-                .stroke(arCoordinator.currentPosition != nil ? Color.systemGreen : Color.systemBlue, lineWidth:2)
-                .vCenter()
-                .hCenter()
+                ScannerFrame(size: reader.size)
                 addMeasurePointButton
-                
             }
-            .hCenter()
-            .vCenter()
             .task {
                 await arCoordinator.pause()
                 await arCoordinator.switchTo(scene: SCNScene(),allowCameraControl: false)
@@ -156,20 +63,16 @@ struct ModelArView: View{
     
     var showTubeModelMode:some View{
         HStack{
-            //clearNodeButton
-            //debugText
             zoomXButton
             zoomYButton.hCenter()
             zoomZButton
-            //clearTextButton
-        }
+         }
         .task {
             tubeViewModel.initFromCache()
             await arCoordinator.pause()
             await renderNewScene()
             await arCoordinator.switchTo(scene: arSceneViewModel.scnScene,allowCameraControl: true)
-            //await arCoordinator.zoom()
-        }
+       }
         .vBottom()
         .padding()
     }
@@ -250,12 +153,7 @@ extension ModelArView{
             arSceneViewModel.buildModelFromTubePoints(tubeViewModel.pointsWithAddedCircle(
                 renderSizePart: arSceneViewModel.renderSizePart),
                                                         dimension: tubeViewModel.settingsVar.tube.dimension)
-            //arSceneViewModel.buildSteelFromTubePoints(tubeViewModel.steelPotentiallyScaled(renderSizePart: arSceneViewModel.renderSizePart),dimension: tubeViewModel.settingsVar.tube.steel)
-             
-            //arSceneViewModel.addWorldAxis()
             arSceneViewModel.publishScene()
-            //arSceneViewModel.rotateParentNode()
-            //arSceneViewModel.zoomScene()
         }
         
     }
@@ -311,28 +209,6 @@ extension ModelArView{
         .padding()
     }
     
-    var clearTextButton:some View{
-        Button("Clear text", action: self.arCoordinator.clearText )
-        .hTrailing()
-        .font(.title3)
-        .foregroundStyle(Color.white)
-        .buttonStyle(.borderedProminent)
-        .tint(Color.systemRed)
-    }
-    
-    var clearNodeButton:some View{
-        Button("Clear node", action: self.arCoordinator.clearNodeList )
-        .hLeading()
-        .font(.title3)
-        .foregroundStyle(Color.white)
-        .buttonStyle(.borderedProminent)
-        .tint(Color.systemRed)
-    }
-    
-    var debugText:some View{
-        Text(arCoordinator.info.status ).foregroundStyle(Color.white)
-    }
-    
     var zoomXButton:some View{
         RoundedButton(action: {
             arCoordinator.zoom(direction:0)
@@ -367,6 +243,7 @@ extension ModelArView{
         if let position = arCoordinator.castQueryFromCenterView(){
             arCoordinator.addSphere(position)
             arCoordinator.addLine()
+            arCoordinator.addAngle()
             
         }
     }
