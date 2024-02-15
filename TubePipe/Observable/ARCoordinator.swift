@@ -7,14 +7,36 @@
 import SwiftUI
 import ARKit
 
-
-
 class ARCoordinator: NSObject, ARSCNViewDelegate,ObservableObject {
     var currentPosition:SCNVector3?
     var currentLine:SCNNode?
     var currentText:SCNNode?
     var arSCNView: ARSCNView?
     var nodeList:[SCNVector3] = []
+    @Published var storedMeasurements:[ARMeasurement] = [
+        ARMeasurement(name: "1", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "2", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "3", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "4", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "5", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "6", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "7", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "8", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "9", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "10", type: .POINT, length: 10.0, angle: 45.0),
+    ]
+    @Published var storedAngles:[ARMeasurement] = [
+        ARMeasurement(name: "1", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "2", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "3", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "4", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "5", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "6", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "7", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "8", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "9", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "10", type: .POINT, length: 10.0, angle: 45.0),
+    ]
       
     var euler:SCNVector3?{
         if let arScnView = arSCNView,
@@ -77,7 +99,7 @@ class ARCoordinator: NSObject, ARSCNViewDelegate,ObservableObject {
             if let last = self.nodeList.last{
                if let currentPosition = self.castQueryFromCenterView(){
                    let lineNode = ARLineNode(pos1: last, pos2: currentPosition)
-                   let textNode = self.orientatedDistanceText(pos1: last, pos2: currentPosition, orientation: .POINT)
+                   let textNode = self.pointDistanceText(pos1: last,pos2: currentPosition)
                     self.currentText?.removeFromParentNode()
                     self.currentLine?.removeFromParentNode()
                     self.currentText = textNode
@@ -135,27 +157,30 @@ extension ARCoordinator{
             let count = nodeList.count
             let first = nodeList[count-2]
             let last = nodeList[count-1]
+            let name = "\(storedMeasurements.count+1)"
             let lineNode = ARLineNode(pos1: first, pos2: last)
-            let textNode = orientatedDistanceText(pos1: first, pos2: last,orientation: .CENTER)
+            let textNode = orientatedDistanceText(pos1: first, pos2: last,name: name)
             lineNode.removeFromParentNode()
             textNode.removeFromParentNode()
             arSCNView?.scene.rootNode.addChildNode(textNode)
             arSCNView?.scene.rootNode.addChildNode(lineNode)
+            storedMeasurements.append(textNode.info)
             
         }
     }
     
     func addAngle(){
         if nodeList.count > 2{
+            let name = "\(storedAngles.count+1)"
             let count = nodeList.count
             let first = nodeList[count-3]
             let middle = nodeList[count-2]
             let last = nodeList[count-1]
             let angle = SCNVector3.angleBetweenThreePoints(n1: first, n2: middle, n3: last)
-            let text = String(format: "%.2f °", angle)
-            let textNode = orientatedAngleText(pos2: middle, text: text)
+            let textNode = orientatedAngleText(pos2: middle, angle: angle,name: name)
             textNode.removeFromParentNode()
             arSCNView?.scene.rootNode.addChildNode(textNode)
+            storedAngles.append(textNode.info)
         }
     }
              
@@ -164,37 +189,48 @@ extension ARCoordinator{
 //MARK: -- ADD TEXT HELPERS
 extension ARCoordinator{
    
-    func orientatedDistanceText(pos1: SCNVector3,pos2:SCNVector3,orientation:TextOrientation) -> SCNNode{
+    func pointDistanceText(pos1: SCNVector3,pos2:SCNVector3) -> ARTextNode{
+        let textNode = ARTextNode(pos1: pos1,
+                                  pos2: pos2)
+        textNode.initialize()
+        return textNode
+    }
+    
+    func orientatedDistanceText(pos1: SCNVector3,pos2:SCNVector3,name:String) -> ARTextNode{
         let textNode = ARTextNode(pos1: pos1,
                                   pos2: pos2,
-                                  orientation: orientation,
+                                  name:name,
                                   euler: euler)
         textNode.initialize()
         return textNode
     }
     
-    func orientatedAngleText(pos2:SCNVector3,text:String) -> SCNNode{
+    func orientatedAngleText(pos2:SCNVector3,angle:SCNFloat,name:String) -> ARTextNode{
         let textNode = ARTextNode(pos2: pos2,
-                                  text: text,
-                                  orientation: .POINT,
-                                  euler: nil)
+                                  angle: angle,
+                                  name:name)
         textNode.initialize()
         return textNode
     }
      
 }
-   
+
 //MARK: -- PROPERTY HELPERS
 extension ARCoordinator{
     func reset(){
         currentLine = nil
         currentText = nil
+        clearARMeasurements()
         clearNodeList()
         clearScene()
     }
     
     func clearNodeList(){
         nodeList.removeAll()
+    }
+    
+    func clearARMeasurements(){
+        storedMeasurements.removeAll()
     }
     
     func clearScene(){

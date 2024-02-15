@@ -51,11 +51,12 @@ struct RoundedButton: View{
     let imageName:String
     let radius:CGFloat
     let color:Color
+    let font:Font
    
     var body: some View{
         Button(action: action ){
             Image(systemName: imageName)
-            .font(.largeTitle)
+            .font(font)
             .bold()
             .foregroundStyle(.white)
             .padding()

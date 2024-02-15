@@ -35,6 +35,7 @@ struct ModelArView: View{
     @State var activeARSheet: ActiveARSheet?
     @State var activeARMode: ActiveARMode?
     @State var renderNewState:Bool = false
+    @State var showList:Bool = false
   
     init() {
         self._arSceneViewModel = StateObject(wrappedValue: ARSceneViewModel())
@@ -47,11 +48,62 @@ struct ModelArView: View{
          .ignoresSafeArea(.all)
     }
     
+    var storedMeasurements:[ARMeasurement] = [
+        ARMeasurement(name: "1", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "2", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "3", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "4", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "5", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "6", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "7", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "8", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "9", type: .POINT, length: 10.0, angle: 45.0),
+        ARMeasurement(name: "10", type: .POINT, length: 10.0, angle: 45.0),
+    ]
+    
+    @ViewBuilder
+    var measurePointList:some View{
+        if showList{
+            GeometryReader{ reader in
+                ZStack{
+                    Color.white.opacity(0.5)
+                    ScrollView{
+                        VStack{
+                            ForEach(arCoordinator.storedMeasurements,id:\.self){ measurement in
+                                if let length = measurement.length,
+                                   let name = measurement.name{
+                                    VStack(spacing:V_SPACING_REG){
+                                        Text(name).avatar(color:Color.darkGray).hLeading()
+                                        Text(String(format: "%.2f cm", length))
+                                        .font(.body)
+                                        .bold()
+                                        .foregroundStyle(Color.darkGray)
+                                        .hLeading()
+                                    }
+                                    .padding()
+                               }
+                            }
+                        }
+                    }
+                }
+                .frame(width:reader.size.width/3)
+                .vTop()
+                .hTrailing()
+                .padding([.trailing,.top])
+            }
+            .transition(.move(edge: .trailing))
+        }
+        
+        
+        
+    }
+     
     var takeMeasurementMode:some View{
         GeometryReader{ reader in
             ZStack{
+                measurePointList
                 ScannerFrame(size: reader.size)
-                addMeasurePointButton
+                bottomButtons
             }
             .task {
                 await arCoordinator.pause()
@@ -212,27 +264,62 @@ extension ModelArView{
     var zoomXButton:some View{
         RoundedButton(action: {
             arCoordinator.zoom(direction:0)
-        }, imageName: "x.circle",radius: 62.0,color: Color.systemBlue)
+        }, imageName: "x.circle",radius: 62.0,color: Color.systemBlue,font: .largeTitle)
     }
     
     var zoomYButton:some View{
         RoundedButton(action: {
             arCoordinator.zoom(direction:1)
-        }, imageName: "y.circle",radius: 62.0,color: Color.systemBlue)
+        }, imageName: "y.circle",radius: 62.0,color: Color.systemBlue,font: .largeTitle)
     }
     
     var zoomZButton:some View{
         RoundedButton(action: {
             arCoordinator.zoom(direction:2)
-        }, imageName: "z.circle",radius: 62.0,color: Color.systemBlue)
+        }, imageName: "z.circle",radius: 62.0,color: Color.systemBlue,font: .largeTitle)
+    }
+    
+    var bottomButtons:some View{
+        HStack{
+            showAngleButton
+            addMeasurePointButton.hCenter()
+            showDistanceButton
+         }
+        .vBottom()
+        .hCenter()
+        .padding()
     }
     
     var addMeasurePointButton:some View{
-        RoundedButton(action:addMeasurePointWith, imageName: "plus",radius: 62.0,color: Color.systemGreen)
+        RoundedButton(action:addMeasurePointWith, 
+                      imageName: "plus",
+                      radius: 62.0,
+                      color: Color.systemGreen,
+                      font:.largeTitle)
         .scaleEffect(CGSize(width: 1.3, height: 1.3))
-        .vBottom()
-        .hCenter()
-        .padding(.bottom)
+       
+    }
+    
+    var showDistanceButton:some View{
+        RoundedButton(action:toggleList, 
+                      imageName: "list.clipboard",
+                      radius: 52.0,
+                      color: Color.black.opacity(0.6),
+                      font: .title)
+        .scaleEffect(CGSize(width: 1.3, height: 1.3))
+        .padding(.trailing)
+    
+    }
+    
+    var showAngleButton:some View{
+        RoundedButton(action:toggleList, 
+                      imageName: "list.bullet",
+                      radius: 52.0,
+                      color: Color.black.opacity(0.6),
+                      font: .title)
+        .scaleEffect(CGSize(width: 1.3, height: 1.3))
+        .padding(.leading)
+   
     }
 }
 
@@ -245,6 +332,12 @@ extension ModelArView{
             arCoordinator.addLine()
             arCoordinator.addAngle()
             
+        }
+    }
+    
+    func toggleList(){
+        withAnimation{
+            showList.toggle()
         }
     }
     

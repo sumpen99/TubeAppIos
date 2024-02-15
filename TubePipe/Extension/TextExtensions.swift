@@ -25,6 +25,15 @@ extension Text{
             .foregroundStyle(.white)
     }
     
+    func avatar(color:Color) -> some View{
+         self.font(.headline)
+            .padding()
+            .background{
+                Circle().fill(color)
+            }
+            .foregroundStyle(.white)
+    }
+    
     func noDataBackground() -> some View{
         self.hLeading()
         .padding()

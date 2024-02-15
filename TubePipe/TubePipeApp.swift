@@ -11,14 +11,14 @@ import SwiftUI
 struct TubePipeApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     @Environment(\.scenePhase) private var phase
-    @StateObject var firebaseAuth = FirebaseAuth()
+    //@StateObject var firebaseAuth = FirebaseAuth()
     let persistenceController = PersistenceController.shared
     
     var body: some Scene {
         StyledWindowGroup {
-            ContentView()
-            .environmentObject(firebaseAuth)
-            //ContentViewDev()
+            //ContentView()
+            //.environmentObject(firebaseAuth)
+            ContentViewDev()
             .environment(\.managedObjectContext,persistenceController.container.viewContext)
             .preferredWindowColor(Color.backgroundPrimary)
             .onChange(of: phase) { newPhase in
